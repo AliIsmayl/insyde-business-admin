@@ -1,0 +1,375 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+.analys-main-modern {
+  font-family: "Poppins", sans-serif;
+  color: var(--text-primary); /* YENİLƏNDİ */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  /* ÜST BAŞLIQ VƏ FİLTRLƏR */
+  .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .title-area {
+      .page-title {
+        font-size: 24px;
+        font-weight: 500;
+        margin: 0 0 5px 0;
+        color: var(--text-primary); /* YENİLƏNDİ */
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: var(--text-secondary); /* YENİLƏNDİ */
+        margin: 0;
+      }
+    }
+
+    .period-filters {
+      display: flex;
+      background-color: var(--bg-panel); /* YENİLƏNDİ */
+      border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+      padding: 5px;
+      border-radius: 15px;
+      gap: 5px;
+
+      button {
+        border: 1px solid transparent;
+        background: transparent;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary); /* YENİLƏNDİ */
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: var(--text-primary); /* YENİLƏNDİ */
+          background-color: var(--bg-hover); /* YENİLƏNDİ */
+        }
+
+        &.active {
+          background-color: var(--bg-active); /* YENİLƏNDİ */
+          color: var(--text-link); /* YENİLƏNDİ */
+          border-color: var(--border-strong); /* YENİLƏNDİ */
+         
+        }
+      }
+    }
+  }
+
+  .analys-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* 3 ƏDƏD ÜST STATİSTİKA KARTLARI */
+  .summary-cards-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    .stat-card {
+      background-color: var(--bg-panel); /* YENİLƏNDİ */
+      border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+      border-radius: 20px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition:
+        transform 0.3s ease,
+          0.3s ease;
+         /* YENİLƏNDİ */
+
+      &:hover {
+        transform: translateY(-4px);
+  
+        border-color: var(--border-focus); /* YENİLƏNDİ */
+      }
+
+      .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        /* Rəng və fon React daxilindən (inline) gəlir */
+      }
+
+      .stat-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        h4 {
+          margin: 0;
+          font-size: 13px;
+          color: var(--text-secondary); /* YENİLƏNDİ */
+          font-weight: 500;
+        }
+
+        .stat-bottom {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+
+          .value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary); /* YENİLƏNDİ */
+            line-height: 1;
+          }
+          .trend {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+            &.positive {
+              background-color: var(--badge-success-bg); /* YENİLƏNDİ */
+              color: var(--badge-success-text); /* YENİLƏNDİ */
+              border: 1px solid rgba(46, 204, 113, 0.3); /* YENİLƏNDİ */
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* DETALLI ANALİZ QRİDİ (Vasitələr, Cihazlar, Yerləşmə) */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    .dashboard-card {
+      background-color: var(--bg-panel); /* YENİLƏNDİ */
+      border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+      border-radius: 25px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+         /* YENİLƏNDİ */
+
+      .card-header {
+        margin-bottom: 25px;
+        border-bottom: 1px dashed var(--border-strong); /* YENİLƏNDİ */
+        padding-bottom: 15px;
+
+        h3 {
+          margin: 0;
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--text-primary); /* YENİLƏNDİ */
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .head-icon {
+            color: var(--text-link); /* YENİLƏNDİ */
+            font-size: 18px;
+          }
+        }
+      }
+
+      .card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        /* Vasitələr və Cihazlar üçün Progress Bar Dizaynı */
+        .progress-row {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .row-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .info-left {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              .item-icon {
+                font-size: 16px;
+                display: flex;
+                /* İkonlar üçün yüngül kölgə əlavə edirik ki, tünd fonda fərqlənsinlər */
+                filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
+              }
+              .item-name {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-primary); /* YENİLƏNDİ */
+              }
+            }
+            .item-count {
+              font-size: 13px;
+              font-weight: 600;
+              color: var(--text-secondary); /* YENİLƏNDİ */
+            }
+          }
+
+          .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background-color: var(--bg-input); /* YENİLƏNDİ */
+            border-radius: 10px;
+            overflow: hidden;
+
+            .progress-fill {
+              height: 100%;
+              border-radius: 10px;
+              transition: width 0.8s ease-in-out;
+            }
+          }
+        }
+
+        /* Yerləşmə (Ölkə/Şəhər) Siyahı Dizaynı */
+        .location-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 15px;
+          background-color: var(--bg-input); /* YENİLƏNDİ */
+          border: 1px solid var(--border-input); /* YENİLƏNDİ */
+          border-radius: 15px;
+          transition:
+            background 0.3s,
+            border-color 0.3s;
+
+          &:hover {
+            background-color: var(--bg-hover); /* YENİLƏNDİ */
+            border-color: var(--border-input-hover); /* YENİLƏNDİ */
+          }
+
+          .loc-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            .loc-icon {
+              width: 36px;
+              height: 36px;
+              border-radius: 10px;
+              background-color: var(--bg-panel); /* YENİLƏNDİ */
+              border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: var(--text-link); /* YENİLƏNDİ */
+            }
+
+            .loc-texts {
+              display: flex;
+              flex-direction: column;
+
+              .city {
+                font-size: 14px;
+                font-weight: 700;
+                color: var(--text-primary); /* YENİLƏNDİ */
+                line-height: 1.2;
+              }
+              .country {
+                font-size: 12px;
+                color: var(--text-secondary); /* YENİLƏNDİ */
+              }
+            }
+          }
+
+          .loc-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            .loc-count {
+              font-size: 15px;
+              font-weight: 800;
+              color: var(--text-primary); /* YENİLƏNDİ */
+            }
+            .loc-percent {
+              font-size: 12px;
+              font-weight: 600;
+              color: var(--badge-success-text); /* YENİLƏNDİ */
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* ================== RESPONSİVLİK ================== */
+
+  /* Planşetlər üçün (ekran daraldıqca) */
+  @media screen and (max-width: 1024px) {
+    .dashboard-grid {
+      grid-template-columns: repeat(2, 1fr);
+
+      /* Yerləşmə kartı altda tək və tam uzunluqda olsun */
+      .location-card {
+        grid-column: span 2;
+      }
+    }
+  }
+
+  /* Mobillər üçün (Tamamilə alt-alta) */
+  @media screen and (max-width: 768px) {
+    .top-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+
+      .period-filters {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+
+        button {
+          padding: 8px 5px;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .summary-cards-row {
+      grid-template-columns: 1fr;
+      gap: 15px;
+
+      .stat-card {
+        padding: 20px;
+        .stat-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 22px;
+        }
+        .stat-info .stat-bottom .value {
+          font-size: 20px;
+        }
+      }
+    }
+
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+
+      .location-card {
+        grid-column: span 1;
+      }
+
+      .dashboard-card {
+        padding: 20px 15px;
+      }
+    }
+  }
+}
