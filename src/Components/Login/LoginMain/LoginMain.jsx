@@ -27,7 +27,7 @@ function LoginMain() {
   // Giriş Funksiyası
   const handleLogin = (e) => {
     e.preventDefault();
-    if (email === "admin" && password === "admin") {
+    if (email === "business" && password === "admin") {
       setErrorMsg("");
 
       // 1. İstifadəçinin daxil olduğunu lokal yaddaşa (localStorage) yazırıq
