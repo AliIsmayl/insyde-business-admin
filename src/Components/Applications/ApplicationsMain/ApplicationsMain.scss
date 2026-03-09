@@ -64,7 +64,6 @@
       &.active {
         background-color: var(--btn-primary-bg);
         color: var(--text-on-gold);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 
       .unread-badge {
@@ -237,9 +236,9 @@
           }
           &:hover {
             background-color: var(--btn-primary-hover);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             .btn-icon {
-              transform: translateX(2px) translateY(-2px);
+              transform: translateX(2px) translateY(-1px);
             }
           }
           &:active {
@@ -326,7 +325,6 @@
             border-radius: 50%;
             background-color: #e74c3c;
             flex-shrink: 0;
-            box-shadow: 0 0 6px rgba(231, 76, 60, 0.5);
           }
 
           .app-title {

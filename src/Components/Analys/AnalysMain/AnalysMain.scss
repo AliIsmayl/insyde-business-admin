@@ -2,13 +2,13 @@
 
 .analys-main-modern {
   font-family: "Poppins", sans-serif;
-  color: var(--text-primary); /* YENİLƏNDİ */
+  color: var(--text-primary);
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 25px;
 
-  /* ÜST BAŞLIQ VƏ FİLTRLƏR */
+  /* ── BAŞLIQ VƏ FİLTRLƏR ─────────────────────── */
   .top-header {
     display: flex;
     justify-content: space-between;
@@ -20,20 +20,20 @@
       .page-title {
         font-size: 24px;
         font-weight: 500;
-        margin: 0 0 5px 0;
-        color: var(--text-primary); /* YENİLƏNDİ */
+        margin: 0 0 5px;
+        color: var(--text-primary);
       }
       .page-subtitle {
         font-size: 14px;
-        color: var(--text-secondary); /* YENİLƏNDİ */
+        color: var(--text-secondary);
         margin: 0;
       }
     }
 
     .period-filters {
       display: flex;
-      background-color: var(--bg-panel); /* YENİLƏNDİ */
-      border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
       padding: 5px;
       border-radius: 15px;
       gap: 5px;
@@ -46,20 +46,18 @@
         font-family: "Poppins", sans-serif;
         font-size: 13px;
         font-weight: 600;
-        color: var(--text-secondary); /* YENİLƏNDİ */
+        color: var(--text-secondary);
         cursor: pointer;
         transition: all 0.3s ease;
 
         &:hover {
-          color: var(--text-primary); /* YENİLƏNDİ */
-          background-color: var(--bg-hover); /* YENİLƏNDİ */
+          color: var(--text-primary);
+          background-color: var(--bg-hover);
         }
-
         &.active {
-          background-color: var(--bg-active); /* YENİLƏNDİ */
-          color: var(--text-link); /* YENİLƏNDİ */
-          border-color: var(--border-strong); /* YENİLƏNDİ */
-         
+          background-color: var(--bg-active);
+          color: var(--text-link);
+          border-color: var(--border-strong);
         }
       }
     }
@@ -71,15 +69,15 @@
     gap: 30px;
   }
 
-  /* 3 ƏDƏD ÜST STATİSTİKA KARTLARI */
+  /* ── SUMMARY CARDS: 3 sütun ─────────────────── */
   .summary-cards-row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 
     .stat-card {
-      background-color: var(--bg-panel); /* YENİLƏNDİ */
-      border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
       border-radius: 20px;
       padding: 25px;
       display: flex;
@@ -87,47 +85,51 @@
       gap: 20px;
       transition:
         transform 0.3s ease,
-          0.3s ease;
-         /* YENİLƏNDİ */
+        border-color 0.3s ease;
 
       &:hover {
         transform: translateY(-4px);
-  
-        border-color: var(--border-focus); /* YENİLƏNDİ */
+        border-color: var(--border-focus);
       }
+
+      /* İşçi kartı üçün qızılı sol kənar vurğusu */
+  
 
       .stat-icon {
         width: 60px;
         height: 60px;
+        min-width: 60px;
         border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 26px;
-        /* Rəng və fon React daxilindən (inline) gəlir */
+        flex-shrink: 0;
       }
 
       .stat-info {
         display: flex;
         flex-direction: column;
         gap: 5px;
+        min-width: 0;
+        flex: 1;
 
         h4 {
           margin: 0;
           font-size: 13px;
-          color: var(--text-secondary); /* YENİLƏNDİ */
+          color: var(--text-secondary);
           font-weight: 500;
         }
 
         .stat-bottom {
           display: flex;
-          align-items: baseline;
+          align-items: center;
           gap: 10px;
 
           .value {
             font-size: 24px;
             font-weight: 800;
-            color: var(--text-primary); /* YENİLƏNDİ */
+            color: var(--text-primary);
             line-height: 1;
           }
           .trend {
@@ -136,9 +138,90 @@
             padding: 3px 8px;
             border-radius: 20px;
             &.positive {
-              background-color: var(--badge-success-bg); /* YENİLƏNDİ */
-              color: var(--badge-success-text); /* YENİLƏNDİ */
-              border: 1px solid rgba(46, 204, 113, 0.3); /* YENİLƏNDİ */
+              background-color: var(--badge-success-bg);
+              color: var(--badge-success-text);
+              border: 1px solid rgba(46, 204, 113, 0.3);
+            }
+          }
+
+          /* ── İşçi düzəliş UI ─── */
+          .worker-edit {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+          }
+          .worker-input {
+            width: 72px;
+            font-family: "Poppins", sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            background: var(--bg-input);
+            border: 1.5px solid rgba(200, 167, 94, 0.5);
+            border-radius: 8px;
+            padding: 2px 8px;
+            outline: none;
+            line-height: 1;
+            /* Chrome number spinner gizlət */
+            &::-webkit-inner-spin-button,
+            &::-webkit-outer-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+            -moz-appearance: textfield;
+            &:focus {
+              border-color: #c8a75e;
+            }
+          }
+          .worker-action {
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+            &--save {
+              background: rgba(39, 174, 96, 0.12);
+              color: #27ae60;
+              border: 1px solid rgba(39, 174, 96, 0.3);
+              &:hover {
+                background: #27ae60;
+                color: #fff;
+              }
+            }
+            &--cancel {
+              background: var(--bg-hover);
+              color: var(--text-muted);
+              border: 1px solid var(--border-subtle);
+              &:hover {
+                background: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+              }
+            }
+          }
+
+          /* Düzəliş düyməsi (qələm) */
+          .worker-edit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+            &:hover {
+              background: rgba(200, 167, 94, 0.12);
+              color: #c8a75e;
+              border-color: rgba(200, 167, 94, 0.4);
             }
           }
         }
@@ -146,37 +229,36 @@
     }
   }
 
-  /* DETALLI ANALİZ QRİDİ (Vasitələr, Cihazlar, Yerləşmə) */
+  /* ── DETALLI ANALİZ QRİDİ ───────────────────── */
   .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 
     .dashboard-card {
-      background-color: var(--bg-panel); /* YENİLƏNDİ */
-      border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
       border-radius: 25px;
       padding: 25px;
       display: flex;
       flex-direction: column;
-         /* YENİLƏNDİ */
 
       .card-header {
         margin-bottom: 25px;
-        border-bottom: 1px dashed var(--border-strong); /* YENİLƏNDİ */
+        border-bottom: 1px dashed var(--border-strong);
         padding-bottom: 15px;
 
         h3 {
           margin: 0;
           font-size: 16px;
           font-weight: 700;
-          color: var(--text-primary); /* YENİLƏNDİ */
+          color: var(--text-primary);
           display: flex;
           align-items: center;
           gap: 10px;
 
           .head-icon {
-            color: var(--text-link); /* YENİLƏNDİ */
+            color: var(--text-link);
             font-size: 18px;
           }
         }
@@ -187,7 +269,6 @@
         flex-direction: column;
         gap: 20px;
 
-        /* Vasitələr və Cihazlar üçün Progress Bar Dizaynı */
         .progress-row {
           display: flex;
           flex-direction: column;
@@ -206,26 +287,24 @@
               .item-icon {
                 font-size: 16px;
                 display: flex;
-                /* İkonlar üçün yüngül kölgə əlavə edirik ki, tünd fonda fərqlənsinlər */
-                filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
               }
               .item-name {
                 font-size: 14px;
                 font-weight: 600;
-                color: var(--text-primary); /* YENİLƏNDİ */
+                color: var(--text-primary);
               }
             }
             .item-count {
               font-size: 13px;
               font-weight: 600;
-              color: var(--text-secondary); /* YENİLƏNDİ */
+              color: var(--text-secondary);
             }
           }
 
           .progress-bar-bg {
             width: 100%;
             height: 8px;
-            background-color: var(--bg-input); /* YENİLƏNDİ */
+            background-color: var(--bg-input);
             border-radius: 10px;
             overflow: hidden;
 
@@ -237,22 +316,21 @@
           }
         }
 
-        /* Yerləşmə (Ölkə/Şəhər) Siyahı Dizaynı */
         .location-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
           padding: 12px 15px;
-          background-color: var(--bg-input); /* YENİLƏNDİ */
-          border: 1px solid var(--border-input); /* YENİLƏNDİ */
+          background-color: var(--bg-input);
+          border: 1px solid var(--border-input);
           border-radius: 15px;
           transition:
             background 0.3s,
             border-color 0.3s;
 
           &:hover {
-            background-color: var(--bg-hover); /* YENİLƏNDİ */
-            border-color: var(--border-input-hover); /* YENİLƏNDİ */
+            background-color: var(--bg-hover);
+            border-color: var(--border-input-hover);
           }
 
           .loc-left {
@@ -264,27 +342,25 @@
               width: 36px;
               height: 36px;
               border-radius: 10px;
-              background-color: var(--bg-panel); /* YENİLƏNDİ */
-              border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
+              background-color: var(--bg-panel);
+              border: 1px solid var(--border-subtle);
               display: flex;
               align-items: center;
               justify-content: center;
-              color: var(--text-link); /* YENİLƏNDİ */
+              color: var(--text-link);
             }
-
             .loc-texts {
               display: flex;
               flex-direction: column;
-
               .city {
                 font-size: 14px;
                 font-weight: 700;
-                color: var(--text-primary); /* YENİLƏNDİ */
+                color: var(--text-primary);
                 line-height: 1.2;
               }
               .country {
                 font-size: 12px;
-                color: var(--text-secondary); /* YENİLƏNDİ */
+                color: var(--text-secondary);
               }
             }
           }
@@ -293,16 +369,15 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-
             .loc-count {
               font-size: 15px;
               font-weight: 800;
-              color: var(--text-primary); /* YENİLƏNDİ */
+              color: var(--text-primary);
             }
             .loc-percent {
               font-size: 12px;
               font-weight: 600;
-              color: var(--badge-success-text); /* YENİLƏNDİ */
+              color: var(--badge-success-text);
             }
           }
         }
@@ -310,21 +385,19 @@
     }
   }
 
-  /* ================== RESPONSİVLİK ================== */
-
-  /* Planşetlər üçün (ekran daraldıqca) */
-  @media screen and (max-width: 1024px) {
+  /* ── RESPONSİVLİK ───────────────────────────── */
+  @media screen and (max-width: 1100px) {
+    .summary-cards-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
     .dashboard-grid {
       grid-template-columns: repeat(2, 1fr);
-
-      /* Yerləşmə kartı altda tək və tam uzunluqda olsun */
       .location-card {
         grid-column: span 2;
       }
     }
   }
 
-  /* Mobillər üçün (Tamamilə alt-alta) */
   @media screen and (max-width: 768px) {
     .top-header {
       flex-direction: column;
@@ -335,7 +408,6 @@
         width: 100%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-
         button {
           padding: 8px 5px;
           font-size: 12px;
@@ -352,6 +424,7 @@
         .stat-icon {
           width: 50px;
           height: 50px;
+          min-width: 50px;
           font-size: 22px;
         }
         .stat-info .stat-bottom .value {
@@ -362,14 +435,18 @@
 
     .dashboard-grid {
       grid-template-columns: 1fr;
-
       .location-card {
         grid-column: span 1;
       }
-
       .dashboard-card {
         padding: 20px 15px;
       }
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .summary-cards-row {
+      grid-template-columns: 1fr;
     }
   }
 }

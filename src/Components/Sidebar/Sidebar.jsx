@@ -8,6 +8,7 @@ import { PiPackage } from "react-icons/pi";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import "./Sidebar.scss";
 import { MdOutlineSwitchAccount } from "react-icons/md";
+import { TbCategory } from "react-icons/tb";
 
 function Sidebar({ isOpen, setIsOpen }) {
   const [openMenus, setOpenMenus] = useState({});
@@ -67,6 +68,11 @@ function Sidebar({ isOpen, setIsOpen }) {
       name: "Hesablar",
       path: "/accounts",
       icon: <MdOutlineSwitchAccount />,
+    },
+    {
+      name: "Categoriyalar",
+      path: "/categorys",
+      icon: <TbCategory />,
     },
 
     { name: "Analitika", path: "/analys", icon: <TbBrandGoogleAnalytics /> },

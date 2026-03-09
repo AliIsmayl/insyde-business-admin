@@ -16,7 +16,6 @@
     max-width: 450px;
     border-radius: 30px;
     border: 1px solid var(--border-subtle); /* YENİLƏNDİ */
-    box-shadow: var(--card-shadow); /* YENİLƏNDİ */
     padding: 40px 40px;
     display: flex;
     flex-direction: column;
@@ -141,7 +140,6 @@
             &:focus {
               border-color: var(--border-focus); /* YENİLƏNDİ */
               background-color: var(--bg-hover); /* YENİLƏNDİ */
-              box-shadow: 0 0 10px rgba(200, 167, 94, 0.1);
 
               & ~ .input-icon,
               .input-icon {
@@ -221,11 +219,10 @@
         cursor: pointer;
         transition: all 0.3s ease;
         margin-top: 10px;
-        box-shadow: var(--btn-primary-shadow); /* YENİLƏNDİ */
 
         &:hover {
           background-color: var(--btn-primary-hover); /* YENİLƏNDİ */
-          transform: translateY(-2px);
+          transform: translateY(-1px);
         }
 
         &:active {

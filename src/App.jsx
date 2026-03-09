@@ -15,6 +15,7 @@ import PackagePage from "./Pages/PackagePage";
 import AnalysPage from "./Pages/AnalysPage";
 import LoginPage from "./Pages/LoginPage";
 import AccountPage from "./Pages/AccountPage";
+import CategoryPage from "./Pages/CategoryPage";
 
 // --- YENİ ƏLAVƏ ---
 // Bu komponent yoxlayır ki, istifadəçi login olub ya yox.
@@ -49,6 +50,7 @@ function App() {
           <Route path="/packages" element={<PackagePage />} />
           <Route path="/analys" element={<AnalysPage />} />
           <Route path="/accounts" element={<AccountPage />} />
+          <Route path="/categorys" element={<CategoryPage />} />
         </Route>
 
         {/* Yanlış link */}

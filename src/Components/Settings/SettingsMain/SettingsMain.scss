@@ -106,7 +106,7 @@
 
         &:hover {
           background-color: var(--bg-hover);
-          transform: translateY(-2px);
+          transform: translateY(-1px);
         }
 
         &.active {
@@ -315,7 +315,7 @@
 
         &:hover {
           background-color: var(--btn-primary-hover);
-          transform: translateY(-2px);
+          transform: translateY(-1px);
         }
         &:active {
           background-color: var(--btn-primary-active);

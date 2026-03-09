@@ -7,6 +7,9 @@ import {
   FiLink,
   FiSmartphone,
   FiMonitor,
+  FiEdit2,
+  FiCheck,
+  FiX,
 } from "react-icons/fi";
 import {
   FaInstagram,
@@ -18,19 +21,27 @@ import {
 import "./AnalysMain.scss";
 
 function AnalysMain() {
-  // Zaman filtri üçün state (week, month, 6months, year)
   const [period, setPeriod] = useState("month");
 
-  // Zaman aralığına görə rəqəmləri dəyişmək üçün sadə vuruq məntiqi (Vizual effekt üçün)
-  const multipliers = {
-    week: 0.25,
-    month: 1,
-    "6months": 6,
-    year: 12,
+  /* ── İşçi sayı state ─── */
+  const [workerCount, setWorkerCount] = useState(12);
+  const [editingWorker, setEditingWorker] = useState(false);
+  const [workerDraft, setWorkerDraft] = useState("");
+
+  const startEditWorker = () => {
+    setWorkerDraft(String(workerCount));
+    setEditingWorker(true);
   };
+  const saveWorker = () => {
+    const val = parseInt(workerDraft, 10);
+    if (!isNaN(val) && val >= 0) setWorkerCount(val);
+    setEditingWorker(false);
+  };
+  const cancelWorker = () => setEditingWorker(false);
+
+  const multipliers = { week: 0.25, month: 1, "6months": 6, year: 12 };
   const m = multipliers[period];
 
-  // ================= MOCK DATALAR ================= //
   const summaryStats = [
     {
       title: "Ümumi Baxış",
@@ -126,39 +137,68 @@ function AnalysMain() {
             Səhifənizin ziyarətçi statistikasını və mənbələrini detallı izləyin.
           </p>
         </div>
-
-        {/* ZAMAN FİLTRİ */}
         <div className="period-filters">
-          <button
-            className={period === "week" ? "active" : ""}
-            onClick={() => setPeriod("week")}
-          >
-            Həftəlik
-          </button>
-          <button
-            className={period === "month" ? "active" : ""}
-            onClick={() => setPeriod("month")}
-          >
-            Aylıq
-          </button>
-          <button
-            className={period === "6months" ? "active" : ""}
-            onClick={() => setPeriod("6months")}
-          >
-            6 Aylıq
-          </button>
-          <button
-            className={period === "year" ? "active" : ""}
-            onClick={() => setPeriod("year")}
-          >
-            İllik
-          </button>
+          {["week", "month", "6months", "year"].map((p) => (
+            <button
+              key={p}
+              className={period === p ? "active" : ""}
+              onClick={() => setPeriod(p)}
+            >
+              {
+                {
+                  week: "Həftəlik",
+                  month: "Aylıq",
+                  "6months": "6 Aylıq",
+                  year: "İllik",
+                }[p]
+              }
+            </button>
+          ))}
         </div>
       </div>
 
       <div className="analys-content">
         {/* ÜMUMİ STATİSTİKA KARTLARI */}
         <div className="summary-cards-row">
+          {/* ── İŞÇİ SAYI KARTI ── */}
+          <div className="stat-card stat-card--worker">
+            <div
+              className="stat-icon"
+              style={{
+                backgroundColor: "rgba(200,167,94,.12)",
+                color: "#c8a75e",
+              }}
+            >
+              <FiUsers />
+            </div>
+            <div className="stat-info">
+              <h4>İşçi Sayı</h4>
+              <div className="stat-bottom">
+                {editingWorker ? (
+                  <div className="worker-edit">
+                    <input
+                      className="worker-input"
+                      type="number"
+                      min="0"
+                      value={workerDraft}
+                      onChange={(e) => setWorkerDraft(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveWorker();
+                        if (e.key === "Escape") cancelWorker();
+                      }}
+                      autoFocus
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <span className="value">{workerCount}</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Dinamik stat kartlar */}
           {summaryStats.map((stat, index) => (
             <div className="stat-card" key={index}>
               <div
@@ -183,7 +223,7 @@ function AnalysMain() {
 
         {/* DETALLI ANALİZ QRİDİ */}
         <div className="dashboard-grid">
-          {/* MƏNBƏLƏR (VASİTƏLƏR) KARTI */}
+          {/* MƏNBƏLƏR */}
           <div className="dashboard-card">
             <div className="card-header">
               <h3>
@@ -209,14 +249,14 @@ function AnalysMain() {
                         width: `${item.percent}%`,
                         backgroundColor: item.color,
                       }}
-                    ></div>
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* CİHAZLAR KARTI */}
+          {/* CİHAZLAR */}
           <div className="dashboard-card">
             <div className="card-header">
               <h3>
@@ -242,14 +282,14 @@ function AnalysMain() {
                         width: `${item.percent}%`,
                         backgroundColor: item.color,
                       }}
-                    ></div>
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* YERLƏŞMƏ (ÖLKƏ/ŞƏHƏR) KARTI */}
+          {/* YERLƏŞMƏ */}
           <div className="dashboard-card location-card">
             <div className="card-header">
               <h3>
