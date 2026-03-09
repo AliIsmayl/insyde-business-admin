@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import Layout from "./Components/Layout/Layout";
 import HomePage from "./Pages/HomePage";
-import './App.css'
+import "./App.css";
 import ApplicationsPage from "./Pages/ApplicationsPage";
 import SettingPage from "./Pages/SettingPage";
 import PackagePage from "./Pages/PackagePage";
@@ -16,6 +16,7 @@ import AnalysPage from "./Pages/AnalysPage";
 import LoginPage from "./Pages/LoginPage";
 import AccountPage from "./Pages/AccountPage";
 import CategoryPage from "./Pages/CategoryPage";
+import ScrollToTop from "./Components/ScroolToTop";
 
 // --- YENİ ƏLAVƏ ---
 // Bu komponent yoxlayır ki, istifadəçi login olub ya yox.
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop /> 
       <Routes>
         <Route path="/" element={<Navigate to="/home" replace />} />
 
