@@ -69,7 +69,6 @@
     gap: 8px;
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-primary);
     padding-bottom: 16px;
     border-bottom: 1px solid var(--border-subtle);
     svg {
@@ -419,6 +418,12 @@
     cursor: pointer;
     transition: 0.2s;
     flex-shrink: 0;
+    &--xs {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      font-size: 13px;
+    }
     &--edit {
       color: var(--text-secondary);
       &:hover {
@@ -483,7 +488,7 @@
   }
 
   /* ══════════════════════════════════════════════
-     BOTTOM GRID: sol (şəkil+mode) | sağ (rəng)
+     BOTTOM GRID
      ══════════════════════════════════════════════ */
   &__bottom-grid {
     display: grid;
@@ -492,19 +497,11 @@
     align-items: start;
   }
 
-  /* Sol sütun: şəkil + mode alt-alta */
-  &__left-col {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-  }
-
-  /* Sağ panel tam hündürlük tutan */
   &__panel--stretch {
     height: 100%;
   }
 
-  /* ── Shared panel card ──────────────────────── */
+  /* ── Panel ──────────────────────────────────── */
   &__panel {
     background: var(--bg-panel);
     border: 1px solid var(--border-subtle);
@@ -512,7 +509,7 @@
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0; /* sections handle their own spacing */
   }
   &__panel-title {
     display: flex;
@@ -521,8 +518,9 @@
     font-size: 15px;
     font-weight: 700;
     color: var(--text-primary);
-    padding-bottom: 16px;
+    padding-bottom: 18px;
     border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 18px;
     svg {
       font-size: 16px;
       color: var(--text-secondary);
@@ -531,7 +529,39 @@
   &__panel-sub {
     font-size: 13px;
     color: var(--text-secondary);
-    margin: -8px 0 0;
+    margin: 0 0 14px;
+  }
+
+  /* ── Sections inside left panel ─────────────── */
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 0;
+  }
+  &__section-heading {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    svg {
+      color: var(--text-secondary);
+    }
+  }
+  &__section-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: -4px 0 0;
+  }
+
+  /* ── Divider ────────────────────────────────── */
+  &__divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 18px 0;
   }
 
   /* ── DROPZONE ───────────────────────────────── */
@@ -541,9 +571,9 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 32px 20px;
+    padding: 28px 20px;
     border: 2px dashed var(--border-input);
-    border-radius: 16px;
+    border-radius: 14px;
     cursor: pointer;
     transition: 0.2s;
     background: var(--bg-input);
@@ -554,15 +584,15 @@
     }
   }
   &__dropzone-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
     background: var(--btn-primary-bg);
     color: var(--text-on-gold);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 20px;
   }
   &__dropzone-text {
     font-size: 13px;
@@ -589,7 +619,7 @@
   /* ── BG preview ─────────────────────────────── */
   &__bg-preview {
     position: relative;
-    border-radius: 14px;
+    border-radius: 12px;
     overflow: hidden;
     aspect-ratio: 16/7;
     border: 1px solid var(--border-subtle);
@@ -603,25 +633,11 @@
   &__bg-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.65) 0%,
-      transparent 50%
-    );
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 55%);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 14px 16px;
-    gap: 8px;
-  }
-  &__bg-filename {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    padding: 12px 14px;
   }
   &__bg-actions {
     display: flex;
@@ -655,12 +671,128 @@
       background: #ef4444;
     }
   }
-
   &__file-input {
     display: none;
   }
 
-  /* ── COLOR PALETTE — grouped ────────────────── */
+  /* ── Inline edit row ────────────────────────── */
+  &__inline-edit {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    .cat__input {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  /* ── Name display row ───────────────────────── */
+  &__name-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 11px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+    &:hover:not(.cat__name-display--muted) {
+      border-color: var(--border-strong);
+      background: var(--bg-hover);
+    }
+    &--muted {
+      cursor: default !important;
+    }
+  }
+  &__name-icon-wrap {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 8px;
+    background: var(--btn-primary-bg);
+    color: var(--text-on-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  &__name-text {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &--empty {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-style: italic;
+    }
+  }
+  &__name-edit-btn {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border-radius: 7px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-panel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: 0.2s;
+    flex-shrink: 0;
+    &:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+  }
+
+  /* ── Theme options ──────────────────────────── */
+  &__theme-options {
+    display: flex;
+    gap: 10px;
+  }
+  &__theme-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border-subtle);
+    svg {
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    &:hover:not(.cat__theme-btn--active) {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+    &--active {
+      background: rgba(200, 167, 94, 0.12);
+      color: #c8a75e;
+      border-color: rgba(200, 167, 94, 0.5);
+    }
+  }
+
+  /* ── COLOR PALETTE ──────────────────────────── */
   &__palette-groups {
     display: flex;
     flex-direction: column;
@@ -714,8 +846,8 @@
     pointer-events: none;
   }
 
-  /* Custom color row */
   &__custom-color {
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -778,48 +910,6 @@
     border-radius: 50%;
     border: 2px solid var(--border-input);
     flex-shrink: 0;
-  }
-
-  /* ── Theme options (inside panel) ──────────────── */
-  &__theme-options {
-    display: flex;
-    gap: 10px;
-  }
-  &__theme-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 14px;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    background: var(--bg-input);
-    color: var(--text-secondary);
-    border: 1.5px solid var(--border-subtle);
-    svg {
-      font-size: 15px;
-      flex-shrink: 0;
-    }
-    &:hover:not(.cat__theme-btn--active) {
-      background: var(--bg-hover);
-      color: var(--text-primary);
-      border-color: var(--border-strong);
-    }
-    &--active {
-      background: rgba(200, 167, 94, 0.12);
-      color: #c8a75e;
-      border-color: rgba(200, 167, 94, 0.5);
-    }
-  }
-  &__theme-check {
-    font-size: 12px;
-    color: #c8a75e;
-    margin-left: 2px;
   }
 
   /* ── MODAL ──────────────────────────────────── */
@@ -900,17 +990,18 @@
     }
   }
 
-  /* ── RESPONSIVE ─────────────────────────────── */
+  /* ══════════════════════════════════════════════
+     RESPONSİVLİK
+     ══════════════════════════════════════════════ */
   @media (max-width: 1100px) {
     &__layout {
       grid-template-columns: 300px 1fr;
       gap: 16px;
     }
   }
+
   @media (max-width: 900px) {
-    & {
-      overflow-x: hidden;
-    }
+    overflow-x: hidden;
     &__layout {
       grid-template-columns: 1fr;
     }
@@ -921,6 +1012,7 @@
       flex-direction: row;
     }
   }
+
   @media (max-width: 640px) {
     &__header {
       flex-direction: column;
@@ -937,10 +1029,6 @@
     }
     &__panel {
       padding: 18px;
-      gap: 14px;
-    }
-    &__left-col {
-      gap: 16px;
     }
     &__item {
       padding: 12px 16px;
@@ -982,7 +1070,11 @@
       flex: 1;
       min-width: 80px;
     }
+    &__inline-edit {
+      flex-wrap: wrap;
+    }
   }
+
   @media (max-width: 400px) {
     &__title {
       font-size: 20px;
@@ -1064,7 +1156,6 @@
     color: var(--text-muted);
     font-weight: 400;
   }
-
   &__chevron {
     font-size: 15px;
     color: var(--text-muted);
