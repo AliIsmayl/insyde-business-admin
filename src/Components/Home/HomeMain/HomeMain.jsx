@@ -54,13 +54,13 @@ function HomeMain() {
     workMonths: "4",
     phone: "+994501234567",
     whatsapp: "+994501234567",
+    companyName: "INSYDE",
   });
 
   const [profileImage, setProfileImage] = useState(null);
   const [phoneMode, setPhoneMode] = useState("dark");
 
   const userCode = "SYD4568";
-  const profileUrl = `/profile/${userCode}`;
   const themeRgb = hexToRgb(formData.themeColor);
 
   const handleChange = (e) =>
@@ -207,6 +207,20 @@ function HomeMain() {
             </div>
           </div>
 
+          {/* ── ŞİRKƏT ADI ── */}
+          <div className="row-company">
+            <div className="input-group flex-1">
+              <label>Şirkət Adı</label>
+              <input
+                type="text"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+                placeholder="Şirkət adını daxil edin"
+              />
+            </div>
+          </div>
+
           <div className="row-stats-input">
             <div className="input-group staj-wrap">
               <label>İşçi Stajı</label>
@@ -278,7 +292,6 @@ function HomeMain() {
           <div className="status-badge">
             <FaCheckCircle /> Məlumatlar işlək vəziyyətdədir
           </div>
-
           <button className="save-btn">
             <FaPlus /> Yarat
           </button>
@@ -291,7 +304,16 @@ function HomeMain() {
           <div className="phone-notch" />
           <div className="phone-scroll-area">
             <div className="profile-header">
+              {/* ── ŞİRKƏT ADI TOP BAR ── */}
+              <div className="ph-top-bar">
+                <span className="ph-company-left">
+                  {formData.companyName || "INSYDE"}
+                </span>
+                <span className="ph-company-right">PM Systems</span>
+              </div>
+
               <div className="ph-back-btn">‹</div>
+
               <div className="ph-stats-row">
                 <div className="ph-stat">
                   <span className="ph-stat-num">0</span>
@@ -363,7 +385,6 @@ function HomeMain() {
 
             {/* ── LİNKLƏR ── */}
             <div className="preview-links-list">
-              {/* Telefon */}
               <div className="preview-link-card">
                 <div
                   className="link-icon-wrap"
@@ -380,7 +401,6 @@ function HomeMain() {
                 <span className="link-arrow">↗</span>
               </div>
 
-              {/* Mesaj */}
               <div className="preview-link-card">
                 <div
                   className="link-icon-wrap"
@@ -397,7 +417,6 @@ function HomeMain() {
                 <span className="link-arrow">↗</span>
               </div>
 
-              {/* Email */}
               <div className="preview-link-card">
                 <div
                   className="link-icon-wrap"
@@ -414,7 +433,6 @@ function HomeMain() {
                 <span className="link-arrow">↗</span>
               </div>
 
-              {/* Avtomatik sosial linklər */}
               {AUTO_LINKS.map((link, i) => (
                 <div className="preview-link-card" key={i}>
                   <div
