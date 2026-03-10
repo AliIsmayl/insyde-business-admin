@@ -23,6 +23,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import "./HomeMain.scss";
+import Popup from "../../Popup/Popup";
 
 const platformIconMap = {
   Instagram: <FaInstagram />,
@@ -90,6 +91,8 @@ function HomeMain() {
   const [showPass, setShowPass] = useState(false);
   const [showPassConfirm, setShowPassConfirm] = useState(false);
 
+
+
   const themeRgb = hexToRgb(formData.themeColor);
 
   const handleChange = (e) =>
@@ -119,6 +122,9 @@ function HomeMain() {
 
   return (
     <div className="home-main-modern-split">
+      {/* ── Popup — bütün type-lar üçün tək instansiya ── */}
+
+
       {/* ========== SOL TƏRƏF ========== */}
       <div className="form-section">
         <div className="top-header">
@@ -166,8 +172,6 @@ function HomeMain() {
               </div>
             </div>
           </div>
-
-       
 
           {/* ── PAROL ── */}
           <div className="password-section">
@@ -221,7 +225,20 @@ function HomeMain() {
           <div className="status-badge">
             <FaCheckCircle /> Məlumatlar işlək vəziyyətdədir
           </div>
-          <button className="save-btn">
+          {/* SUCCESS popup ilə saxla */}
+          <button
+            className="save-btn"
+            onClick={() =>
+              setPopup({
+                isOpen: true,
+                type: "success",
+                title: "Yadda saxlanıldı!",
+                message: "Bütün məlumatlar uğurla yeniləndi.",
+                confirmText: "Əla",
+                onConfirm: null,
+              })
+            }
+          >
             <FaPlus /> Yarat
           </button>
         </div>
@@ -232,14 +249,13 @@ function HomeMain() {
         <div className="phone-mockup">
           <div className="phone-notch" />
           <div className="phone-scroll-area">
-            {/* ── HEADER: qızılı gradient ── */}
+            {/* ── HEADER ── */}
             <div
               className="ph-header-gradient"
               style={{
                 background: `linear-gradient(160deg, #2a1f00 0%, #3d2c00 40%, #1a1400 100%)`,
               }}
             >
-              {/* top bar */}
               <div className="ph-top-bar">
                 <span className="ph-company-badge">
                   {formData.companyName || "INSYDE"}
@@ -249,7 +265,6 @@ function HomeMain() {
                 </div>
               </div>
 
-              {/* avatar */}
               <div className="ph-avatar-center">
                 <div
                   className="ph-avatar-ring"
@@ -276,7 +291,6 @@ function HomeMain() {
                 </div>
               </div>
 
-              {/* name */}
               <div className="ph-name-block">
                 <span className="ph-name">
                   {formData.name || "Ad Soyad"}
@@ -292,7 +306,6 @@ function HomeMain() {
                 </span>
               </div>
 
-              {/* action buttons */}
               <div className="ph-action-row">
                 <button
                   className="ph-act-btn ph-act-gold"
@@ -309,7 +322,6 @@ function HomeMain() {
                 </button>
               </div>
 
-              {/* tabs */}
               <div className="ph-tabs">
                 <button className="ph-tab active">Şəxsi</button>
                 <button className="ph-tab">PM Systems</button>
@@ -341,7 +353,6 @@ function HomeMain() {
               )}
             </div>
 
-            {/* footer */}
             <div className="ph-footer">
               © 2026 <span style={{ color: formData.themeColor }}>INSYDE.</span>{" "}
               ALL RIGHTS RESERVED.
