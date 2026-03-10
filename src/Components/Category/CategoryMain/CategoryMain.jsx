@@ -35,6 +35,7 @@ import {
 } from "react-icons/fi";
 import "./CategoryMain.scss";
 
+/* ── Platform kataloqu ─────────────────────────────────────────── */
 const PLATFORMS = [
   { key: "instagram", label: "Instagram", Icon: FaInstagram },
   { key: "facebook", label: "Facebook", Icon: FaFacebook },
@@ -52,6 +53,7 @@ const PLATFORMS = [
   { key: "website", label: "Vebsayt", Icon: FaGlobe },
 ];
 
+/* ── Rəng paleti ───────────────────────────────────────────────── */
 const COLOR_GROUPS = [
   {
     label: "Tünd",
@@ -222,7 +224,7 @@ function PlatformSelect({ value, onChange, size = "md" }) {
   );
 }
 
-/* ── Inline editable field ─────────────────────────────────────── */
+/* ── Inline editable text field ────────────────────────────────── */
 function InlineField({
   value,
   draft,
@@ -291,6 +293,115 @@ function InlineField({
   );
 }
 
+/* ── Inline editable URL field ─────────────────────────────────── */
+function InlineLinkField({
+  value,
+  draft,
+  editing,
+  placeholder,
+  emptyText,
+  inputRef,
+  onStartEdit,
+  onSaveDraft,
+  onCancelEdit,
+  onDraftChange,
+}) {
+  const urlOk = isValidUrl(draft);
+  return editing ? (
+    <div className="cat__inline-edit">
+      <div className="cat__input-wrap" style={{ flex: 1 }}>
+        <FiLink className="cat__input-icon" style={{ fontSize: 13 }} />
+        <input
+          ref={inputRef}
+          type="text"
+          className={`cat__input cat__input--sm cat__input--icon ${draft && !urlOk ? "cat__input--error" : ""}`}
+          placeholder={placeholder}
+          value={draft}
+          onChange={(e) => onDraftChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onSaveDraft();
+            if (e.key === "Escape") onCancelEdit();
+          }}
+        />
+        {draft && !urlOk && (
+          <span className="cat__input-err">
+            <FiX size={12} />
+          </span>
+        )}
+        {draft && urlOk && (
+          <span className="cat__input-ok">
+            <FiCheck size={12} />
+          </span>
+        )}
+      </div>
+      <button
+        className="cat__icon-btn cat__icon-btn--save cat__icon-btn--xs"
+        onClick={onSaveDraft}
+        title="Saxla"
+      >
+        <FiCheck size={13} />
+      </button>
+      <button
+        className="cat__icon-btn cat__icon-btn--cancel cat__icon-btn--xs"
+        onClick={onCancelEdit}
+        title="Ləğv"
+      >
+        <FiX size={13} />
+      </button>
+    </div>
+  ) : (
+    <div
+      className={`cat__name-display ${!value ? "cat__name-display--muted" : ""}`}
+      onClick={onStartEdit}
+      style={{ cursor: "pointer" }}
+    >
+      <div className="cat__name-icon-wrap cat__name-icon-wrap--link">
+        <FiLink size={14} />
+      </div>
+      {value ? (
+        <>
+          <a
+            href={value}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cat__company-link-text"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {value}
+          </a>
+          <FiExternalLink size={11} className="cat__company-link-ext" />
+          <button
+            className="cat__name-edit-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onStartEdit();
+            }}
+            title="Düzəliş et"
+          >
+            <FiEdit2 size={12} />
+          </button>
+        </>
+      ) : (
+        <>
+          <span className="cat__name-text cat__name-text--empty">
+            {emptyText}
+          </span>
+          <button
+            className="cat__name-edit-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onStartEdit();
+            }}
+            title="Əlavə et"
+          >
+            <FiEdit2 size={12} />
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
 /* ── Main ──────────────────────────────────────────────────────── */
 const initialCategories = [
   { id: 1, platformKey: "instagram", link: "https://instagram.com/myprofile" },
@@ -319,6 +430,12 @@ export default function CategoryMain() {
   const [companyDraft, setCompanyDraft] = useState("");
   const [editingCompany, setEditingCompany] = useState(false);
   const companyRef = useRef(null);
+
+  /* company link */
+  const [companyLink, setCompanyLink] = useState("");
+  const [companyLinkDraft, setCompanyLinkDraft] = useState("");
+  const [editingCompanyLink, setEditingCompanyLink] = useState(false);
+  const companyLinkRef = useRef(null);
 
   /* image name */
   const [imgNameDraft, setImgNameDraft] = useState("");
@@ -399,7 +516,7 @@ export default function CategoryMain() {
     if (bgInputRef.current) bgInputRef.current.value = "";
   };
 
-  /* company edit */
+  /* company name edit */
   const startCompanyEdit = () => {
     setCompanyDraft(companyName);
     setEditingCompany(true);
@@ -412,6 +529,24 @@ export default function CategoryMain() {
   const cancelCompanyEdit = () => {
     setCompanyDraft(companyName);
     setEditingCompany(false);
+  };
+
+  /* company link edit */
+  const startCompanyLinkEdit = () => {
+    setCompanyLinkDraft(companyLink);
+    setEditingCompanyLink(true);
+    setTimeout(() => companyLinkRef.current?.focus(), 40);
+  };
+  const saveCompanyLink = () => {
+    const t = companyLinkDraft.trim();
+    if (!t || isValidUrl(t)) {
+      setCompanyLink(t);
+      setEditingCompanyLink(false);
+    }
+  };
+  const cancelCompanyLinkEdit = () => {
+    setCompanyLinkDraft(companyLink);
+    setEditingCompanyLink(false);
   };
 
   /* image name edit */
@@ -442,7 +577,7 @@ export default function CategoryMain() {
 
   return (
     <div className="cat">
-      {/* HEADER */}
+      {/* ══ HEADER ════════════════════════════════════════════════ */}
       <div className="cat__header">
         <div>
           <h2 className="cat__title">Sosial Şəbəkələr</h2>
@@ -456,7 +591,7 @@ export default function CategoryMain() {
         </div>
       </div>
 
-      {/* SOCIAL LAYOUT */}
+      {/* ══ SOCIAL LAYOUT ═════════════════════════════════════════ */}
       <div className="cat__layout">
         {/* Form */}
         <div className="cat__form-card">
@@ -656,9 +791,9 @@ export default function CategoryMain() {
         </div>
       </div>
 
-      {/* BOTTOM GRID */}
+      {/* ══ BOTTOM GRID ═══════════════════════════════════════════ */}
       <div className="cat__bottom-grid">
-        {/* SOL PANEL */}
+        {/* ── SOL PANEL ─────────────────────────────────────────── */}
         <div className="cat__panel cat__panel--left">
           <div className="cat__panel-title">
             <FiImage /> Profil Tənzimləmələri
@@ -722,12 +857,14 @@ export default function CategoryMain() {
 
           <div className="cat__divider" />
 
-          {/* 2. Şirkətin adı */}
+          {/* 2. Şirkətin adı + linki */}
           <div className="cat__section">
             <p className="cat__section-heading">Şirkətin Adı</p>
             <p className="cat__section-sub">
-              Profil səhifənizdə görünəcək şirkət adı.
+              Profil səhifənizdə görünəcək şirkət adı və sayt linki.
             </p>
+
+            {/* Ad */}
             <InlineField
               value={companyName}
               draft={companyDraft}
@@ -741,13 +878,25 @@ export default function CategoryMain() {
               onCancelEdit={cancelCompanyEdit}
               onDraftChange={setCompanyDraft}
             />
+
+            {/* Link */}
+            <InlineLinkField
+              value={companyLink}
+              draft={companyLinkDraft}
+              editing={editingCompanyLink}
+              placeholder="https://sirket.az"
+              emptyText="Şirkət linki əlavə edilməyib…"
+              inputRef={companyLinkRef}
+              onStartEdit={startCompanyLinkEdit}
+              onSaveDraft={saveCompanyLink}
+              onCancelEdit={cancelCompanyLinkEdit}
+              onDraftChange={setCompanyLinkDraft}
+            />
           </div>
 
           <div className="cat__divider" />
 
-     
-
-          {/* 4. Ekran rejimi */}
+          {/* 3. Ekran rejimi */}
           <div className="cat__section">
             <p className="cat__section-heading">
               {themeMode === "light" ? (
@@ -779,7 +928,7 @@ export default function CategoryMain() {
           </div>
         </div>
 
-        {/* SAĞ PANEL — Rəng Paleti */}
+        {/* ── SAĞ PANEL: Rəng Paleti ─────────────────────────────── */}
         <div className="cat__panel cat__panel--stretch">
           <div className="cat__panel-title">
             <FiDroplet /> Rəng Paleti
@@ -860,7 +1009,7 @@ export default function CategoryMain() {
         </div>
       </div>
 
-      {/* DELETE MODAL */}
+      {/* ══ DELETE MODAL ══════════════════════════════════════════ */}
       {deleteId && (
         <div className="cat__modal-backdrop" onClick={() => setDeleteId(null)}>
           <div className="cat__modal" onClick={(e) => e.stopPropagation()}>
