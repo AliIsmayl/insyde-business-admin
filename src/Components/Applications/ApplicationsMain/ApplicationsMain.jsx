@@ -1,158 +1,270 @@
 import React, { useState } from "react";
-import { FiSend, FiChevronDown, FiBell, FiMessageSquare } from "react-icons/fi";
+import {
+  FiSend,
+  FiChevronDown,
+  FiBell,
+  FiMessageSquare,
+  FiBriefcase,
+  FiCheck,
+  FiX,
+  FiClock,
+  FiAlertCircle,
+  FiUser,
+  FiMail,
+  FiPhone,
+  FiFileText,
+  FiUsers,
+} from "react-icons/fi";
 import "./ApplicationsMain.scss";
 
+/* ─── MOCK DATA ─────────────────────────────────────────── */
+
+/* Tab 1 — İstifadəçi müraciətləri */
+const previousApplications = [
+  {
+    id: 1,
+    title: "assasa",
+    status: "Açıq",
+    date: "06-03-2026",
+    content: "Salam, bu bir sınaq mesajıdır.",
+    reply: "",
+  },
+  {
+    id: 2,
+    title: "Sistem xətası barədə",
+    status: "Cavablandı",
+    date: "05-03-2026",
+    content: "Dünən giriş edərkən xəta ilə qarşılaşdım.",
+    reply: "Müraciətiniz üçün təşəkkürlər. Xəta aradan qaldırıldı.",
+  },
+];
+
+/* Tab 2 — Admin mesajları */
+const initialAdminMessages = [
+  {
+    id: 1,
+    title: "Sistem yeniləməsi haqqında",
+    date: "07-03-2026",
+    content:
+      "Hörmətli istifadəçi, sistemimiz 10 mart 2026 tarixində texniki yeniləmə keçirəcək. Bu müddətdə qısa fasilə ola bilər.",
+    isRead: false,
+    userReply: "",
+  },
+  {
+    id: 2,
+    title: "Premium paketiniz yeniləndi",
+    date: "04-03-2026",
+    content:
+      "Paketiniz uğurla yeniləndi. Yeni funksiyalardan istifadə edə bilərsiniz.",
+    isRead: true,
+    userReply: "Təşəkkürlər, yeni funksiyalar çox faydalıdır!",
+  },
+];
+
+/* Tab 3 — Biznes admininin gördüyü işçi qoşulma sorğuları */
+const initialWorkerRequests = [
+  {
+    id: 1,
+    name: "Elçin Məmmədov",
+    email: "elcin@example.com",
+    phone: "+994 50 123 45 67",
+    position: "Frontend Developer",
+    note: "PM Systems-in inkişaf departamentində çalışıram. Hesabımı şirkətimizə bağlamaq istəyirəm.",
+    date: "08-03-2026",
+    status: "pending", // pending | approved | rejected
+    adminNote: "",
+  },
+  {
+    id: 2,
+    name: "Nigar Həsənova",
+    email: "nigar@pmsystems.az",
+    phone: "+994 55 987 65 43",
+    position: "UX Designer",
+    note: "Dizayn komandasındayam, korporativ profilimi aktivləşdirmək istəyirəm.",
+    date: "07-03-2026",
+    status: "approved",
+    adminNote: "Xoş gəldiniz! Hesabınız şirkətimizə uğurla bağlandı.",
+  },
+  {
+    id: 3,
+    name: "Tural Əliyev",
+    email: "tural@gmail.com",
+    phone: "+994 70 456 78 90",
+    position: "Mühasib",
+    note: "",
+    date: "06-03-2026",
+    status: "rejected",
+    adminNote:
+      "Sistem üzrə mühasib vəzifəsi mövcud deyil. Zəhmət olmasa HR ilə əlaqə saxlayın.",
+  },
+];
+
+const STATUS = {
+  pending: { label: "Gözləyir", color: "orange", Icon: FiClock },
+  approved: { label: "Qəbul edildi", color: "green", Icon: FiCheck },
+  rejected: { label: "Rədd edildi", color: "red", Icon: FiX },
+};
+
+/* ─── COMPONENT ─────────────────────────────────────────── */
 function ApplicationsMain() {
+  const [activeTab, setActiveTab] = useState("applications");
+  const [accordion, setAccordion] = useState(null);
+
+  /* Tab 1 */
   const [formData, setFormData] = useState({
     type: "Təklif",
     title: "",
     message: "",
   });
-
-  const [activeAccordion, setActiveAccordion] = useState(null);
-  const [activeTab, setActiveTab] = useState("applications"); // "applications" | "admin"
-  const [replyText, setReplyText] = useState({});
-  const [openReplyBox, setOpenReplyBox] = useState(null);
-
-  const previousApplications = [
-    {
-      id: 1,
-      title: "assasa",
-      status: "Açıq",
-      date: "06-03-2026",
-      content: "Salam, bu bir sınaq mesajıdır.",
-      reply: "",
-    },
-    {
-      id: 2,
-      title: "Sistem xətası barədə",
-      status: "Cavablandı",
-      date: "05-03-2026",
-      content: "Dünən giriş edərkən xəta ilə qarşılaşdım.",
-      reply: "Müraciətiniz üçün təşəkkürlər. Xəta aradan qaldırıldı.",
-    },
-  ];
-
-  // Superadmin tərəfindən gələn mesajlar
-  const [adminMessages, setAdminMessages] = useState([
-    {
-      id: 1,
-      title: "Sistem yeniləməsi haqqında",
-      date: "07-03-2026",
-      content:
-        "Hörmətli istifadəçi, sistemimiz 10 mart 2026 tarixində texniki yeniləmə keçirəcək. Bu müddətdə qısa fasilə ola bilər.",
-      isRead: false,
-      userReply: "",
-    },
-    {
-      id: 2,
-      title: "Premium paketiniz yeniləndi",
-      date: "04-03-2026",
-      content:
-        "Paketiniz uğurla yeniləndi. Yeni funksiyalardan istifadə edə bilərsiniz. Hər hansı sualınız olarsa bizimlə əlaqə saxlayın.",
-      isRead: true,
-      userReply: "Təşəkkürlər, yeni funksiyalar çox faydalıdır!",
-    },
-  ]);
-
-  const unreadCount = adminMessages.filter((m) => !m.isRead).length;
-
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Göndərilən data:", formData);
   };
 
-  const toggleAccordion = (index) => {
-    setActiveAccordion(activeAccordion === index ? null : index);
-  };
+  /* Tab 2 */
+  const [adminMsgs, setAdminMsgs] = useState(initialAdminMessages);
+  const [replyText, setReplyText] = useState({});
+  const [openReply, setOpenReply] = useState(null);
+  const unreadCount = adminMsgs.filter((m) => !m.isRead).length;
 
-  const handleAdminMsgOpen = (id) => {
-    // Açılanda oxunmuş kimi işarələ
-    setAdminMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, isRead: true } : m)),
+  const openAdminMsg = (id) => {
+    setAdminMsgs((p) =>
+      p.map((m) => (m.id === id ? { ...m, isRead: true } : m)),
     );
-    setActiveAccordion(activeAccordion === id ? null : id);
+    toggle("adm_" + id);
   };
-
-  const handleReplyChange = (id, value) => {
-    setReplyText((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const handleReplySend = (id) => {
-    const text = replyText[id]?.trim();
-    if (!text) return;
-    setAdminMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, userReply: text } : m)),
+  const sendReply = (id) => {
+    const txt = replyText[id]?.trim();
+    if (!txt) return;
+    setAdminMsgs((p) =>
+      p.map((m) => (m.id === id ? { ...m, userReply: txt } : m)),
     );
-    setReplyText((prev) => ({ ...prev, [id]: "" }));
-    setOpenReplyBox(null);
+    setReplyText((p) => ({ ...p, [id]: "" }));
+    setOpenReply(null);
   };
 
+  /* Tab 3 */
+  const [workers, setWorkers] = useState(initialWorkerRequests);
+  const [rejectModal, setRejectModal] = useState(null); // id | null
+  const [rejectNote, setRejectNote] = useState("");
+  const pendingCount = workers.filter((w) => w.status === "pending").length;
+
+  const approveWorker = (id) => {
+    setWorkers((p) =>
+      p.map((w) =>
+        w.id === id
+          ? {
+              ...w,
+              status: "approved",
+              adminNote: "Xoş gəldiniz! Hesabınız şirkətimizə uğurla bağlandı.",
+            }
+          : w,
+      ),
+    );
+  };
+  const openRejectModal = (id) => {
+    setRejectModal(id);
+    setRejectNote("");
+  };
+  const confirmReject = () => {
+    if (!rejectNote.trim()) return;
+    setWorkers((p) =>
+      p.map((w) =>
+        w.id === rejectModal
+          ? { ...w, status: "rejected", adminNote: rejectNote.trim() }
+          : w,
+      ),
+    );
+    setRejectModal(null);
+    setRejectNote("");
+  };
+
+  /* accordion helper */
+  const toggle = (key) => setAccordion((p) => (p === key ? null : key));
+  const isOpen = (key) => accordion === key;
+
+  /* ── RENDER ── */
   return (
-    <div className="applications-main-modern">
-      <div className="top-header">
-        <div>
-          <h2 className="page-title">Müraciətlər</h2>
-          <p className="page-subtitle">
-            Şikayət və təkliflərinizi bizə çatdırın
-          </p>
-        </div>
+    <div className="apm">
+      {/* HEADER */}
+      <div className="apm__header">
+        <h2 className="apm__title">Müraciətlər</h2>
+        <p className="apm__subtitle">
+          Şikayət, təklif və işçi qoşulma sorğularını idarə edin
+        </p>
       </div>
 
       {/* TABS */}
-      <div className="main-tabs">
-        <button
-          className={`main-tab ${activeTab === "applications" ? "active" : ""}`}
-          onClick={() => setActiveTab("applications")}
-        >
-          <FiMessageSquare /> Müraciətlər
-        </button>
-        <button
-          className={`main-tab ${activeTab === "admin" ? "active" : ""}`}
-          onClick={() => setActiveTab("admin")}
-        >
-          <FiBell />
-          Admin Mesajları
-          {unreadCount > 0 && (
-            <span className="unread-badge">{unreadCount}</span>
-          )}
-        </button>
+      <div className="apm__tabs">
+        {[
+          {
+            key: "applications",
+            icon: <FiMessageSquare />,
+            label: "Müraciətlər",
+          },
+          {
+            key: "workers",
+            icon: <FiUsers />,
+            label: "İşçi Sorğuları",
+            badge: pendingCount,
+            badgeColor: "orange",
+          },
+          {
+            key: "admin",
+            icon: <FiBell />,
+            label: "Admin Mesajları",
+            badge: unreadCount,
+            badgeColor: "red",
+          },
+        ].map(({ key, icon, label, badge, badgeColor }) => (
+          <button
+            key={key}
+            className={`apm__tab ${activeTab === key ? "apm__tab--active" : ""}`}
+            onClick={() => setActiveTab(key)}
+          >
+            {icon}
+            <span>{label}</span>
+            {badge > 0 && (
+              <span className={`apm__badge apm__badge--${badgeColor}`}>
+                {badge}
+              </span>
+            )}
+          </button>
+        ))}
+        <span className={`apm__slider apm__slider--${activeTab}`} />
       </div>
 
-      {/* ===== MÜRACİƏTLƏR TAB ===== */}
+      {/* ════════════════════════════════
+          TAB 1 — MÜRACİƏTLƏR
+      ════════════════════════════════ */}
       {activeTab === "applications" && (
-        <div className="applications-grid">
-          {/* SOL: YENİ MÜRACİƏT */}
-          <div className="modern-card form-section">
-            <div className="card-header">
+        <div className="apm__grid">
+          {/* Yeni müraciət */}
+          <div className="apm__card">
+            <div className="apm__card-head">
               <h3>Şikayət və Təklif</h3>
               <p>Probleminiz və ya ideyanız varsa bizə yazın.</p>
             </div>
-
-            <form onSubmit={handleSubmit} className="application-form">
-              <div className="form-row">
-                <div className="input-group">
+            <form className="apm__form" onSubmit={handleSubmit}>
+              <div className="apm__row">
+                <div className="apm__field">
                   <label>Müraciət növü</label>
-                  <div className="select-wrapper">
+                  <div className="apm__sel-wrap">
                     <select
                       name="type"
                       value={formData.type}
                       onChange={handleChange}
                     >
-                      <option value="Təklif">Təklif</option>
-                      <option value="Şikayət">Şikayət</option>
-                      <option value="Sual">Sual</option>
-                      <option value="Digər">Digər</option>
+                      <option>Təklif</option>
+                      <option>Şikayət</option>
+                      <option>Sual</option>
+                      <option>Digər</option>
                     </select>
-                    <FiChevronDown className="select-icon" />
+                    <FiChevronDown className="apm__sel-icon" />
                   </div>
                 </div>
-
-                <div className="input-group flex-2">
+                <div className="apm__field apm__field--grow">
                   <label>Başlıq (istəyə görə)</label>
                   <input
                     type="text"
@@ -163,160 +275,352 @@ function ApplicationsMain() {
                   />
                 </div>
               </div>
-
-              <div className="input-group full-width">
+              <div className="apm__field">
                 <textarea
                   name="message"
-                  rows="6"
+                  rows="5"
                   placeholder="Mesajınızı bura daxil edin..."
                   value={formData.message}
                   onChange={handleChange}
                   required
-                ></textarea>
+                />
               </div>
-
-              <div className="form-actions">
-                <button type="submit" className="submit-btn">
-                  <FiSend className="btn-icon" /> Göndər
+              <div className="apm__actions">
+                <button type="submit" className="apm__btn-primary">
+                  <FiSend /> Göndər
                 </button>
               </div>
             </form>
           </div>
 
-          {/* SAĞ: ƏVVƏLKİ MÜRACİƏTLƏR */}
-          <div className="modern-card history-section">
-            <div className="card-header">
+          {/* Əvvəlki müraciətlər */}
+          <div className="apm__card">
+            <div className="apm__card-head">
               <h3>Əvvəlki Müraciətlər</h3>
               <p>Göndərdiyiniz müraciətlər və cavablar.</p>
             </div>
-
-            <div className="accordion-list">
-              {previousApplications.map((app, index) => (
-                <div
-                  key={app.id}
-                  className={`accordion-item ${activeAccordion === index ? "active" : ""}`}
-                >
+            <div className="apm__acc-list">
+              {previousApplications.map((app, i) => {
+                const k = "app_" + i;
+                return (
                   <div
-                    className="accordion-header"
-                    onClick={() => toggleAccordion(index)}
+                    key={app.id}
+                    className={`apm__acc ${isOpen(k) ? "apm__acc--open" : ""}`}
                   >
-                    <div className="header-left">
-                      <span
-                        className={`status-dot ${app.status === "Cavablandı" ? "green" : "orange"}`}
-                      ></span>
-                      <span className="app-title">{app.title}</span>
-                    </div>
-                    <div className="header-right">
-                      <FiChevronDown className="accordion-icon" />
-                    </div>
-                  </div>
-
-                  <div className="accordion-body">
-                    <div className="app-content">
-                      <strong>Sizin mesajınız:</strong>
-                      <p>{app.content}</p>
-                      <span className="app-date">{app.date}</span>
-                    </div>
-                    {app.reply && (
-                      <div className="app-reply">
-                        <strong>Cavab:</strong>
-                        <p>{app.reply}</p>
+                    <div className="apm__acc-head" onClick={() => toggle(k)}>
+                      <div className="apm__acc-left">
+                        <span
+                          className={`apm__dot apm__dot--${app.status === "Cavablandı" ? "green" : "orange"}`}
+                        />
+                        <span className="apm__acc-title">{app.title}</span>
                       </div>
-                    )}
+                      <FiChevronDown className="apm__chevron" />
+                    </div>
+                    <div className="apm__acc-body">
+                      <div className="apm__msg-block">
+                        <span className="apm__label">Sizin mesajınız</span>
+                        <p>{app.content}</p>
+                        <span className="apm__date">{app.date}</span>
+                      </div>
+                      {app.reply && (
+                        <div className="apm__msg-block apm__msg-block--green">
+                          <span className="apm__label">Cavab</span>
+                          <p>{app.reply}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
       )}
 
-      {/* ===== ADMİN MESAJLARI TAB ===== */}
-      {activeTab === "admin" && (
-        <div className="admin-messages-section">
-          <div className="modern-card">
-            <div className="card-header">
-              <h3>Admin Mesajları</h3>
-              <p>Superadmin tərəfindən göndərilən bildiriş və mesajlar.</p>
+      {/* ════════════════════════════════
+          TAB 2 — İŞÇİ QOŞULMA SORĞULARI
+      ════════════════════════════════ */}
+      {activeTab === "workers" && (
+        <div className="apm__single">
+          <div className="apm__card">
+            <div className="apm__card-head">
+              <div className="apm__card-icon">
+                <FiUsers />
+              </div>
+              <div>
+                <h3>İşçi Qoşulma Sorğuları</h3>
+                <p>
+                  Aşağıdakı istifadəçilər sizin şirkətinizdə çalışdıqlarını
+                  bildirərək hesablarını biznes profilinizə bağlamağı tələb
+                  edirlər. Hər sorğunu nəzərdən keçirib qəbul və ya rədd edə
+                  bilərsiniz.
+                </p>
+              </div>
             </div>
 
-            <div className="accordion-list">
-              {adminMessages.map((msg) => (
+            {/* Summary bar */}
+            <div className="apm__summary">
+              {[
+                {
+                  label: "Gözləyir",
+                  val: workers.filter((w) => w.status === "pending").length,
+                  color: "orange",
+                },
+                {
+                  label: "Qəbul edildi",
+                  val: workers.filter((w) => w.status === "approved").length,
+                  color: "green",
+                },
+                {
+                  label: "Rədd edildi",
+                  val: workers.filter((w) => w.status === "rejected").length,
+                  color: "red",
+                },
+                { label: "Cəmi", val: workers.length, color: "muted" },
+              ].map(({ label, val, color }) => (
                 <div
-                  key={msg.id}
-                  className={`accordion-item admin-item ${activeAccordion === msg.id ? "active" : ""} ${!msg.isRead ? "unread" : ""}`}
+                  key={label}
+                  className={`apm__sum-item apm__sum-item--${color}`}
                 >
-                  <div
-                    className="accordion-header"
-                    onClick={() => handleAdminMsgOpen(msg.id)}
-                  >
-                    <div className="header-left">
-                      {!msg.isRead && <span className="unread-dot"></span>}
-                      <span className="app-title">{msg.title}</span>
-                    </div>
-                    <div className="header-right">
-                      <span className="msg-date">{msg.date}</span>
-                      <FiChevronDown className="accordion-icon" />
-                    </div>
-                  </div>
-
-                  <div className="accordion-body">
-                    {/* Admin mesajı */}
-                    <div className="admin-msg-bubble">
-                      <div className="bubble-label">Admin</div>
-                      <p>{msg.content}</p>
-                      <span className="app-date">{msg.date}</span>
-                    </div>
-
-                    {/* İstifadəçinin əvvəlki cavabı */}
-                    {msg.userReply && (
-                      <div className="user-reply-bubble">
-                        <div className="bubble-label">Siz</div>
-                        <p>{msg.userReply}</p>
-                      </div>
-                    )}
-
-                    {/* Cavab yazma hissəsi */}
-                    {openReplyBox === msg.id ? (
-                      <div className="reply-input-area">
-                        <textarea
-                          rows="3"
-                          placeholder="Cavabınızı yazın..."
-                          value={replyText[msg.id] || ""}
-                          onChange={(e) =>
-                            handleReplyChange(msg.id, e.target.value)
-                          }
-                        />
-                        <div className="reply-actions">
-                          <button
-                            className="cancel-btn"
-                            onClick={() => setOpenReplyBox(null)}
-                          >
-                            Ləğv et
-                          </button>
-                          <button
-                            className="send-reply-btn"
-                            onClick={() => handleReplySend(msg.id)}
-                          >
-                            <FiSend /> Göndər
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        className="open-reply-btn"
-                        onClick={() => setOpenReplyBox(msg.id)}
-                      >
-                        <FiMessageSquare />
-                        {msg.userReply ? "Yenidən cavabla" : "Cavabla"}
-                      </button>
-                    )}
-                  </div>
+                  <span className="apm__sum-val">{val}</span>
+                  <span className="apm__sum-label">{label}</span>
                 </div>
               ))}
             </div>
+
+            <div className="apm__acc-list">
+              {workers.map((w) => {
+                const k = "wrk_" + w.id;
+                const st = STATUS[w.status];
+                return (
+                  <div
+                    key={w.id}
+                    className={`apm__acc apm__acc--worker apm__acc--${w.status} ${isOpen(k) ? "apm__acc--open" : ""}`}
+                  >
+                    {/* HEAD */}
+                    <div className="apm__acc-head" onClick={() => toggle(k)}>
+                      <div className="apm__acc-left">
+                        <span className={`apm__chip apm__chip--${st.color}`}>
+                          <st.Icon /> {st.label}
+                        </span>
+                        <div className="apm__worker-info">
+                          <span className="apm__acc-title">{w.name}</span>
+                          <span className="apm__acc-sub">{w.position}</span>
+                        </div>
+                      </div>
+                      <div className="apm__acc-right">
+                        <span className="apm__date">{w.date}</span>
+                        <FiChevronDown className="apm__chevron" />
+                      </div>
+                    </div>
+
+                    {/* BODY */}
+                    <div className="apm__acc-body">
+                      {/* İşçi məlumatları */}
+                      <div className="apm__worker-details">
+                        <div className="apm__detail-row">
+                          <FiUser />
+                          <div>
+                            <span className="apm__label">Ad Soyad</span>
+                            <span className="apm__detail-val">{w.name}</span>
+                          </div>
+                        </div>
+                        <div className="apm__detail-row">
+                          <FiMail />
+                          <div>
+                            <span className="apm__label">E-mail</span>
+                            <span className="apm__detail-val">{w.email}</span>
+                          </div>
+                        </div>
+                        <div className="apm__detail-row">
+                          <FiPhone />
+                          <div>
+                            <span className="apm__label">Telefon</span>
+                            <span className="apm__detail-val">{w.phone}</span>
+                          </div>
+                        </div>
+                        <div className="apm__detail-row">
+                          <FiBriefcase />
+                          <div>
+                            <span className="apm__label">Vəzifə</span>
+                            <span className="apm__detail-val">
+                              {w.position}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Admin cavabı — approved/rejected */}
+                      {w.status !== "pending" && w.adminNote && (
+                        <div
+                          className={`apm__admin-response apm__admin-response--${w.status}`}
+                        >
+                          <span className="apm__label">
+                            {w.status === "approved"
+                              ? "Qəbul qeydi"
+                              : "Rədd səbəbi"}
+                          </span>
+                          <p>{w.adminNote}</p>
+                        </div>
+                      )}
+
+                      {/* Əməliyyat düymələri — yalnız pending */}
+                      {w.status === "pending" && (
+                        <div className="apm__worker-actions">
+                          <button
+                            className="apm__btn-approve"
+                            onClick={() => approveWorker(w.id)}
+                          >
+                            <FiCheck /> Qəbul et
+                          </button>
+                          <button
+                            className="apm__btn-reject"
+                            onClick={() => openRejectModal(w.id)}
+                          >
+                            <FiX /> Rədd et
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
+      )}
+
+      {/* ════════════════════════════════
+          TAB 3 — ADMİN MESAJLARI
+      ════════════════════════════════ */}
+      {activeTab === "admin" && (
+        <div className="apm__single">
+          <div className="apm__card">
+            <div className="apm__card-head">
+              <h3>Admin Mesajları</h3>
+              <p>Superadmin tərəfindən göndərilən bildiriş və mesajlar.</p>
+            </div>
+            <div className="apm__acc-list">
+              {adminMsgs.map((msg) => {
+                const k = "adm_" + msg.id;
+                return (
+                  <div
+                    key={msg.id}
+                    className={`apm__acc ${isOpen(k) ? "apm__acc--open" : ""} ${!msg.isRead ? "apm__acc--unread" : ""}`}
+                  >
+                    <div
+                      className="apm__acc-head"
+                      onClick={() => openAdminMsg(msg.id)}
+                    >
+                      <div className="apm__acc-left">
+                        {!msg.isRead && (
+                          <span className="apm__dot apm__dot--red apm__dot--pulse" />
+                        )}
+                        <span className="apm__acc-title">{msg.title}</span>
+                      </div>
+                      <div className="apm__acc-right">
+                        <span className="apm__date">{msg.date}</span>
+                        <FiChevronDown className="apm__chevron" />
+                      </div>
+                    </div>
+                    <div className="apm__acc-body">
+                      <div className="apm__bubble apm__bubble--admin">
+                        <span className="apm__bubble-label">Admin</span>
+                        <p>{msg.content}</p>
+                        <span className="apm__date">{msg.date}</span>
+                      </div>
+                      {msg.userReply && (
+                        <div className="apm__bubble apm__bubble--user">
+                          <span className="apm__bubble-label">Siz</span>
+                          <p>{msg.userReply}</p>
+                        </div>
+                      )}
+                      {openReply === msg.id ? (
+                        <div className="apm__reply-area">
+                          <textarea
+                            rows="3"
+                            placeholder="Cavabınızı yazın..."
+                            value={replyText[msg.id] || ""}
+                            onChange={(e) =>
+                              setReplyText((p) => ({
+                                ...p,
+                                [msg.id]: e.target.value,
+                              }))
+                            }
+                          />
+                          <div className="apm__reply-btns">
+                            <button
+                              className="apm__btn-ghost"
+                              onClick={() => setOpenReply(null)}
+                            >
+                              Ləğv et
+                            </button>
+                            <button
+                              className="apm__btn-primary apm__btn-primary--sm"
+                              onClick={() => sendReply(msg.id)}
+                            >
+                              <FiSend /> Göndər
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          className="apm__reply-trigger"
+                          onClick={() => setOpenReply(msg.id)}
+                        >
+                          <FiMessageSquare />
+                          {msg.userReply ? "Yenidən cavabla" : "Cavabla"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ════════════════════════════════
+          RƏDD MODAL
+      ════════════════════════════════ */}
+      {rejectModal !== null && (
+        <>
+          <div className="apm__overlay" onClick={() => setRejectModal(null)} />
+          <div className="apm__modal">
+            <div className="apm__modal-icon-wrap">
+              <FiAlertCircle />
+            </div>
+            <h3 className="apm__modal-title">Sorğunu Rədd et</h3>
+            <p className="apm__modal-desc">
+              Rədd etmə səbəbini daxil edin. Bu məlumat işçiyə göndəriləcək.
+            </p>
+            <div className="apm__field">
+              <label>Rədd edilmə səbəbi</label>
+              <textarea
+                rows="4"
+                placeholder="Məs: Bu vəzifə üzrə artıq işçimiz var."
+                value={rejectNote}
+                onChange={(e) => setRejectNote(e.target.value)}
+              />
+            </div>
+            <div className="apm__modal-actions">
+              <button
+                className="apm__btn-ghost"
+                onClick={() => setRejectModal(null)}
+              >
+                Ləğv et
+              </button>
+              <button
+                className="apm__btn-reject"
+                onClick={confirmReject}
+                disabled={!rejectNote.trim()}
+              >
+                <FiX /> Rədd et
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
