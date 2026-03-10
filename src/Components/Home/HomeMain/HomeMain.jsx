@@ -207,19 +207,6 @@ function HomeMain() {
             </div>
           </div>
 
-          {/* ── ŞİRKƏT ADI ── */}
-          <div className="row-company">
-            <div className="input-group flex-1">
-              <label>Şirkət Adı</label>
-              <input
-                type="text"
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleChange}
-                placeholder="Şirkət adını daxil edin"
-              />
-            </div>
-          </div>
 
           <div className="row-stats-input">
             <div className="input-group staj-wrap">
