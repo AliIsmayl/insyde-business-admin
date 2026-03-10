@@ -12,6 +12,16 @@ import {
   FiMoreVertical,
   FiEdit2,
   FiTrash2,
+  FiSlash,
+  FiCheckCircle,
+  FiInstagram,
+  FiLinkedin,
+  FiGithub,
+  FiTwitter,
+  FiGlobe,
+  FiAlertTriangle,
+  FiX,
+  FiShield,
 } from "react-icons/fi";
 import "./AccountMain.scss";
 
@@ -27,6 +37,14 @@ const MOCK_USERS = [
     views: 0,
     profileUrl: "https://example.com/elcin",
     about: "Minimalist və müasir interfeyslər qurmağı sevirəm.",
+    blocked: false,
+    socials: {
+      instagram: "elcin.dev",
+      linkedin: "elcinmammadov",
+      github: "elcinm",
+      twitter: "",
+      website: "https://elcin.dev",
+    },
   },
   {
     id: 2,
@@ -39,6 +57,14 @@ const MOCK_USERS = [
     views: 142,
     profileUrl: "https://example.com/aynur",
     about: "İstifadəçi mərkəzli dizayn.",
+    blocked: false,
+    socials: {
+      instagram: "aynur.design",
+      linkedin: "aynurhasanova",
+      github: "",
+      twitter: "aynurux",
+      website: "",
+    },
   },
   {
     id: 3,
@@ -51,6 +77,14 @@ const MOCK_USERS = [
     views: 87,
     profileUrl: "https://example.com/tural",
     about: "Güclü API həlləri yaradıram.",
+    blocked: true,
+    socials: {
+      instagram: "",
+      linkedin: "turalaliyev",
+      github: "turalaliyev",
+      twitter: "",
+      website: "https://tural.io",
+    },
   },
   {
     id: 4,
@@ -63,6 +97,14 @@ const MOCK_USERS = [
     views: 310,
     profileUrl: "https://example.com/leyla",
     about: "Məhsulun hər mərhələsini sevərək idarə edirəm.",
+    blocked: false,
+    socials: {
+      instagram: "leyla.pm",
+      linkedin: "leylaquliyeva",
+      github: "",
+      twitter: "leylapm",
+      website: "https://leyla.pm",
+    },
   },
   {
     id: 5,
@@ -75,6 +117,14 @@ const MOCK_USERS = [
     views: 55,
     profileUrl: "https://example.com/rauf",
     about: "Cross-platform mobil tətbiqlər hazırlayıram.",
+    blocked: false,
+    socials: {
+      instagram: "",
+      linkedin: "raufismayilov",
+      github: "raufdev",
+      twitter: "",
+      website: "",
+    },
   },
   {
     id: 6,
@@ -87,6 +137,14 @@ const MOCK_USERS = [
     views: 421,
     profileUrl: "https://example.com/nigar",
     about: "Vizual hekayəçilik mənim ehtirasım.",
+    blocked: false,
+    socials: {
+      instagram: "nigar.art",
+      linkedin: "nigarbabayeva",
+      github: "",
+      twitter: "nigarart",
+      website: "https://nigar.art",
+    },
   },
   {
     id: 7,
@@ -99,6 +157,14 @@ const MOCK_USERS = [
     views: 193,
     profileUrl: "https://example.com/kamran",
     about: "İnfrastruktur avtomatlaşdırma üzrə ixtisaslaşmışam.",
+    blocked: false,
+    socials: {
+      instagram: "",
+      linkedin: "kamrannecefov",
+      github: "kamranops",
+      twitter: "kamrandevops",
+      website: "",
+    },
   },
   {
     id: 8,
@@ -111,6 +177,14 @@ const MOCK_USERS = [
     views: 76,
     profileUrl: "https://example.com/sevinc",
     about: "Məlumatlardan dərin anlayışlar çıxarıram.",
+    blocked: false,
+    socials: {
+      instagram: "sevinc.data",
+      linkedin: "sevincorucova",
+      github: "sevincdata",
+      twitter: "",
+      website: "",
+    },
   },
   {
     id: 9,
@@ -123,6 +197,14 @@ const MOCK_USERS = [
     views: 268,
     profileUrl: "https://example.com/ferid",
     about: "Tam yığın həllərlə işləyirəm.",
+    blocked: false,
+    socials: {
+      instagram: "",
+      linkedin: "feridhüseynov",
+      github: "feriddev",
+      twitter: "feridstack",
+      website: "https://ferid.dev",
+    },
   },
   {
     id: 10,
@@ -135,6 +217,14 @@ const MOCK_USERS = [
     views: 509,
     profileUrl: "https://example.com/xedice",
     about: "Marka səsini formalaşdırıram.",
+    blocked: false,
+    socials: {
+      instagram: "xedice.content",
+      linkedin: "xedicérahimova",
+      github: "",
+      twitter: "xedicecreates",
+      website: "https://xedice.co",
+    },
   },
   {
     id: 11,
@@ -147,6 +237,14 @@ const MOCK_USERS = [
     views: 34,
     profileUrl: "https://example.com/behruz",
     about: "Keyfiyyətsiz kod buraxmıram.",
+    blocked: true,
+    socials: {
+      instagram: "",
+      linkedin: "behruzasgarov",
+      github: "behruzqa",
+      twitter: "",
+      website: "",
+    },
   },
   {
     id: 12,
@@ -159,6 +257,14 @@ const MOCK_USERS = [
     views: 177,
     profileUrl: "https://example.com/meryem",
     about: "İstifadəçi davranışını dərindən öyrənirəm.",
+    blocked: false,
+    socials: {
+      instagram: "meryem.ux",
+      linkedin: "meryemsultanova",
+      github: "",
+      twitter: "meryemresearch",
+      website: "https://meryem.design",
+    },
   },
   {
     id: 13,
@@ -171,6 +277,14 @@ const MOCK_USERS = [
     views: 88,
     profileUrl: "https://example.com/elnur",
     about: "Rəqəmsal aktivləri qoruyuram.",
+    blocked: false,
+    socials: {
+      instagram: "",
+      linkedin: "elnurqasimov",
+      github: "elnursec",
+      twitter: "elnurcyber",
+      website: "",
+    },
   },
   {
     id: 14,
@@ -183,6 +297,14 @@ const MOCK_USERS = [
     views: 612,
     profileUrl: "https://example.com/zehra",
     about: "Brendlər üçün böyümə strategiyaları hazırlayıram.",
+    blocked: false,
+    socials: {
+      instagram: "zehra.marketing",
+      linkedin: "zehramuradova",
+      github: "",
+      twitter: "zehragrowth",
+      website: "https://zehra.marketing",
+    },
   },
   {
     id: 15,
@@ -195,24 +317,141 @@ const MOCK_USERS = [
     views: 145,
     profileUrl: "https://example.com/vusal",
     about: "Artırılmış reallıq təcrübələri yaradıram.",
+    blocked: false,
+    socials: {
+      instagram: "vusal.xr",
+      linkedin: "vusalkarimov",
+      github: "vusalxr",
+      twitter: "",
+      website: "https://vusal.xr",
+    },
   },
 ];
 
 const ITEMS_PER_PAGE = 10;
 
+// Social icon helper
+function SocialIcon({ type }) {
+  const icons = {
+    instagram: <FiInstagram />,
+    linkedin: <FiLinkedin />,
+    github: <FiGithub />,
+    twitter: <FiTwitter />,
+    website: <FiGlobe />,
+  };
+  return icons[type] || null;
+}
+
+function getSocialUrl(type, value) {
+  if (!value) return null;
+  const bases = {
+    instagram: "https://instagram.com/",
+    linkedin: "https://linkedin.com/in/",
+    github: "https://github.com/",
+    twitter: "https://twitter.com/",
+    website: "",
+  };
+  return type === "website" ? value : bases[type] + value;
+}
+
+// Confirm Modal
+function ConfirmModal({ user, action, onConfirm, onCancel }) {
+  const isBlock = action === "block";
+  return (
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onCancel}>
+          <FiX />
+        </button>
+        <div className={`modal-icon-wrap ${isBlock ? "warn" : "success"}`}>
+          {isBlock ? <FiAlertTriangle /> : <FiCheckCircle />}
+        </div>
+        <h3 className="modal-title">
+          {isBlock ? "İstifadəçini blokla" : "Bloku aç"}
+        </h3>
+        <p className="modal-desc">
+          <strong>{user.name}</strong> adlı istifadəçini{" "}
+          {isBlock
+            ? "bloklamaq istədiyinizə əminsiniz? Bu istifadəçi sistemə daxil ola bilməyəcək."
+            : "blokdan çıxarmaq istədiyinizə əminsiniz?"}
+        </p>
+        <div className="modal-actions">
+          <button className="modal-cancel-btn" onClick={onCancel}>
+            Ləğv et
+          </button>
+          <button
+            className={`modal-confirm-btn ${isBlock ? "block" : "unblock"}`}
+            onClick={onConfirm}
+          >
+            {isBlock ? (
+              <>
+                <FiSlash /> Blokla
+              </>
+            ) : (
+              <>
+                <FiCheckCircle /> Bloku aç
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Delete Confirm Modal
+function DeleteModal({ user, onConfirm, onCancel }) {
+  return (
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onCancel}>
+          <FiX />
+        </button>
+        <div className="modal-icon-wrap danger">
+          <FiTrash2 />
+        </div>
+        <h3 className="modal-title">İstifadəçini sil</h3>
+        <p className="modal-desc">
+          <strong>{user.name}</strong> adlı istifadəçini silmək istədiyinizə
+          əminsiniz? Bu əməliyyat geri alına bilməz.
+        </p>
+        <div className="modal-actions">
+          <button className="modal-cancel-btn" onClick={onCancel}>
+            Ləğv et
+          </button>
+          <button className="modal-confirm-btn block" onClick={onConfirm}>
+            <FiTrash2 /> Sil
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AccountMain() {
+  const [users, setUsers] = useState(MOCK_USERS);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [expandedRow, setExpandedRow] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
+  const [filterBlocked, setFilterBlocked] = useState("all"); // "all" | "active" | "blocked"
+  const [confirmModal, setConfirmModal] = useState(null); // { user, action: "block"|"unblock" }
+  const [deleteModal, setDeleteModal] = useState(null); // user
 
-  const filtered = MOCK_USERS.filter(
-    (u) =>
+  const filtered = users.filter((u) => {
+    const matchSearch =
       u.name.toLowerCase().includes(search.toLowerCase()) ||
       u.email.toLowerCase().includes(search.toLowerCase()) ||
       u.code.toLowerCase().includes(search.toLowerCase()) ||
-      u.profession.toLowerCase().includes(search.toLowerCase()),
-  );
+      u.profession.toLowerCase().includes(search.toLowerCase());
+    const matchFilter =
+      filterBlocked === "all"
+        ? true
+        : filterBlocked === "blocked"
+          ? u.blocked
+          : !u.blocked;
+    return matchSearch && matchFilter;
+  });
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice(
@@ -235,8 +474,56 @@ function AccountMain() {
     setOpenMenu(openMenu === id ? null : id);
   };
 
+  const openBlockConfirm = (e, user) => {
+    e.stopPropagation();
+    setOpenMenu(null);
+    setConfirmModal({ user, action: user.blocked ? "unblock" : "block" });
+  };
+
+  const handleBlockConfirm = () => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === confirmModal.user.id ? { ...u, blocked: !u.blocked } : u,
+      ),
+    );
+    setConfirmModal(null);
+  };
+
+  const openDeleteConfirm = (e, user) => {
+    e.stopPropagation();
+    setOpenMenu(null);
+    setDeleteModal(user);
+  };
+
+  const handleDeleteConfirm = () => {
+    setUsers((prev) => prev.filter((u) => u.id !== deleteModal.id));
+    setDeleteModal(null);
+    setExpandedRow(null);
+  };
+
+  const blockedCount = users.filter((u) => u.blocked).length;
+  const activeCount = users.length - blockedCount;
+
   return (
     <div className="account-main" onClick={() => setOpenMenu(null)}>
+      {/* MODALS */}
+      {confirmModal && (
+        <ConfirmModal
+          user={confirmModal.user}
+          action={confirmModal.action}
+          onConfirm={handleBlockConfirm}
+          onCancel={() => setConfirmModal(null)}
+        />
+      )}
+      {deleteModal && (
+        <DeleteModal
+          user={deleteModal}
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setDeleteModal(null)}
+        />
+      )}
+
+      {/* HEADER */}
       <div className="top-header">
         <div>
           <h2 className="page-title">İstifadəçilər</h2>
@@ -254,13 +541,42 @@ function AccountMain() {
               onChange={handleSearch}
             />
           </div>
-          <div className="user-count-badge">
-            <FiUser />
-            <span>{filtered.length} istifadəçi</span>
+          <div className="stats-badges">
+            <button
+              className={`stat-badge ${filterBlocked === "all" ? "active" : ""}`}
+              onClick={() => {
+                setFilterBlocked("all");
+                setPage(1);
+              }}
+            >
+              <FiUser />
+              <span>{users.length} Hamısı</span>
+            </button>
+            <button
+              className={`stat-badge success ${filterBlocked === "active" ? "active" : ""}`}
+              onClick={() => {
+                setFilterBlocked("active");
+                setPage(1);
+              }}
+            >
+              <FiCheckCircle />
+              <span>{activeCount} Aktiv</span>
+            </button>
+            <button
+              className={`stat-badge danger ${filterBlocked === "blocked" ? "active" : ""}`}
+              onClick={() => {
+                setFilterBlocked("blocked");
+                setPage(1);
+              }}
+            >
+              <FiShield />
+              <span>{blockedCount} Blok</span>
+            </button>
           </div>
         </div>
       </div>
 
+      {/* TABLE */}
       <div className="table-card">
         <div className="table-wrapper">
           <table className="accounts-table">
@@ -279,10 +595,11 @@ function AccountMain() {
                   <FiBriefcase className="th-icon" /> Peşə
                 </th>
                 <th>Bacarıqlar</th>
-                <th>Staj</th>
                 <th>
                   <FiEye className="th-icon" /> Baxışlar
                 </th>
+                <th>Sosial</th>
+                <th>Status</th>
                 <th>
                   <FiExternalLink className="th-icon" /> Link
                 </th>
@@ -292,7 +609,7 @@ function AccountMain() {
             <tbody>
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="empty-row">
+                  <td colSpan={11} className="empty-row">
                     <FiSearch className="empty-icon" />
                     <span>Nəticə tapılmadı</span>
                   </td>
@@ -301,7 +618,7 @@ function AccountMain() {
                 paginated.map((user) => (
                   <React.Fragment key={user.id}>
                     <tr
-                      className={`data-row ${expandedRow === user.id ? "expanded" : ""}`}
+                      className={`data-row ${expandedRow === user.id ? "expanded" : ""} ${user.blocked ? "is-blocked" : ""}`}
                       onClick={() => toggleRow(user.id)}
                     >
                       <td>
@@ -309,7 +626,11 @@ function AccountMain() {
                       </td>
                       <td>
                         <div className="user-name-cell">
-                          <div className="avatar">{user.name.charAt(0)}</div>
+                          <div
+                            className={`avatar ${user.blocked ? "blocked-avatar" : ""}`}
+                          >
+                            {user.name.charAt(0)}
+                          </div>
                           <span>{user.name}</span>
                         </div>
                       </td>
@@ -335,16 +656,49 @@ function AccountMain() {
                           )}
                         </div>
                       </td>
-                      <td>
-                        <span className="experience-text">
-                          {user.experience}
-                        </span>
-                      </td>
+                   
                       <td>
                         <span
                           className={`views-badge ${user.views > 200 ? "high" : user.views > 50 ? "mid" : "low"}`}
                         >
                           {user.views}
+                        </span>
+                      </td>
+                      {/* SOCIAL ICONS */}
+                      <td onClick={(e) => e.stopPropagation()}>
+                        <div className="socials-cell">
+                          {Object.entries(user.socials).map(([type, val]) => {
+                            if (!val) return null;
+                            const url = getSocialUrl(type, val);
+                            return (
+                              <a
+                                key={type}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`social-icon-btn ${type}`}
+                                title={`@${val}`}
+                              >
+                                <SocialIcon type={type} />
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </td>
+                      {/* STATUS BADGE */}
+                      <td>
+                        <span
+                          className={`status-badge ${user.blocked ? "blocked" : "active"}`}
+                        >
+                          {user.blocked ? (
+                            <>
+                              <FiSlash /> Blok
+                            </>
+                          ) : (
+                            <>
+                              <FiCheckCircle /> Aktiv
+                            </>
+                          )}
                         </span>
                       </td>
                       <td onClick={(e) => e.stopPropagation()}>
@@ -371,7 +725,25 @@ function AccountMain() {
                               <button className="dropdown-item edit">
                                 <FiEdit2 /> Düzəliş et
                               </button>
-                              <button className="dropdown-item delete">
+                              <button
+                                className={`dropdown-item ${user.blocked ? "unblock" : "block-item"}`}
+                                onClick={(e) => openBlockConfirm(e, user)}
+                              >
+                                {user.blocked ? (
+                                  <>
+                                    <FiCheckCircle /> Bloku aç
+                                  </>
+                                ) : (
+                                  <>
+                                    <FiSlash /> Blokla
+                                  </>
+                                )}
+                              </button>
+                              <div className="dropdown-divider" />
+                              <button
+                                className="dropdown-item delete"
+                                onClick={(e) => openDeleteConfirm(e, user)}
+                              >
                                 <FiTrash2 /> Sil
                               </button>
                             </div>
@@ -382,7 +754,7 @@ function AccountMain() {
 
                     {expandedRow === user.id && (
                       <tr className="expand-row">
-                        <td colSpan={9}>
+                        <td colSpan={11}>
                           <div className="expand-content">
                             <div className="expand-block">
                               <span className="expand-label">Haqqında</span>
@@ -400,6 +772,42 @@ function AccountMain() {
                                 ))}
                               </div>
                             </div>
+                            {/* EXPANDED SOCIALS */}
+                            <div className="expand-block">
+                              <span className="expand-label">
+                                Sosial şəbəkələr
+                              </span>
+                              <div className="expand-socials">
+                                {Object.entries(user.socials).map(
+                                  ([type, val]) => {
+                                    if (!val) return null;
+                                    const url = getSocialUrl(type, val);
+                                    const labels = {
+                                      instagram: "Instagram",
+                                      linkedin: "LinkedIn",
+                                      github: "GitHub",
+                                      twitter: "Twitter/X",
+                                      website: "Vebsayt",
+                                    };
+                                    return (
+                                      <a
+                                        key={type}
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`expand-social-link ${type}`}
+                                      >
+                                        <SocialIcon type={type} />
+                                        <span>
+                                          {labels[type]}:{" "}
+                                          {type === "website" ? val : `@${val}`}
+                                        </span>
+                                      </a>
+                                    );
+                                  },
+                                )}
+                              </div>
+                            </div>
                             <div className="expand-block">
                               <span className="expand-label">Profil linki</span>
                               <a
@@ -411,6 +819,26 @@ function AccountMain() {
                                 <FiExternalLink />
                                 <span>{user.profileUrl}</span>
                               </a>
+                            </div>
+                            {/* BLOCK QUICK ACTION */}
+                            <div className="expand-block expand-actions">
+                              <span className="expand-label">
+                                Tez əməliyyat
+                              </span>
+                              <button
+                                className={`expand-block-btn ${user.blocked ? "unblock" : "block"}`}
+                                onClick={(e) => openBlockConfirm(e, user)}
+                              >
+                                {user.blocked ? (
+                                  <>
+                                    <FiCheckCircle /> Bloku aç
+                                  </>
+                                ) : (
+                                  <>
+                                    <FiSlash /> Blokla
+                                  </>
+                                )}
+                              </button>
                             </div>
                           </div>
                         </td>
@@ -438,7 +866,6 @@ function AccountMain() {
               >
                 <FiChevronLeft />
               </button>
-
               {Array.from({ length: totalPages }, (_, i) => i + 1)
                 .filter(
                   (p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1,
@@ -463,7 +890,6 @@ function AccountMain() {
                     </button>
                   ),
                 )}
-
               <button
                 className="page-btn"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}

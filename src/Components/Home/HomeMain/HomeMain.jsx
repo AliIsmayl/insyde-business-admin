@@ -7,15 +7,20 @@ import {
   FaWhatsapp,
   FaGlobe,
   FaCheckCircle,
-  FaSun,
-  FaMoon,
-  FaExternalLinkAlt,
   FaPhone,
   FaEnvelope,
   FaCommentDots,
   FaCamera,
   FaTrashAlt,
   FaPlus,
+  FaTelegram,
+  FaYoutube,
+  FaTiktok,
+  FaTwitter,
+  FaShareAlt,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 import "./HomeMain.scss";
 
@@ -25,12 +30,30 @@ const platformIconMap = {
   LinkedIn: <FaLinkedin />,
   WhatsApp: <FaWhatsapp />,
   "Web Sayt": <FaGlobe />,
+  Telefon: <FaPhone />,
+  "Zəng et": <FaPhone />,
+  Email: <FaEnvelope />,
+  "E-mail": <FaEnvelope />,
+  Telegram: <FaTelegram />,
+  YouTube: <FaYoutube />,
+  TikTok: <FaTiktok />,
+  Twitter: <FaTwitter />,
+  Mesaj: <FaCommentDots />,
 };
 
-const AUTO_LINKS = [
-  { platform: "Instagram", url: "instagram.com/elcin" },
-  { platform: "LinkedIn", url: "linkedin.com/in/elcin" },
-  { platform: "WhatsApp", url: "+994501234567" },
+const platformOptions = [
+  { name: "Zəng et", icon: <FaPhone /> },
+  { name: "Mesaj", icon: <FaCommentDots /> },
+  { name: "WhatsApp", icon: <FaWhatsapp /> },
+  { name: "E-mail", icon: <FaEnvelope /> },
+  { name: "Instagram", icon: <FaInstagram /> },
+  { name: "Facebook", icon: <FaFacebook /> },
+  { name: "LinkedIn", icon: <FaLinkedin /> },
+  { name: "Telegram", icon: <FaTelegram /> },
+  { name: "YouTube", icon: <FaYoutube /> },
+  { name: "TikTok", icon: <FaTiktok /> },
+  { name: "Twitter", icon: <FaTwitter /> },
+  { name: "Web Sayt", icon: <FaGlobe /> },
 ];
 
 const hexToRgb = (hex) => {
@@ -50,17 +73,23 @@ function HomeMain() {
     skill3: "UI/UX",
     about: "Minimalist və müasir interfeyslər qurmağı sevirəm.",
     themeColor: "#b8860b",
-    workYears: "2",
-    workMonths: "4",
-    phone: "+994501234567",
-    whatsapp: "+994501234567",
     companyName: "INSYDE",
+    password: "",
+    passwordConfirm: "",
   });
 
-  const [profileImage, setProfileImage] = useState(null);
-  const [phoneMode, setPhoneMode] = useState("dark");
+  const [links, setLinks] = useState([
+    { platform: "Zəng et", url: "+994501234567" },
+    { platform: "Mesaj", url: "+994501234567" },
+    { platform: "E-mail", url: "elcin@example.com" },
+    { platform: "Instagram", url: "instagram.com/elcin" },
+    { platform: "LinkedIn", url: "linkedin.com/in/elcin" },
+  ]);
 
-  const userCode = "SYD4568";
+  const [profileImage, setProfileImage] = useState(null);
+  const [showPass, setShowPass] = useState(false);
+  const [showPassConfirm, setShowPassConfirm] = useState(false);
+
   const themeRgb = hexToRgb(formData.themeColor);
 
   const handleChange = (e) =>
@@ -73,6 +102,20 @@ function HomeMain() {
   };
 
   const removeProfileImage = () => setProfileImage(null);
+
+  const addLink = () => {
+    setLinks([...links, { platform: "Instagram", url: "" }]);
+  };
+
+  const handleLinkChange = (index, field, value) => {
+    const updated = [...links];
+    updated[index][field] = value;
+    setLinks(updated);
+  };
+
+  const removeLink = (index) => {
+    setLinks(links.filter((_, i) => i !== index));
+  };
 
   return (
     <div className="home-main-modern-split">
@@ -88,53 +131,8 @@ function HomeMain() {
           </div>
         </div>
 
-        {/* ── FOTO YÜKLƏMƏ KARTI ── */}
-        <div className="modern-card photo-upload-card">
-          <div className="photo-upload-inner">
-            <div className="photo-preview-wrap">
-              {profileImage ? (
-                <img
-                  src={profileImage}
-                  alt="Profile"
-                  className="photo-preview-img"
-                />
-              ) : (
-                <div className="photo-placeholder">
-                  <FaCamera className="camera-icon" />
-                </div>
-              )}
-            </div>
-            <div className="photo-right">
-              <div className="photo-section-info">
-                <h4>Profil Şəkli</h4>
-                <p>Avatar kimi görünür. JPG, PNG · Maks 5MB</p>
-              </div>
-              <div className="photo-actions">
-                <label htmlFor="profile-upload" className="upload-photo-btn">
-                  <FaCloudUploadAlt />
-                  {profileImage ? "Dəyişdir" : "Yüklə"}
-                </label>
-                <input
-                  type="file"
-                  id="profile-upload"
-                  accept="image/*"
-                  onChange={handleProfileImageUpload}
-                  style={{ display: "none" }}
-                />
-                {profileImage && (
-                  <button
-                    className="remove-photo-btn"
-                    onClick={removeProfileImage}
-                  >
-                    <FaTrashAlt />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+      
 
-        {/* ── ŞƏXSİ MƏLUMATLAR ── */}
         <div className="modern-card form-card">
           <div className="row-1">
             <div className="inputs-grid">
@@ -169,109 +167,53 @@ function HomeMain() {
             </div>
           </div>
 
-          <div className="row-2">
-            <div className="input-group flex-1">
-              <label>Peşə</label>
-              <input
-                type="text"
-                name="profession"
-                value={formData.profession}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="skills-group">
-              <label>Bacarıqlar (Max 3)</label>
-              <div className="skills-inputs">
-                <input
-                  type="text"
-                  name="skill1"
-                  value={formData.skill1}
-                  onChange={handleChange}
-                  placeholder="Bacarıq 1"
-                />
-                <input
-                  type="text"
-                  name="skill2"
-                  value={formData.skill2}
-                  onChange={handleChange}
-                  placeholder="Bacarıq 2"
-                />
-                <input
-                  type="text"
-                  name="skill3"
-                  value={formData.skill3}
-                  onChange={handleChange}
-                  placeholder="Bacarıq 3"
-                />
-              </div>
-            </div>
-          </div>
+       
 
-
-          <div className="row-stats-input">
-            <div className="input-group staj-wrap">
-              <label>İşçi Stajı</label>
-              <div className="staj-inputs-row">
-                <div className="staj-field">
+          {/* ── PAROL ── */}
+          <div className="password-section">
+            <label className="section-label">
+              <FaLock /> Parol
+            </label>
+            <div className="password-row">
+              <div className="input-group flex-1">
+                <label>Yeni Parol</label>
+                <div className="password-input-wrap">
                   <input
-                    type="number"
-                    name="workYears"
-                    min="0"
-                    max="50"
-                    value={formData.workYears}
+                    type={showPass ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
                     onChange={handleChange}
-                    placeholder="0"
+                    placeholder="••••••••"
                   />
-                  <span>il</span>
+                  <button
+                    type="button"
+                    className="eye-btn"
+                    onClick={() => setShowPass(!showPass)}
+                  >
+                    {showPass ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
-                <div className="staj-field">
+              </div>
+              <div className="input-group flex-1">
+                <label>Parolu Təsdiqlə</label>
+                <div className="password-input-wrap">
                   <input
-                    type="number"
-                    name="workMonths"
-                    min="0"
-                    max="11"
-                    value={formData.workMonths}
+                    type={showPassConfirm ? "text" : "password"}
+                    name="passwordConfirm"
+                    value={formData.passwordConfirm}
                     onChange={handleChange}
-                    placeholder="0"
+                    placeholder="••••••••"
                   />
-                  <span>ay</span>
+                  <button
+                    type="button"
+                    className="eye-btn"
+                    onClick={() => setShowPassConfirm(!showPassConfirm)}
+                  >
+                    {showPassConfirm ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* ── ƏLAQƏ VƏ MESAJ ── */}
-          <div className="row-contact">
-            <div className="input-group flex-1">
-              <label>Əlaqə (Telefon)</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="+994 XX XXX XX XX"
-              />
-            </div>
-            <div className="input-group flex-1">
-              <label>Mesaj (WhatsApp / SMS)</label>
-              <input
-                type="text"
-                name="whatsapp"
-                value={formData.whatsapp}
-                onChange={handleChange}
-                placeholder="+994 XX XXX XX XX"
-              />
-            </div>
-          </div>
-
-          <div className="input-group full-width">
-            <label>Haqqında məlumat</label>
-            <textarea
-              name="about"
-              rows="3"
-              value={formData.about}
-              onChange={handleChange}
-            />
           </div>
         </div>
 
@@ -287,181 +229,122 @@ function HomeMain() {
 
       {/* ========== SAĞ TƏRƏF: PREVIEW ========== */}
       <div className="preview-section">
-        <div className={`phone-mockup mode-${phoneMode}`}>
+        <div className="phone-mockup">
           <div className="phone-notch" />
           <div className="phone-scroll-area">
-            <div className="profile-header">
-              {/* ── ŞİRKƏT ADI TOP BAR ── */}
+            {/* ── HEADER: qızılı gradient ── */}
+            <div
+              className="ph-header-gradient"
+              style={{
+                background: `linear-gradient(160deg, #2a1f00 0%, #3d2c00 40%, #1a1400 100%)`,
+              }}
+            >
+              {/* top bar */}
               <div className="ph-top-bar">
-                <span className="ph-company-left">
+                <span className="ph-company-badge">
                   {formData.companyName || "INSYDE"}
                 </span>
-                <span className="ph-company-right">PM Systems</span>
+                <div className="ph-views-badge">
+                  <span className="ph-views-dot" />0 baxış
+                </div>
               </div>
 
-              <div className="ph-back-btn">‹</div>
-
-              <div className="ph-stats-row">
-                <div className="ph-stat">
-                  <span className="ph-stat-num">0</span>
-                  <span className="ph-stat-label">Baxış</span>
-                </div>
-                <div className="ph-avatar-wrap">
+              {/* avatar */}
+              <div className="ph-avatar-center">
+                <div
+                  className="ph-avatar-ring"
+                  style={{ borderColor: formData.themeColor }}
+                >
                   {profileImage ? (
                     <img
                       src={profileImage}
                       alt="avatar"
-                      className="ph-avatar"
+                      className="ph-avatar-img"
                     />
                   ) : (
                     <div
                       className="ph-avatar-placeholder"
                       style={{
-                        background: `linear-gradient(135deg, rgba(${themeRgb},0.6), rgba(${themeRgb},0.2))`,
+                        background: `linear-gradient(135deg, rgba(${themeRgb},0.5), rgba(${themeRgb},0.15))`,
                       }}
                     />
                   )}
                   <span
                     className="ph-online-dot"
-                    style={{ backgroundColor: formData.themeColor }}
+                    style={{ backgroundColor: "#2ecc71" }}
                   />
-                </div>
-                <div className="ph-stat ph-stat-right">
-                  <span className="ph-stat-num">
-                    {(formData.workYears > 0
-                      ? `${formData.workYears}il `
-                      : "") +
-                      (formData.workMonths > 0
-                        ? `${formData.workMonths}ay`
-                        : "") || "0"}
-                  </span>
-                  <span className="ph-stat-label">Staj</span>
                 </div>
               </div>
 
+              {/* name */}
               <div className="ph-name-block">
                 <span className="ph-name">
                   {formData.name || "Ad Soyad"}
                   <span
-                    className="ph-verified"
+                    className="ph-star"
                     style={{ color: formData.themeColor }}
                   >
                     ✦
                   </span>
                 </span>
                 <span className="ph-profession">
-                  {formData.profession || "Peşə"}
+                  {(formData.profession || "Peşə").toUpperCase()}
                 </span>
               </div>
 
-              <div className="ph-action-btns">
+              {/* action buttons */}
+              <div className="ph-action-row">
                 <button
-                  className="ph-btn ph-btn-primary"
-                  style={{ borderColor: `rgba(${themeRgb},0.6)` }}
+                  className="ph-act-btn ph-act-gold"
+                  style={{
+                    borderColor: formData.themeColor,
+                    color: formData.themeColor,
+                  }}
                 >
-                  Əlaqə
+                  {formData.companyName || "Insyde"}
                 </button>
-                <button
-                  className="ph-btn ph-btn-fill"
-                  style={{ backgroundColor: formData.themeColor }}
-                >
-                  Mesaj
+                <button className="ph-act-btn ph-act-outline">Daha çox</button>
+                <button className="ph-act-btn ph-act-share">
+                  <FaShareAlt /> Paylaş
                 </button>
+              </div>
+
+              {/* tabs */}
+              <div className="ph-tabs">
+                <button className="ph-tab active">Şəxsi</button>
+                <button className="ph-tab">PM Systems</button>
               </div>
             </div>
 
             {/* ── LİNKLƏR ── */}
-            <div className="preview-links-list">
-              <div className="preview-link-card">
-                <div
-                  className="link-icon-wrap"
-                  style={{ backgroundColor: formData.themeColor }}
-                >
-                  <FaPhone />
-                </div>
-                <div className="link-text">
-                  <span className="link-label">Call</span>
-                  {formData.phone && (
-                    <span className="link-sub">{formData.phone}</span>
-                  )}
-                </div>
-                <span className="link-arrow">↗</span>
-              </div>
-
-              <div className="preview-link-card">
-                <div
-                  className="link-icon-wrap"
-                  style={{ backgroundColor: formData.themeColor }}
-                >
-                  <FaCommentDots />
-                </div>
-                <div className="link-text">
-                  <span className="link-label">Message</span>
-                  {formData.whatsapp && (
-                    <span className="link-sub">{formData.whatsapp}</span>
-                  )}
-                </div>
-                <span className="link-arrow">↗</span>
-              </div>
-
-              <div className="preview-link-card">
-                <div
-                  className="link-icon-wrap"
-                  style={{ backgroundColor: formData.themeColor }}
-                >
-                  <FaEnvelope />
-                </div>
-                <div className="link-text">
-                  <span className="link-label">E-mail</span>
-                  {formData.email && (
-                    <span className="link-sub">{formData.email}</span>
-                  )}
-                </div>
-                <span className="link-arrow">↗</span>
-              </div>
-
-              {AUTO_LINKS.map((link, i) => (
-                <div className="preview-link-card" key={i}>
-                  <div
-                    className="link-icon-wrap"
-                    style={{ backgroundColor: formData.themeColor }}
-                  >
-                    {platformIconMap[link.platform] || <FaGlobe />}
+            <div className="ph-links-list">
+              {links.map((link, i) =>
+                link.url ? (
+                  <div className="ph-link-card" key={i}>
+                    <div
+                      className="ph-link-icon"
+                      style={{ backgroundColor: `rgba(${themeRgb}, 0.18)` }}
+                    >
+                      <span style={{ color: formData.themeColor }}>
+                        {platformIconMap[link.platform] || <FaGlobe />}
+                      </span>
+                    </div>
+                    <span className="ph-link-label">{link.platform}</span>
+                    <span
+                      className="ph-link-arrow"
+                      style={{ color: formData.themeColor }}
+                    >
+                      ↗
+                    </span>
                   </div>
-                  <div className="link-text">
-                    <span className="link-label">{link.platform}</span>
-                    <span className="link-sub">{link.url}</span>
-                  </div>
-                  <span className="link-arrow">↗</span>
-                </div>
-              ))}
+                ) : null,
+              )}
             </div>
 
-            {/* ── BACARIQLAR ── */}
-            {(formData.skill1 || formData.skill2 || formData.skill3) && (
-              <div className="preview-skills-section">
-                {[formData.skill1, formData.skill2, formData.skill3]
-                  .filter(Boolean)
-                  .map((s, i) => (
-                    <span
-                      key={i}
-                      className="skill-chip"
-                      style={{
-                        borderColor: `rgba(${themeRgb},0.5)`,
-                        color: formData.themeColor,
-                      }}
-                    >
-                      {s}
-                    </span>
-                  ))}
-              </div>
-            )}
-
-            <div className="phone-nav-bar">
-              <span>✉</span>
-              <span>⌕</span>
-              <span>♡</span>
-              <span>≡</span>
+            {/* footer */}
+            <div className="ph-footer">
+              © 2026 <span style={{ color: formData.themeColor }}>INSYDE.</span>{" "}
+              ALL RIGHTS RESERVED.
             </div>
           </div>
         </div>
