@@ -488,9 +488,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background-color: var(--badge-success-bg);
       color: var(--badge-success-text);
-      border: 1px solid rgba(46, 204, 113, 0.2);
       padding: 10px 20px;
       border-radius: 12px;
       font-weight: 600;
@@ -548,9 +546,7 @@
     flex-direction: column;
     background-color: #111008;
     position: relative;
-    box-shadow:
-      0 0 0 1px rgba(200, 167, 94, 0.15),
-      0 30px 60px rgba(0, 0, 0, 0.6);
+
 
     .phone-notch {
       position: absolute;

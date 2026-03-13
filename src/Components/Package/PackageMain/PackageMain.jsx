@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FiCheck,
   FiX,
@@ -7,9 +7,130 @@ import {
   FiCalendar,
   FiUsers,
   FiZap,
+  FiTrash2,
+  FiAlertCircle,
+  FiSlash,
 } from "react-icons/fi";
 import "./PackageMain.scss";
 
+// ─────────────────────────────────────────
+// POPUP
+// ─────────────────────────────────────────
+const POPUP_CONFIG = {
+  success: {
+    Icon: FiCheckCircle,
+    confirmClass: "popup__btn--success",
+    defaultConfirm: "Əla",
+    cancelable: false,
+  },
+  delete: {
+    Icon: FiTrash2,
+    confirmClass: "popup__btn--delete",
+    defaultConfirm: "Sil",
+    cancelable: true,
+  },
+  error: {
+    Icon: FiAlertCircle,
+    confirmClass: "popup__btn--error",
+    defaultConfirm: "Anladım",
+    cancelable: false,
+  },
+  block: {
+    Icon: FiSlash,
+    confirmClass: "popup__btn--block",
+    defaultConfirm: "Blokla",
+    cancelable: true,
+  },
+};
+
+function Popup({
+  isOpen = false,
+  type = "success",
+  title = "",
+  message = "",
+  confirmText,
+  cancelText = "Ləğv et",
+  onConfirm,
+  onCancel,
+}) {
+  const cfg = POPUP_CONFIG[type] ?? POPUP_CONFIG.success;
+  const finalConfirmText = confirmText ?? cfg.defaultConfirm;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e) => {
+      if (e.key === "Escape") onCancel?.();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onCancel]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div
+        className="popup__overlay"
+        onClick={cfg.cancelable ? onCancel : undefined}
+        aria-hidden="true"
+      />
+      <div
+        className={`popup popup--${type}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="popup-title"
+      >
+        {cfg.cancelable && (
+          <button
+            className="popup__close"
+            onClick={onCancel}
+            aria-label="Bağla"
+          >
+            <FiX />
+          </button>
+        )}
+        <div className="popup__icon-wrap">
+          <cfg.Icon className="popup__icon" />
+        </div>
+        <div className="popup__content">
+          {title && (
+            <h3 id="popup-title" className="popup__title">
+              {title}
+            </h3>
+          )}
+          {message && <p className="popup__message">{message}</p>}
+        </div>
+        <div className="popup__actions">
+          {cfg.cancelable && (
+            <button
+              className="popup__btn popup__btn--cancel"
+              onClick={onCancel}
+            >
+              {cancelText}
+            </button>
+          )}
+          <button
+            className={`popup__btn ${cfg.confirmClass}`}
+            onClick={() => onConfirm?.()}
+          >
+            {finalConfirmText}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────
+// MOBILE FEATURE ROW
+// ─────────────────────────────────────────
 const MobileFeatureRow = ({ title, info, isAvailable, isMonthly, price }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -59,8 +180,14 @@ const MobileFeatureRow = ({ title, info, isAvailable, isMonthly, price }) => {
   );
 };
 
+// ─────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────
 const packageMonthlyPrice = { premium: 4.0, business: 4.0 };
-const packageCardPrice = { premium: "36.90₼ / hesab", business: "52.90₼ / hesab" };
+const packageCardPrice = {
+  premium: "36.90₼ / hesab",
+  business: "52.90₼ / hesab",
+};
 const packageNames = { premium: "Premium", business: "Biznes" };
 
 const billingOptions = [
@@ -71,10 +198,18 @@ const billingOptions = [
 
 const MIN_PROFILES = 5;
 
+// ─────────────────────────────────────────
+// MAIN COMPONENT
+// ─────────────────────────────────────────
 function PackageMain() {
   const [currentPackage] = useState("business");
   const [selectedBilling, setSelectedBilling] = useState("monthly");
   const [profileCount, setProfileCount] = useState(MIN_PROFILES);
+  const [isPayLoading, setIsPayLoading] = useState(false);
+
+  // Popup state
+  const [popup, setPopup] = useState({ isOpen: false, type: "success" });
+  const closePopup = () => setPopup((p) => ({ ...p, isOpen: false }));
 
   const features = [
     {
@@ -153,8 +288,86 @@ function PackageMain() {
     profileCount
   ).toFixed(2);
 
+  // ── Ödəniş handler ──
+  const handlePayment = () => {
+    // Minimum profil yoxlaması (əlavə qoruma)
+    if (profileCount < MIN_PROFILES) {
+      setPopup({
+        isOpen: true,
+        type: "error",
+        title: "Xəta!",
+        message: `Minimum ${MIN_PROFILES} profil seçilməlidir.`,
+        confirmText: "Anladım",
+        onConfirm: null,
+      });
+      return;
+    }
+
+    // Ödəniş təsdiq popupu
+    setPopup({
+      isOpen: true,
+      type: "block",
+      title: "Ödənişi təsdiqləyin",
+      message: `${profileCount} hesab · ${activeBilling.label} · Ümumi: ${totalPrice}₼. Davam etmək istəyirsiniz?`,
+      confirmText: "Ödə",
+      cancelText: "Ləğv et",
+      onConfirm: () => {
+        closePopup();
+        processPayment();
+      },
+    });
+  };
+
+  // ── Ödəniş emalı (simulyasiya) ──
+  const processPayment = () => {
+    setIsPayLoading(true);
+
+    // API çağırışını simulyasiya edirik
+    setTimeout(() => {
+      setIsPayLoading(false);
+
+      const isSuccess = Math.random() > 0.25; // 75% uğur şansı (demo üçün)
+
+      if (isSuccess) {
+        setPopup({
+          isOpen: true,
+          type: "success",
+          title: "Ödəniş uğurla tamamlandı!",
+          message: `${profileCount} hesab üçün ${totalPrice}₼ məbləğ uğurla ödənildi. Abunəliyiniz aktivdir.`,
+          confirmText: "Əla",
+          onConfirm: closePopup,
+        });
+      } else {
+        setPopup({
+          isOpen: true,
+          type: "error",
+          title: "Ödəniş uğursuz oldu",
+          message:
+            "Bank tərəfindən əməliyyat rədd edildi. Kart məlumatlarınızı yoxlayın və yenidən cəhd edin.",
+          confirmText: "Anladım",
+          onConfirm: closePopup,
+        });
+      }
+    }, 1800);
+  };
+
   return (
     <div className="package-main-modern">
+      {/* ── Popup ── */}
+      <Popup
+        isOpen={popup.isOpen}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        confirmText={popup.confirmText}
+        cancelText={popup.cancelText || "Ləğv et"}
+        onConfirm={() => {
+          popup.onConfirm?.();
+          if (!popup.onConfirm) closePopup();
+        }}
+        onCancel={closePopup}
+      />
+
       <div className="top-header">
         <div>
           <h2 className="page-title">Ödəniş Planı</h2>
@@ -403,8 +616,21 @@ function PackageMain() {
               <span className="summary-label">Ümumi məbləğ</span>
               <span className="summary-total">{totalPrice}₼</span>
             </div>
-            <button className="pay-btn">
-              <FiCheckCircle /> Ödənişi Tamamla
+
+            <button
+              className={`pay-btn ${isPayLoading ? "loading" : ""}`}
+              onClick={handlePayment}
+              disabled={isPayLoading}
+            >
+              {isPayLoading ? (
+                <>
+                  <span className="pay-spinner" /> Emal olunur...
+                </>
+              ) : (
+                <>
+                  <FiCheckCircle /> Ödənişi Tamamla
+                </>
+              )}
             </button>
           </div>
         </div>

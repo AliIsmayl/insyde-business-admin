@@ -554,8 +554,6 @@
     color: var(--text-secondary);
     margin: -4px 0 0;
   }
-
-  /* ── Divider ────────────────────────────────── */
   &__divider {
     height: 1px;
     background: var(--border-subtle);
@@ -721,8 +719,6 @@
     justify-content: center;
     font-size: 14px;
     flex-shrink: 0;
-
-    /* link variant — daha incə görünüş */
     &--link {
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
@@ -763,8 +759,6 @@
       border-color: var(--border-strong);
     }
   }
-
-  /* ── Company link text (inside name-display) ── */
   &__company-link-text {
     flex: 1;
     font-size: 12px;
@@ -871,6 +865,12 @@
       border-color: #c8a75e !important;
       transform: scale(1.1);
     }
+    /* tətbiq edilmiş rəng — soluk halqa */
+    &--applied {
+      border-color: rgba(200, 167, 94, 0.35) !important;
+      outline: 2px dashed rgba(200, 167, 94, 0.4);
+      outline-offset: 2px;
+    }
   }
   &__swatch-check {
     font-size: 10px;
@@ -943,7 +943,56 @@
     flex-shrink: 0;
   }
 
-  /* ── MODAL ──────────────────────────────────── */
+  /* ── Rəngi Tətbiq Et düyməsi ─────────────────── */
+  &__apply-color-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 16px;
+    padding: 13px 18px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: not-allowed;
+    border: 1.5px solid var(--border-subtle);
+    background: var(--bg-input);
+    color: var(--text-muted);
+    transition:
+      background 0.2s,
+      border-color 0.2s,
+      color 0.2s,
+      transform 0.15s,
+      opacity 0.2s;
+
+    &--active {
+      background: var(--btn-primary-bg);
+      color: var(--text-on-gold);
+      border-color: transparent;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      &:active {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  }
+  &__apply-color-dot {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  /* ── MODAL (köhnə inline modal — artıq Popup ilə əvəz edilib ama CSS saxlanılır) ── */
   &__modal-backdrop {
     position: fixed;
     inset: 0;
@@ -1030,7 +1079,6 @@
       gap: 16px;
     }
   }
-
   @media (max-width: 900px) {
     overflow-x: hidden;
     &__layout {
@@ -1043,7 +1091,6 @@
       flex-direction: row;
     }
   }
-
   @media (max-width: 640px) {
     &__header {
       flex-direction: column;
@@ -1108,7 +1155,6 @@
       font-size: 11px;
     }
   }
-
   @media (max-width: 400px) {
     &__title {
       font-size: 20px;
@@ -1255,5 +1301,209 @@
     font-size: 13px;
     color: #c8a75e;
     flex-shrink: 0;
+  }
+}
+
+/* ════════════════════════════════════════════════
+   POPUP
+   ════════════════════════════════════════════════ */
+.popup__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+  animation: popupFadeIn 0.2s ease;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  width: 90%;
+  max-width: 400px;
+  background: var(--bg-panel);
+  border-radius: 24px;
+  padding: 36px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-subtle);
+  animation: popupSlideUp 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-input);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+  }
+
+  &__icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+  &__icon {
+    font-size: 28px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  &__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  &__message {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  &__btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition:
+      opacity 0.2s,
+      transform 0.15s;
+    &:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: translateY(0);
+    }
+
+    &--cancel {
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      &:hover {
+        background: var(--bg-hover);
+        opacity: 1;
+      }
+    }
+    &--success {
+      background: #22c55e;
+      color: #fff;
+    }
+    &--update {
+      background: #3b82f6;
+      color: #fff;
+    }
+    &--delete {
+      background: #ef4444;
+      color: #fff;
+    }
+    &--error {
+      background: #f97316;
+      color: #fff;
+    }
+    &--block {
+      background: #6b7280;
+      color: #fff;
+    }
+  }
+
+  /* ── Növə görə ikon arxa fon rəngləri ── */
+  &--success .popup__icon-wrap {
+    background: rgba(34, 197, 94, 0.12);
+  }
+  &--success .popup__icon {
+    color: #22c55e;
+  }
+
+  &--update .popup__icon-wrap {
+    background: rgba(59, 130, 246, 0.12);
+  }
+  &--update .popup__icon {
+    color: #3b82f6;
+  }
+
+  &--delete .popup__icon-wrap {
+    background: rgba(239, 68, 68, 0.12);
+  }
+  &--delete .popup__icon {
+    color: #ef4444;
+  }
+
+  &--error .popup__icon-wrap {
+    background: rgba(249, 115, 22, 0.12);
+  }
+  &--error .popup__icon {
+    color: #f97316;
+  }
+
+  &--block .popup__icon-wrap {
+    background: rgba(107, 114, 128, 0.12);
+  }
+  &--block .popup__icon {
+    color: #6b7280;
+  }
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes popupSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 24px)) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
 }

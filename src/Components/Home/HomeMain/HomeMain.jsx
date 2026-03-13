@@ -91,7 +91,9 @@ function HomeMain() {
   const [showPass, setShowPass] = useState(false);
   const [showPassConfirm, setShowPassConfirm] = useState(false);
 
-
+  // ── Popup state ──
+  const [popup, setPopup] = useState({ isOpen: false, type: "success" });
+  const closePopup = () => setPopup((p) => ({ ...p, isOpen: false }));
 
   const themeRgb = hexToRgb(formData.themeColor);
 
@@ -123,7 +125,19 @@ function HomeMain() {
   return (
     <div className="home-main-modern-split">
       {/* ── Popup — bütün type-lar üçün tək instansiya ── */}
-
+      <Popup
+        isOpen={popup.isOpen}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        confirmText={popup.confirmText}
+        cancelText="Ləğv et"
+        onConfirm={() => {
+          popup.onConfirm?.();
+          closePopup();
+        }}
+        onCancel={closePopup}
+      />
 
       {/* ========== SOL TƏRƏF ========== */}
       <div className="form-section">
@@ -136,8 +150,6 @@ function HomeMain() {
             <span className="time-left">3 gün qalıb</span>
           </div>
         </div>
-
-      
 
         <div className="modern-card form-card">
           <div className="row-1">

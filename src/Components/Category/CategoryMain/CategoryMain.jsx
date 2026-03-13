@@ -32,8 +32,121 @@ import {
   FiSun,
   FiMoon,
   FiBriefcase,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiSlash,
+  FiRefreshCw,
 } from "react-icons/fi";
 import "./CategoryMain.scss";
+
+/* ─── POPUP COMPONENT ───────────────────────────────────── */
+const POPUP_CONFIG = {
+  success: {
+    Icon: FiCheckCircle,
+    confirmClass: "popup__btn--success",
+    defaultConfirm: "Əla",
+    cancelable: false,
+  },
+  update: {
+    Icon: FiRefreshCw,
+    confirmClass: "popup__btn--update",
+    defaultConfirm: "Yenilə",
+    cancelable: true,
+  },
+  delete: {
+    Icon: FiTrash2,
+    confirmClass: "popup__btn--delete",
+    defaultConfirm: "Sil",
+    cancelable: true,
+  },
+  error: {
+    Icon: FiAlertCircle,
+    confirmClass: "popup__btn--error",
+    defaultConfirm: "Anladım",
+    cancelable: false,
+  },
+  block: {
+    Icon: FiSlash,
+    confirmClass: "popup__btn--block",
+    defaultConfirm: "Blokla",
+    cancelable: true,
+  },
+};
+
+function Popup({
+  isOpen = false,
+  type = "success",
+  title = "",
+  message = "",
+  confirmText,
+  cancelText = "Ləğv et",
+  onConfirm,
+  onCancel,
+}) {
+  const cfg = POPUP_CONFIG[type] ?? POPUP_CONFIG.success;
+  const finalConfirmText = confirmText ?? cfg.defaultConfirm;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e) => {
+      if (e.key === "Escape") onCancel?.();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onCancel]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="popup__overlay" onClick={onCancel} aria-hidden="true" />
+      <div
+        className={`popup popup--${type}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="popup-title"
+      >
+        <button className="popup__close" onClick={onCancel} aria-label="Bağla">
+          <FiX />
+        </button>
+        <div className="popup__icon-wrap">
+          <cfg.Icon className="popup__icon" />
+        </div>
+        <div className="popup__content">
+          {title && (
+            <h3 id="popup-title" className="popup__title">
+              {title}
+            </h3>
+          )}
+          {message && <p className="popup__message">{message}</p>}
+        </div>
+        <div className="popup__actions">
+          {cfg.cancelable && (
+            <button
+              className="popup__btn popup__btn--cancel"
+              onClick={onCancel}
+            >
+              {cancelText}
+            </button>
+          )}
+          <button
+            className={`popup__btn ${cfg.confirmClass}`}
+            onClick={() => onConfirm?.()}
+          >
+            {finalConfirmText}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
 
 /* ── Platform kataloqu ─────────────────────────────────────────── */
 const PLATFORMS = [
@@ -410,6 +523,10 @@ const initialCategories = [
 ];
 
 export default function CategoryMain() {
+  /* ── Popup ── */
+  const [popup, setPopup] = useState({ isOpen: false, type: "success" });
+  const closePopup = () => setPopup((p) => ({ ...p, isOpen: false }));
+
   /* social */
   const [categories, setCategories] = useState(initialCategories);
   const [addPlatform, setAddPlatform] = useState("");
@@ -417,7 +534,6 @@ export default function CategoryMain() {
   const [editId, setEditId] = useState(null);
   const [editPlatform, setEditPlatform] = useState("");
   const [editLink, setEditLink] = useState("");
-  const [deleteId, setDeleteId] = useState(null);
 
   /* bg image */
   const [bgImage, setBgImage] = useState(null);
@@ -425,24 +541,24 @@ export default function CategoryMain() {
   const [bgDragging, setBgDragging] = useState(false);
   const bgInputRef = useRef(null);
 
-  /* company name */
+  /* company */
   const [companyName, setCompanyName] = useState("");
   const [companyDraft, setCompanyDraft] = useState("");
   const [editingCompany, setEditingCompany] = useState(false);
   const companyRef = useRef(null);
 
-  /* company link */
   const [companyLink, setCompanyLink] = useState("");
   const [companyLinkDraft, setCompanyLinkDraft] = useState("");
   const [editingCompanyLink, setEditingCompanyLink] = useState(false);
   const companyLinkRef = useRef(null);
 
-  /* image name */
+  /* image name (unused display, kept for compat) */
   const [imgNameDraft, setImgNameDraft] = useState("");
   const [editingImgName, setEditingImgName] = useState(false);
   const imgNameRef = useRef(null);
 
-  /* color */
+  /* color — seçilmiş (pending) vs tətbiq edilmiş */
+  const [appliedColor, setAppliedColor] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [customColor, setCustomColor] = useState("#c8a75e");
   const colorInputRef = useRef(null);
@@ -455,17 +571,32 @@ export default function CategoryMain() {
   const canAdd = addPlatform && addLink.trim() && addLinkOk;
   const editLinkOk = isValidUrl(editLink);
   const canSave = editPlatform && editLink.trim() && editLinkOk;
+  const colorChanged = selectedColor && selectedColor !== appliedColor;
 
-  /* social handlers */
+  /* ════════════════════════════════════════════
+     HANDLERS
+     ════════════════════════════════════════════ */
+
+  /* ── Şəbəkə əlavə et → success popup ── */
   const handleAdd = () => {
     if (!canAdd) return;
+    const platform = getPlatform(addPlatform);
     setCategories((p) => [
       ...p,
       { id: Date.now(), platformKey: addPlatform, link: addLink.trim() },
     ]);
     setAddPlatform("");
     setAddLink("");
+    setPopup({
+      isOpen: true,
+      type: "success",
+      title: "Şəbəkə əlavə edildi!",
+      message: `${platform?.label} uğurla siyahıya əlavə edildi.`,
+      confirmText: "Əla",
+      onConfirm: closePopup,
+    });
   };
+
   const startEdit = (c) => {
     setEditId(c.id);
     setEditPlatform(c.platformKey);
@@ -476,24 +607,49 @@ export default function CategoryMain() {
     setEditPlatform("");
     setEditLink("");
   };
+
+  /* ── Şəbəkə redaktəsi → update popup (Yenilə / Ləğv et) ── */
   const saveEdit = () => {
     if (!canSave) return;
-    setCategories((p) =>
-      p.map((c) =>
-        c.id === editId
-          ? { ...c, platformKey: editPlatform, link: editLink.trim() }
-          : c,
-      ),
-    );
-    cancelEdit();
+    const platform = getPlatform(editPlatform);
+    setPopup({
+      isOpen: true,
+      type: "update",
+      title: "Dəyişiklikləri tətbiq et?",
+      message: `${platform?.label} şəbəkəsinin məlumatları yenilənəcək.`,
+      confirmText: "Yenilə",
+      onConfirm: () => {
+        setCategories((p) =>
+          p.map((c) =>
+            c.id === editId
+              ? { ...c, platformKey: editPlatform, link: editLink.trim() }
+              : c,
+          ),
+        );
+        cancelEdit();
+        closePopup();
+      },
+    });
   };
-  const doDelete = () => {
-    setCategories((p) => p.filter((c) => c.id !== deleteId));
-    setDeleteId(null);
-  };
-  const deleteTarget = categories.find((c) => c.id === deleteId);
 
-  /* bg handlers */
+  /* ── Şəbəkə sil → delete popup ── */
+  const openDeletePopup = (id) => {
+    const target = categories.find((c) => c.id === id);
+    const platform = getPlatform(target?.platformKey);
+    setPopup({
+      isOpen: true,
+      type: "delete",
+      title: "Silmək istədiyinizdən əminsiniz?",
+      message: `${platform?.label} şəbəkəsi silinəcək. Bu əməliyyat geri alına bilməz.`,
+      confirmText: "Sil",
+      onConfirm: () => {
+        setCategories((p) => p.filter((c) => c.id !== id));
+        closePopup();
+      },
+    });
+  };
+
+  /* ── BG ── */
   const processFile = (file) => {
     if (!file || !file.type.startsWith("image/")) return;
     setBgFileName(file.name);
@@ -516,56 +672,68 @@ export default function CategoryMain() {
     if (bgInputRef.current) bgInputRef.current.value = "";
   };
 
-  /* company name edit */
+  /* ── Şirkət adı → update popup ── */
   const startCompanyEdit = () => {
     setCompanyDraft(companyName);
     setEditingCompany(true);
     setTimeout(() => companyRef.current?.focus(), 40);
   };
-  const saveCompanyName = () => {
-    setCompanyName(companyDraft.trim());
-    setEditingCompany(false);
-  };
   const cancelCompanyEdit = () => {
     setCompanyDraft(companyName);
     setEditingCompany(false);
   };
+  const saveCompanyName = () => {
+    const newName = companyDraft.trim();
+    if (!newName) {
+      cancelCompanyEdit();
+      return;
+    }
+    setPopup({
+      isOpen: true,
+      type: "update",
+      title: "Şirkət adını yenilə?",
+      message: `Adı "${newName}" olaraq yeniləmək istədiyinizdən əminsiniz?`,
+      confirmText: "Yenilə",
+      onConfirm: () => {
+        setCompanyName(newName);
+        setEditingCompany(false);
+        closePopup();
+      },
+    });
+  };
 
-  /* company link edit */
+  /* ── Şirkət linki → update popup ── */
   const startCompanyLinkEdit = () => {
     setCompanyLinkDraft(companyLink);
     setEditingCompanyLink(true);
     setTimeout(() => companyLinkRef.current?.focus(), 40);
   };
-  const saveCompanyLink = () => {
-    const t = companyLinkDraft.trim();
-    if (!t || isValidUrl(t)) {
-      setCompanyLink(t);
-      setEditingCompanyLink(false);
-    }
-  };
   const cancelCompanyLinkEdit = () => {
     setCompanyLinkDraft(companyLink);
     setEditingCompanyLink(false);
   };
+  const saveCompanyLink = () => {
+    const t = companyLinkDraft.trim();
+    if (!t) {
+      cancelCompanyLinkEdit();
+      return;
+    }
+    if (!isValidUrl(t)) return;
+    setPopup({
+      isOpen: true,
+      type: "update",
+      title: "Şirkət linkini yenilə?",
+      message: "Vebsayt linkini yeniləmək istədiyinizdən əminsiniz?",
+      confirmText: "Yenilə",
+      onConfirm: () => {
+        setCompanyLink(t);
+        setEditingCompanyLink(false);
+        closePopup();
+      },
+    });
+  };
 
-  /* image name edit */
-  const startImgNameEdit = () => {
-    setImgNameDraft(bgFileName);
-    setEditingImgName(true);
-    setTimeout(() => imgNameRef.current?.focus(), 40);
-  };
-  const saveImgName = () => {
-    const t = imgNameDraft.trim();
-    if (t) setBgFileName(t);
-    setEditingImgName(false);
-  };
-  const cancelImgNameEdit = () => {
-    setImgNameDraft(bgFileName);
-    setEditingImgName(false);
-  };
-
-  /* color */
+  /* ── Rəng seçim (pending) ── */
   const handleColorSelect = (c) => {
     setSelectedColor(c);
     setCustomColor(c);
@@ -575,6 +743,25 @@ export default function CategoryMain() {
     setSelectedColor(e.target.value);
   };
 
+  /* ── Rəngi Tətbiq Et → success popup ── */
+  const applyColor = () => {
+    if (!colorChanged) return;
+    setPopup({
+      isOpen: true,
+      type: "success",
+      title: "Rəng tətbiq edildi!",
+      message: `${selectedColor.toUpperCase()} rəngi profil səhifənizə uğurla tətbiq edildi.`,
+      confirmText: "Əla",
+      onConfirm: () => {
+        setAppliedColor(selectedColor);
+        closePopup();
+      },
+    });
+  };
+
+  /* ════════════════════════════════════════════
+     RENDER
+     ════════════════════════════════════════════ */
   return (
     <div className="cat">
       {/* ══ HEADER ════════════════════════════════════════════════ */}
@@ -593,7 +780,7 @@ export default function CategoryMain() {
 
       {/* ══ SOCIAL LAYOUT ═════════════════════════════════════════ */}
       <div className="cat__layout">
-        {/* Form */}
+        {/* ─ Form ─ */}
         <div className="cat__form-card">
           <div className="cat__form-title">
             <FiPlus /> Yeni Şəbəkə
@@ -664,7 +851,7 @@ export default function CategoryMain() {
           </button>
         </div>
 
-        {/* List */}
+        {/* ─ List ─ */}
         <div className="cat__list-card">
           <div className="cat__list-header">
             Əlavə Edilmiş Şəbəkələr
@@ -726,11 +913,12 @@ export default function CategoryMain() {
                         </div>
                       </div>
                       <div className="cat__edit-actions">
+                        {/* FiSave → update popup açır */}
                         <button
                           className="cat__icon-btn cat__icon-btn--save"
                           onClick={saveEdit}
                           disabled={!canSave}
-                          title="Saxla"
+                          title="Yenilə"
                         >
                           <FiSave />
                         </button>
@@ -776,7 +964,7 @@ export default function CategoryMain() {
                         </button>
                         <button
                           className="cat__icon-btn cat__icon-btn--del"
-                          onClick={() => setDeleteId(cat.id)}
+                          onClick={() => openDeletePopup(cat.id)}
                           title="Sil"
                         >
                           <FiTrash2 />
@@ -799,7 +987,7 @@ export default function CategoryMain() {
             <FiImage /> Profil Tənzimləmələri
           </div>
 
-          {/* 1. Arxa fon şəkli */}
+          {/* Arxa fon */}
           <div className="cat__section">
             <p className="cat__section-heading">Arxa Fon Şəkli</p>
             <p className="cat__section-sub">
@@ -857,14 +1045,12 @@ export default function CategoryMain() {
 
           <div className="cat__divider" />
 
-          {/* 2. Şirkətin adı + linki */}
+          {/* Şirkət adı + linki — FiCheck → update popup */}
           <div className="cat__section">
             <p className="cat__section-heading">Şirkətin Adı</p>
             <p className="cat__section-sub">
               Profil səhifənizdə görünəcək şirkət adı və sayt linki.
             </p>
-
-            {/* Ad */}
             <InlineField
               value={companyName}
               draft={companyDraft}
@@ -878,8 +1064,6 @@ export default function CategoryMain() {
               onCancelEdit={cancelCompanyEdit}
               onDraftChange={setCompanyDraft}
             />
-
-            {/* Link */}
             <InlineLinkField
               value={companyLink}
               draft={companyLinkDraft}
@@ -896,7 +1080,7 @@ export default function CategoryMain() {
 
           <div className="cat__divider" />
 
-          {/* 3. Ekran rejimi */}
+          {/* Ekran rejimi */}
           <div className="cat__section">
             <p className="cat__section-heading">
               {themeMode === "light" ? (
@@ -936,6 +1120,7 @@ export default function CategoryMain() {
           <p className="cat__panel-sub">
             Profil səhifəniz üçün əsas rəng seçin.
           </p>
+
           <div className="cat__palette-groups">
             {COLOR_GROUPS.map((group) => (
               <div key={group.label} className="cat__palette-group">
@@ -945,7 +1130,7 @@ export default function CategoryMain() {
                     <button
                       key={c}
                       type="button"
-                      className={`cat__color-swatch ${selectedColor === c ? "cat__color-swatch--active" : ""}`}
+                      className={`cat__color-swatch ${selectedColor === c ? "cat__color-swatch--active" : ""} ${appliedColor === c && selectedColor !== c ? "cat__color-swatch--applied" : ""}`}
                       style={{ background: c }}
                       onClick={() => handleColorSelect(c)}
                       title={c}
@@ -962,6 +1147,7 @@ export default function CategoryMain() {
               </div>
             ))}
           </div>
+
           <div className="cat__custom-color">
             <div className="cat__custom-color-label">
               <span>Xüsusi rəng</span>
@@ -1006,35 +1192,41 @@ export default function CategoryMain() {
               )}
             </div>
           </div>
+
+          {/* ── Rəngi Tətbiq Et → success popup ── */}
+          <button
+            className={`cat__apply-color-btn ${colorChanged ? "cat__apply-color-btn--active" : ""}`}
+            onClick={applyColor}
+            disabled={!colorChanged}
+          >
+            <span
+              className="cat__apply-color-dot"
+              style={{
+                background: colorChanged
+                  ? selectedColor
+                  : appliedColor || "transparent",
+              }}
+            />
+            {!colorChanged && appliedColor
+              ? "Rəng tətbiq edilib"
+              : "Rəngi Tətbiq Et"}
+          </button>
         </div>
       </div>
 
-      {/* ══ DELETE MODAL ══════════════════════════════════════════ */}
-      {deleteId && (
-        <div className="cat__modal-backdrop" onClick={() => setDeleteId(null)}>
-          <div className="cat__modal" onClick={(e) => e.stopPropagation()}>
-            <div className="cat__modal-icon">
-              <FiTrash2 />
-            </div>
-            <h4>Silmək istədiyinizdən əminsiniz?</h4>
-            <p>
-              <strong>{getPlatform(deleteTarget?.platformKey)?.label}</strong>{" "}
-              şəbəkəsi silinəcək. Bu əməliyyat geri alına bilməz.
-            </p>
-            <div className="cat__modal-actions">
-              <button
-                className="cat__btn cat__btn--ghost"
-                onClick={() => setDeleteId(null)}
-              >
-                Ləğv et
-              </button>
-              <button className="cat__btn cat__btn--danger" onClick={doDelete}>
-                <FiTrash2 /> Sil
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ══ GLOBAL POPUP ══════════════════════════════════════════ */}
+      <Popup
+        isOpen={popup.isOpen}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        confirmText={popup.confirmText}
+        cancelText="Ləğv et"
+        onConfirm={() => {
+          popup.onConfirm?.();
+        }}
+        onCancel={closePopup}
+      />
     </div>
   );
 }

@@ -47,12 +47,12 @@ function App() {
         {/* YALNIZ LOGİN OLANLARIN GÖRƏ BİLƏCƏYİ SƏHİFƏLƏR */}
         <Route element={<PrivateRoutes />}>
           <Route path="/home" element={<HomePage />} />
-          <Route path="/applications" element={<ApplicationsPage />} />
-          <Route path="/settings" element={<SettingPage />} />
-          <Route path="/packages" element={<PackagePage />} />
-          <Route path="/analys" element={<AnalysPage />} />
           <Route path="/accounts" element={<AccountPage />} />
           <Route path="/categorys" element={<CategoryPage />} />
+          <Route path="/analys" element={<AnalysPage />} />
+          <Route path="/packages" element={<PackagePage />} />
+          <Route path="/applications" element={<ApplicationsPage />} />
+          <Route path="/settings" element={<SettingPage />} />
         </Route>
 
         {/* Yanlış link */}

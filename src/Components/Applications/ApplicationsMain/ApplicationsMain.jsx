@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FiSend,
   FiChevronDown,
@@ -14,12 +14,118 @@ import {
   FiPhone,
   FiFileText,
   FiUsers,
+  FiCheckCircle,
+  FiTrash2,
+  FiSlash,
 } from "react-icons/fi";
 import "./ApplicationsMain.scss";
 
+/* ─── POPUP COMPONENT ───────────────────────────────────── */
+
+const POPUP_CONFIG = {
+  success: {
+    Icon: FiCheckCircle,
+    confirmClass: "popup__btn--success",
+    defaultConfirm: "Əla",
+    cancelable: false,
+  },
+  delete: {
+    Icon: FiTrash2,
+    confirmClass: "popup__btn--delete",
+    defaultConfirm: "Sil",
+    cancelable: true,
+  },
+  error: {
+    Icon: FiAlertCircle,
+    confirmClass: "popup__btn--error",
+    defaultConfirm: "Anladım",
+    cancelable: false,
+  },
+  block: {
+    Icon: FiSlash,
+    confirmClass: "popup__btn--block",
+    defaultConfirm: "Blokla",
+    cancelable: true,
+  },
+};
+
+function Popup({
+  isOpen = false,
+  type = "success",
+  title = "",
+  message = "",
+  confirmText,
+  cancelText = "Ləğv et",
+  onConfirm,
+  onCancel,
+}) {
+  const cfg = POPUP_CONFIG[type] ?? POPUP_CONFIG.success;
+  const finalConfirmText = confirmText ?? cfg.defaultConfirm;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e) => {
+      if (e.key === "Escape") onCancel?.();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, onCancel]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="popup__overlay" onClick={onCancel} aria-hidden="true" />
+      <div
+        className={`popup popup--${type}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="popup-title"
+      >
+        <button className="popup__close" onClick={onCancel} aria-label="Bağla">
+          <FiX />
+        </button>
+        <div className="popup__icon-wrap">
+          <cfg.Icon className="popup__icon" />
+        </div>
+        <div className="popup__content">
+          {title && (
+            <h3 id="popup-title" className="popup__title">
+              {title}
+            </h3>
+          )}
+          {message && <p className="popup__message">{message}</p>}
+        </div>
+        <div className="popup__actions">
+          {cfg.cancelable && (
+            <button
+              className="popup__btn popup__btn--cancel"
+              onClick={onCancel}
+            >
+              {cancelText}
+            </button>
+          )}
+          <button
+            className={`popup__btn ${cfg.confirmClass}`}
+            onClick={() => onConfirm?.()}
+          >
+            {finalConfirmText}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
 /* ─── MOCK DATA ─────────────────────────────────────────── */
 
-/* Tab 1 — İstifadəçi müraciətləri */
 const previousApplications = [
   {
     id: 1,
@@ -39,7 +145,6 @@ const previousApplications = [
   },
 ];
 
-/* Tab 2 — Admin mesajları */
 const initialAdminMessages = [
   {
     id: 1,
@@ -61,7 +166,6 @@ const initialAdminMessages = [
   },
 ];
 
-/* Tab 3 — Biznes admininin gördüyü işçi qoşulma sorğuları */
 const initialWorkerRequests = [
   {
     id: 1,
@@ -71,7 +175,7 @@ const initialWorkerRequests = [
     position: "Frontend Developer",
     note: "PM Systems-in inkişaf departamentində çalışıram. Hesabımı şirkətimizə bağlamaq istəyirəm.",
     date: "08-03-2026",
-    status: "pending", // pending | approved | rejected
+    status: "pending",
     adminNote: "",
   },
   {
@@ -110,6 +214,10 @@ function ApplicationsMain() {
   const [activeTab, setActiveTab] = useState("applications");
   const [accordion, setAccordion] = useState(null);
 
+  /* ── Popup state ── */
+  const [popup, setPopup] = useState({ isOpen: false, type: "success" });
+  const closePopup = () => setPopup((p) => ({ ...p, isOpen: false }));
+
   /* Tab 1 */
   const [formData, setFormData] = useState({
     type: "Təklif",
@@ -118,8 +226,21 @@ function ApplicationsMain() {
   });
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  /* Tab 1 — Form göndər → success popup */
   const handleSubmit = (e) => {
     e.preventDefault();
+    setPopup({
+      isOpen: true,
+      type: "success",
+      title: "Müraciət göndərildi!",
+      message: "Müraciətiniz qeydə alındı. Tezliklə cavablandırılacaq.",
+      confirmText: "Əla",
+      onConfirm: () => {
+        setFormData({ type: "Təklif", title: "", message: "" });
+        closePopup();
+      },
+    });
   };
 
   /* Tab 2 */
@@ -134,6 +255,8 @@ function ApplicationsMain() {
     );
     toggle("adm_" + id);
   };
+
+  /* Tab 2 — Cavab göndər → success popup */
   const sendReply = (id) => {
     const txt = replyText[id]?.trim();
     if (!txt) return;
@@ -142,42 +265,77 @@ function ApplicationsMain() {
     );
     setReplyText((p) => ({ ...p, [id]: "" }));
     setOpenReply(null);
+    setPopup({
+      isOpen: true,
+      type: "success",
+      title: "Cavab göndərildi!",
+      message: "Cavabınız adminə uğurla çatdırıldı.",
+      confirmText: "Əla",
+      onConfirm: closePopup,
+    });
   };
 
   /* Tab 3 */
   const [workers, setWorkers] = useState(initialWorkerRequests);
-  const [rejectModal, setRejectModal] = useState(null); // id | null
+  const [rejectModal, setRejectModal] = useState(null);
   const [rejectNote, setRejectNote] = useState("");
   const pendingCount = workers.filter((w) => w.status === "pending").length;
 
+  /* Tab 3 — İşçini qəbul et → success popup */
   const approveWorker = (id) => {
-    setWorkers((p) =>
-      p.map((w) =>
-        w.id === id
-          ? {
-              ...w,
-              status: "approved",
-              adminNote: "Xoş gəldiniz! Hesabınız şirkətimizə uğurla bağlandı.",
-            }
-          : w,
-      ),
-    );
+    const worker = workers.find((w) => w.id === id);
+    setPopup({
+      isOpen: true,
+      type: "success",
+      title: "Sorğu qəbul edildi!",
+      message: `${worker?.name} şirkət profilinizə uğurla əlavə edildi.`,
+      confirmText: "Əla",
+      onConfirm: () => {
+        setWorkers((p) =>
+          p.map((w) =>
+            w.id === id
+              ? {
+                  ...w,
+                  status: "approved",
+                  adminNote:
+                    "Xoş gəldiniz! Hesabınız şirkətimizə uğurla bağlandı.",
+                }
+              : w,
+          ),
+        );
+        closePopup();
+      },
+    });
   };
+
   const openRejectModal = (id) => {
     setRejectModal(id);
     setRejectNote("");
   };
+
+  /* Tab 3 — İşçini rədd et → inline modal saxlanıldı, sonra success popup */
   const confirmReject = () => {
     if (!rejectNote.trim()) return;
-    setWorkers((p) =>
-      p.map((w) =>
-        w.id === rejectModal
-          ? { ...w, status: "rejected", adminNote: rejectNote.trim() }
-          : w,
-      ),
-    );
+    const worker = workers.find((w) => w.id === rejectModal);
+    const note = rejectNote.trim();
+    const id = rejectModal;
     setRejectModal(null);
     setRejectNote("");
+    setPopup({
+      isOpen: true,
+      type: "error",
+      title: "Sorğu rədd edildi",
+      message: `${worker?.name} adlı istifadəçinin sorğusu rədd edildi. Bildiriş göndərildi.`,
+      confirmText: "Anladım",
+      onConfirm: () => {
+        setWorkers((p) =>
+          p.map((w) =>
+            w.id === id ? { ...w, status: "rejected", adminNote: note } : w,
+          ),
+        );
+        closePopup();
+      },
+    });
   };
 
   /* accordion helper */
@@ -240,7 +398,6 @@ function ApplicationsMain() {
       ════════════════════════════════ */}
       {activeTab === "applications" && (
         <div className="apm__grid">
-          {/* Yeni müraciət */}
           <div className="apm__card">
             <div className="apm__card-head">
               <h3>Şikayət və Təklif</h3>
@@ -293,7 +450,6 @@ function ApplicationsMain() {
             </form>
           </div>
 
-          {/* Əvvəlki müraciətlər */}
           <div className="apm__card">
             <div className="apm__card-head">
               <h3>Əvvəlki Müraciətlər</h3>
@@ -358,7 +514,6 @@ function ApplicationsMain() {
               </div>
             </div>
 
-            {/* Summary bar */}
             <div className="apm__summary">
               {[
                 {
@@ -397,7 +552,6 @@ function ApplicationsMain() {
                     key={w.id}
                     className={`apm__acc apm__acc--worker apm__acc--${w.status} ${isOpen(k) ? "apm__acc--open" : ""}`}
                   >
-                    {/* HEAD */}
                     <div className="apm__acc-head" onClick={() => toggle(k)}>
                       <div className="apm__acc-left">
                         <span className={`apm__chip apm__chip--${st.color}`}>
@@ -414,9 +568,7 @@ function ApplicationsMain() {
                       </div>
                     </div>
 
-                    {/* BODY */}
                     <div className="apm__acc-body">
-                      {/* İşçi məlumatları */}
                       <div className="apm__worker-details">
                         <div className="apm__detail-row">
                           <FiUser />
@@ -450,7 +602,6 @@ function ApplicationsMain() {
                         </div>
                       </div>
 
-                      {/* Admin cavabı — approved/rejected */}
                       {w.status !== "pending" && w.adminNote && (
                         <div
                           className={`apm__admin-response apm__admin-response--${w.status}`}
@@ -464,7 +615,6 @@ function ApplicationsMain() {
                         </div>
                       )}
 
-                      {/* Əməliyyat düymələri — yalnız pending */}
                       {w.status === "pending" && (
                         <div className="apm__worker-actions">
                           <button
@@ -582,7 +732,7 @@ function ApplicationsMain() {
       )}
 
       {/* ════════════════════════════════
-          RƏDD MODAL
+          RƏDD MODAL (inline — səbəb daxil etmək üçün)
       ════════════════════════════════ */}
       {rejectModal !== null && (
         <>
@@ -622,6 +772,22 @@ function ApplicationsMain() {
           </div>
         </>
       )}
+
+      {/* ════════════════════════════════
+          GLOBAL POPUP
+      ════════════════════════════════ */}
+      <Popup
+        isOpen={popup.isOpen}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        confirmText={popup.confirmText}
+        cancelText="Ləğv et"
+        onConfirm={() => {
+          popup.onConfirm?.();
+        }}
+        onCancel={closePopup}
+      />
     </div>
   );
 }
