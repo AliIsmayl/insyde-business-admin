@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaCloudUploadAlt,
   FaCheckCircle,
@@ -80,12 +81,19 @@ const ICON_MAP = {
 
 const getIconByCode = (code) => ICON_MAP[code] || <FaLink />;
 
-// ─── Trial Modal ──────────────────────────────────────────────
-function TrialModal({ onClose }) {
+// ─── Welcome Modal (ilk dəfə görünür) ────────────────────────
+function WelcomeModal({ onClose }) {
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
+
+  const handleGuide = () => {
+    onClose();
+    navigate("/guide");
+  };
 
   return (
     <div className="tm-overlay" onClick={onClose}>
@@ -101,13 +109,13 @@ function TrialModal({ onClose }) {
             <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
-            Sınaq versiyası
+            INSYDE Business
           </div>
           <div className="tm-demo-copy">
             <h2 className="tm-title">Xoş gəldiniz!</h2>
             <p className="tm-sub">
-              <strong>1 gün ərzində</strong> hesabınız aktivdir. Profilinizi
-              doldurun, görünüşü yoxlayın və hazır olduqda uyğun paketi seçin.
+              Profilinizi doldurun, görünüşü fərdiləşdirin və linklərini əlavə
+              edin. Hər şey hazır olduqda istədiyiniz paketi seçin.
             </p>
           </div>
         </div>
@@ -138,8 +146,11 @@ function TrialModal({ onClose }) {
           </div>
 
           <div className="tm-actions">
-            <button className="tm-btn tm-btn--primary" onClick={onClose}>
-              Kəşfə başla
+            <button className="tm-btn tm-btn--secondary" onClick={onClose}>
+              Bağla
+            </button>
+            <button className="tm-btn tm-btn--primary" onClick={handleGuide}>
+              Bələdçiyə keç
             </button>
           </div>
         </div>
@@ -475,15 +486,13 @@ export default function HomeMain() {
   const [totalViews] = useState(0);
   const profileUrl = "#";
 
-  // Modal: hər sessiyada bir dəfə göstər (free plan üçün)
+  // Modal: yalnız ilk dəfə göstər (localStorage ilə)
   useEffect(() => {
-    if (!planName || planName.toLowerCase() === "free") {
-      if (!sessionStorage.getItem(TRIAL_MODAL_SESSION_KEY)) {
-        sessionStorage.setItem(TRIAL_MODAL_SESSION_KEY, "true");
-        setShowTrialModal(true);
-      }
+    if (!localStorage.getItem(TRIAL_MODAL_SESSION_KEY)) {
+      localStorage.setItem(TRIAL_MODAL_SESSION_KEY, "true");
+      setShowTrialModal(true);
     }
-  }, [planName]);
+  }, []);
 
   // Telefon önizləmə
   const [themeColor, setThemeColor] = useState(DEFAULT_COLOR);
@@ -519,7 +528,7 @@ export default function HomeMain() {
   return (
     <div className="home-main-modern-split">
       {showTrialModal && (
-        <TrialModal onClose={() => setShowTrialModal(false)} />
+        <WelcomeModal onClose={() => setShowTrialModal(false)} />
       )}
       <Popup
         isOpen={popup.isOpen}

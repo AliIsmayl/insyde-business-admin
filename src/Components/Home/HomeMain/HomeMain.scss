@@ -199,6 +199,20 @@
 
     &:active { transform: translateY(0); }
   }
+
+  &--secondary {
+    background: transparent;
+    border: 1.5px solid var(--border-default);
+    color: var(--text-secondary);
+
+    &:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    &:active { transform: translateY(0); }
+  }
 }
 
 @media screen and (max-width: 600px) {
