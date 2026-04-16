@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Joyride, STATUS, EVENTS } from "react-joyride";
 import {
   FaCloudUploadAlt,
   FaCheckCircle,
@@ -34,7 +35,38 @@ import "./HomeMain.scss";
 import Popup from "../../Popup/Popup";
 
 const TRIAL_MODAL_SESSION_KEY = "insyde_biz_trial_modal_seen";
+const TOUR_DONE_KEY = "insyde_biz_tour_done";
 const DEFAULT_COLOR = "#d4af37";
+
+const TOUR_STEPS = [
+  {
+    target: "#tour-profile",
+    title: "Profiliniz",
+    content:
+      "Buradan fərdi və ya brend məlumatlarınızı doldura bilərsiniz. Hər iki hissəni ayrıca idarə edə bilərsiniz.",
+    skipBeacon: true,
+    placement: "auto",
+    buttons: ["close", "primary", "skip"],
+  },
+  {
+    target: "#tour-save",
+    title: "Yadda Saxla",
+    content:
+      "Doldurduğunuz bütün məlumatları saxlamaq üçün bu düyməni istifadə edin.",
+    skipBeacon: true,
+    placement: "auto",
+    buttons: ["back", "close", "primary", "skip"],
+  },
+  {
+    target: "#tour-view-profile",
+    title: "Profilə keç",
+    content:
+      "Müştərilərinizin görəcəyi profil səhifənizə baxmaq üçün bu düyməyə klikləyin.",
+    skipBeacon: true,
+    placement: "auto",
+    buttons: ["back", "close", "primary"],
+  },
+];
 
 // ─── Link sabitləri ───────────────────────────────────────────
 const CATEGORIES = [
@@ -459,8 +491,32 @@ export default function HomeMain() {
   const [popup, setPopup] = useState({ isOpen: false });
   const closePopup = () => setPopup((p) => ({ ...p, isOpen: false }));
 
-  // Trial modal
+  // Welcome modal
   const [showTrialModal, setShowTrialModal] = useState(false);
+
+  // Joyride
+  const [runTour, setRunTour] = useState(false);
+
+  const startTour = () => {
+    if (!localStorage.getItem(TOUR_DONE_KEY)) {
+      setTimeout(() => setRunTour(true), 350);
+    }
+  };
+
+  const closeModal = () => {
+    setShowTrialModal(false);
+    startTour();
+  };
+
+  const handleTourEvent = ({ type, status }) => {
+    if (
+      type === EVENTS.TOUR_END ||
+      (type === EVENTS.TOUR_STATUS && [STATUS.FINISHED, STATUS.SKIPPED].includes(status))
+    ) {
+      setRunTour(false);
+      localStorage.setItem(TOUR_DONE_KEY, "true");
+    }
+  };
 
   // Plan & status
   const [planName] = useState(""); // boş = free/sınaq
@@ -486,13 +542,20 @@ export default function HomeMain() {
   const [totalViews] = useState(0);
   const profileUrl = "#";
 
-  // Modal: yalnız ilk dəfə göstər (localStorage ilə)
+  // İlk girişdə: modal varsa göstər, yoxdursa birbaşa tour-u başlat
   useEffect(() => {
-    if (!localStorage.getItem(TRIAL_MODAL_SESSION_KEY)) {
+    const modalSeen = localStorage.getItem(TRIAL_MODAL_SESSION_KEY);
+    const tourDone  = localStorage.getItem(TOUR_DONE_KEY);
+
+    if (!modalSeen) {
       localStorage.setItem(TRIAL_MODAL_SESSION_KEY, "true");
       setShowTrialModal(true);
+      // tour, modal bağlananda closeModal() vasitəsilə başlayacaq
+    } else if (!tourDone) {
+      // Modal artıq bağlıdır amma tour hələ görülməyib
+      startTour();
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Telefon önizləmə
   const [themeColor, setThemeColor] = useState(DEFAULT_COLOR);
@@ -528,8 +591,84 @@ export default function HomeMain() {
   return (
     <div className="home-main-modern-split">
       {showTrialModal && (
-        <WelcomeModal onClose={() => setShowTrialModal(false)} />
+        <WelcomeModal onClose={closeModal} />
       )}
+
+      <Joyride
+        steps={TOUR_STEPS}
+        run={runTour}
+        continuous
+        showProgress
+        skipScroll
+        offset={16}
+        scrollOffset={80}
+        primaryColor="#d4af37"
+        backgroundColor="#1e1a0e"
+        textColor="#f0e8d0"
+        arrowColor="#1e1a0e"
+        overlayColor="rgba(0,0,0,0.55)"
+        zIndex={10000}
+        width={Math.min(340, typeof window !== "undefined" ? window.innerWidth - 32 : 340)}
+        onEvent={handleTourEvent}
+        locale={{
+          back: "Geri",
+          close: "Bağla",
+          last: "Bitir",
+          next: "Növbəti",
+          skip: "Keç",
+        }}
+        styles={{
+          tooltip: {
+            borderRadius: 16,
+            padding: "16px 20px",
+            fontFamily: "Poppins, sans-serif",
+            fontSize: 13,
+            border: "1px solid rgba(212,175,55,0.3)",
+            boxSizing: "border-box",
+            maxWidth: "calc(100vw - 24px)",
+          },
+          tooltipContainer: {
+            textAlign: "left",
+          },
+          tooltipTitle: {
+            fontSize: 14,
+            fontWeight: 600,
+            marginBottom: 4,
+            textAlign: "left",
+          },
+          tooltipContent: {
+            paddingTop: 6,
+            paddingBottom: 6,
+            lineHeight: 1.55,
+            textAlign: "left",
+          },
+          tooltipFooter: {
+            marginTop: 12,
+            gap: 6,
+          },
+          buttonPrimary: {
+            backgroundColor: "#d4af37",
+            borderRadius: 9,
+            padding: "7px 16px",
+            fontFamily: "Poppins, sans-serif",
+            fontWeight: 600,
+            fontSize: 12,
+            color: "#1a1200",
+          },
+          buttonBack: {
+            color: "#d4af37",
+            fontFamily: "Poppins, sans-serif",
+            fontWeight: 600,
+            fontSize: 12,
+            marginRight: 4,
+          },
+          buttonSkip: {
+            color: "#a09070",
+            fontFamily: "Poppins, sans-serif",
+            fontSize: 11,
+          },
+        }}
+      />
       <Popup
         isOpen={popup.isOpen}
         type={popup.type}
@@ -561,7 +700,7 @@ export default function HomeMain() {
           </div>
         </div>
 
-        <div className="dual-accounts">
+        <div id="tour-profile" className="dual-accounts">
           {/* ── Başlıq sıraları yan yana ── */}
           <div className="dual-accounts-headers">
             <button
@@ -732,6 +871,7 @@ export default function HomeMain() {
           </div>
 
           <a
+            id="tour-view-profile"
             href={profileUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -741,6 +881,7 @@ export default function HomeMain() {
           </a>
 
           <button
+            id="tour-save"
             className={`save-btn ${hasUnsaved ? "save-btn--unsaved" : ""}`}
             disabled={isBlocked}
             onClick={() =>
