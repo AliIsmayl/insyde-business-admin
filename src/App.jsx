@@ -16,6 +16,8 @@ import AnalysPage from "./Pages/AnalysPage";
 import LoginPage from "./Pages/LoginPage";
 import AccountPage from "./Pages/AccountPage";
 import CategoryPage from "./Pages/CategoryPage";
+import PlanSelectPage from "./Pages/PlanSelectPage";
+import GuidePage from "./Pages/GuidePage";
 import ScrollToTop from "./Components/ScroolToTop";
 
 // --- YENİ ƏLAVƏ ---
@@ -44,6 +46,9 @@ function App() {
         {/* LOGİN SƏHİFƏSİ */}
         <Route path="/login" element={<LoginPage />} />
 
+        {/* PLAN SEÇİM SƏHİFƏSİ (login sonrası, layout xaricində) */}
+        <Route path="/plan-select" element={<PlanSelectPage />} />
+
         {/* YALNIZ LOGİN OLANLARIN GÖRƏ BİLƏCƏYİ SƏHİFƏLƏR */}
         <Route element={<PrivateRoutes />}>
           <Route path="/home" element={<HomePage />} />
@@ -53,6 +58,7 @@ function App() {
           <Route path="/packages" element={<PackagePage />} />
           <Route path="/applications" element={<ApplicationsPage />} />
           <Route path="/settings" element={<SettingPage />} />
+          <Route path="/guide" element={<GuidePage />} />
         </Route>
 
         {/* Yanlış link */}

@@ -33,8 +33,9 @@ function LoginMain() {
       // 1. İstifadəçinin daxil olduğunu lokal yaddaşa (localStorage) yazırıq
       localStorage.setItem("isAuthenticated", "true");
 
-      // 2. Ana səhifəyə yönləndiririk (Əvvəlki addımda App.js-də yaratdığımız /home yolu)
-      navigate("/home");
+      // 2. Plan seçilməyibsə plan seçim səhifəsinə, seçilibsə ana səhifəyə yönləndir
+      const hasPlan = localStorage.getItem("planType");
+      navigate(hasPlan ? "/home" : "/plan-select", { replace: true });
     } else {
       setErrorMsg("E-poçt və ya şifrə yanlışdır! (Sınaq üçün: admin / admin)");
       setSuccessMsg("");

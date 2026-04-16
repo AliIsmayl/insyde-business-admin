@@ -9,10 +9,13 @@ import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import "./Sidebar.scss";
 import { MdOutlineSwitchAccount } from "react-icons/md";
 import { TbCategory } from "react-icons/tb";
+import { HiOutlineBookOpen } from "react-icons/hi";
 
 function Sidebar({ isOpen, setIsOpen }) {
   const [openMenus, setOpenMenus] = useState({});
   const sidebarRef = useRef(null);
+  const planType = (localStorage.getItem("planType") || "sahibkar").toLowerCase();
+  const isKorporativ = planType === "korporativ";
 
   // Ekran ölçüsünü yoxlamaq üçün state (Masaüstü və ya Mobil)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -60,28 +63,36 @@ function Sidebar({ isOpen, setIsOpen }) {
 
   const menuItems = [
     {
-      name: "Ana səhifə",
+      name: "Profil",
       path: "/home",
       icon: <HiOutlineHome />,
     },
-    {
-      name: "Hesablar",
-      path: "/accounts",
-      icon: <MdOutlineSwitchAccount />,
-    },
-    {
-      name: "Categoriyalar",
-      path: "/categorys",
-      icon: <TbCategory />,
-    },
+    ...(isKorporativ ? [
+      {
+        name: "Hesablar",
+        path: "/accounts",
+        icon: <MdOutlineSwitchAccount />,
+      },
+      {
+        name: "Categoriyalar",
+        path: "/categorys",
+        icon: <TbCategory />,
+      },
+    ] : []),
 
     { name: "Analitika", path: "/analys", icon: <TbBrandGoogleAnalytics /> },
     { name: "Paketlər", path: "/packages", icon: <PiPackage /> },
     {
-      name: "Müraciətlər",
-      path: "/applications",
-      icon: <FaRegMessage />,
+      name: "Bələdçi",
+      path: "/guide",
+      icon: <HiOutlineBookOpen />,
     },
+    // {
+    //   name: "Müraciətlər",
+    //   path: "/applications",
+    //   icon: <FaRegMessage />,
+    // },
+
   ];
 
   return (

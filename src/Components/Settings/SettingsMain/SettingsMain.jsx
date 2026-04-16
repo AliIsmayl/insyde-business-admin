@@ -129,6 +129,12 @@ function SettingsMain() {
                 <p>İşləmək üçün sizə ən uyğun olan mövzunu seçin.</p>
               </div>
             </div>
+            <div className="user-code-box">
+              <span className="user-code-label">User Code</span>
+              <strong className="user-code-value">
+                {localStorage.getItem("userCode") || "—"}
+              </strong>
+            </div>
             <div className="theme-options">
               <div
                 className={`theme-box ${theme === "dark" ? "active" : ""}`}
@@ -163,8 +169,8 @@ function SettingsMain() {
             </div>
           </div>
 
-          {/* SOL AŞAĞI — DİL */}
-          <div className="modern-card language-card">
+          {/* SOL AŞAĞI — DİL (müvəqqəti deaktiv edilib) */}
+          {/* <div className="modern-card language-card">
             <div className="card-header">
               <div className="header-icon">
                 <FiGlobe />
@@ -193,7 +199,7 @@ function SettingsMain() {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* SAĞ SÜTUN — PAROL */}

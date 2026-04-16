@@ -6,15 +6,15 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 24px;
 
-  /* ── BAŞLIQ VƏ FİLTRLƏR ─────────────────────── */
+  // ── TOP HEADER ─────────────────────────────────────
   .top-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 16px;
 
     .title-area {
       .page-title {
@@ -24,7 +24,7 @@
         color: var(--text-primary);
       }
       .page-subtitle {
-        font-size: 14px;
+        font-size: 13px;
         color: var(--text-secondary);
         margin: 0;
       }
@@ -48,7 +48,7 @@
         font-weight: 600;
         color: var(--text-secondary);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
 
         &:hover {
           color: var(--text-primary);
@@ -63,339 +63,394 @@
     }
   }
 
+  // ── CONTENT ────────────────────────────────────────
   .analys-content {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 28px;
   }
 
-  /* ── SUMMARY CARDS: 3 sütun ─────────────────── */
+  // ── SECTION BLOCK ──────────────────────────────────
+  .section-block {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    .section-label {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+  }
+
+  // ── SCAN TYPE ROW ──────────────────────────────────
+  .scan-type-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  // ── SUMMARY CARDS ──────────────────────────────────
   .summary-cards-row {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 
-    .stat-card {
-      background-color: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: 25px;
+  // ── STAT CARD ──────────────────────────────────────
+  .stat-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.22s, border-color 0.22s;
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-focus);
+    }
+
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
-      gap: 20px;
-      transition:
-        transform 0.3s ease,
-        border-color 0.3s ease;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
 
-      &:hover {
-        transform: translateY(-4px);
-        border-color: var(--border-focus);
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+
+      h4 {
+        margin: 0;
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-weight: 500;
       }
 
-      /* İşçi kartı üçün qızılı sol kənar vurğusu */
-  
+      .stat-bottom {
+        display: flex;
+        align-items: center;
+        gap: 8px;
 
-      .stat-icon {
-        width: 60px;
-        height: 60px;
-        min-width: 60px;
-        border-radius: 16px;
+        .value {
+          font-size: 22px;
+          font-weight: 800;
+          color: var(--text-primary);
+          line-height: 1;
+        }
+
+        // ── İşçi edit UI ──
+        .worker-edit {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .worker-input {
+          width: 72px;
+          font-family: "Poppins", sans-serif;
+          font-size: 20px;
+          font-weight: 800;
+          color: var(--text-primary);
+          background: var(--bg-input);
+          border: 1.5px solid rgba(212, 175, 55, 0.5);
+          border-radius: 8px;
+          padding: 2px 8px;
+          outline: none;
+          line-height: 1;
+
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+          -moz-appearance: textfield;
+
+          &:focus { border-color: #d4af37; }
+        }
+
+        .worker-action {
+          width: 26px;
+          height: 26px;
+          border-radius: 7px;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: 0.2s;
+          flex-shrink: 0;
+          font-size: 13px;
+
+          &--save {
+            background: rgba(39, 174, 96, 0.12);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+            &:hover { background: #27ae60; color: #fff; }
+          }
+          &--cancel {
+            background: var(--bg-hover);
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+            &:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+          }
+        }
+
+        .worker-edit-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          border: 1px solid var(--border-subtle);
+          background: var(--bg-input);
+          color: var(--text-muted);
+          cursor: pointer;
+          transition: 0.2s;
+          font-size: 13px;
+          flex-shrink: 0;
+
+          &:hover {
+            background: rgba(212, 175, 55, 0.12);
+            color: #d4af37;
+            border-color: rgba(212, 175, 55, 0.4);
+          }
+        }
+      }
+    }
+  }
+
+  // ── DASHBOARD GRID ─────────────────────────────────
+  .dashboard-grid {
+    display: grid;
+    gap: 20px;
+
+    &.two-col { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  // ── DASHBOARD CARD ─────────────────────────────────
+  .dashboard-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: 22px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+
+    .card-header {
+      margin-bottom: 20px;
+      border-bottom: 1px dashed var(--border-strong);
+      padding-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .head-icon {
+          color: var(--text-link);
+          font-size: 16px;
+        }
+      }
+
+      // ── Fərdi / Biznes switch ──
+      .source-section-switch {
+        display: flex;
+        background: var(--bg-input);
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 3px;
+        gap: 3px;
+        align-self: flex-start;
+
+        button {
+          border: 1px solid transparent;
+          background: transparent;
+          padding: 5px 14px;
+          border-radius: 7px;
+          font-family: "Poppins", sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--text-secondary);
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+
+          &:hover { color: var(--text-primary); }
+
+          &.active {
+            background: var(--bg-active);
+            border-color: var(--border-strong);
+            color: var(--text-link);
+          }
+        }
+      }
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+  // ── PROGRESS ROW ───────────────────────────────────
+  .progress-row {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    .row-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+
+      .info-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+
+        .item-icon { font-size: 15px; display: flex; flex-shrink: 0; }
+
+        .item-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--text-primary);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .item-count {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: var(--bg-input);
+      border-radius: 10px;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.65s ease-in-out;
+      }
+    }
+  }
+
+  // ── LOCATION ROW ───────────────────────────────────
+  .location-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-input);
+    border-radius: 14px;
+    transition: background 0.2s, border-color 0.2s;
+
+    &:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-input-hover);
+    }
+
+    .loc-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .loc-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border-subtle);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 26px;
-        flex-shrink: 0;
+        color: var(--text-link);
+        font-size: 14px;
       }
 
-      .stat-info {
+      .loc-texts {
         display: flex;
         flex-direction: column;
-        gap: 5px;
-        min-width: 0;
-        flex: 1;
+        gap: 1px;
 
-        h4 {
-          margin: 0;
+        .city {
           font-size: 13px;
-          color: var(--text-secondary);
-          font-weight: 500;
-        }
-
-        .stat-bottom {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-
-          .value {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--text-primary);
-            line-height: 1;
-          }
-          .trend {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 20px;
-            &.positive {
-              background-color: var(--badge-success-bg);
-              color: var(--badge-success-text);
-              border: 1px solid rgba(46, 204, 113, 0.3);
-            }
-          }
-
-          /* ── İşçi düzəliş UI ─── */
-          .worker-edit {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-          }
-          .worker-input {
-            width: 72px;
-            font-family: "Poppins", sans-serif;
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--text-primary);
-            background: var(--bg-input);
-            border: 1.5px solid rgba(200, 167, 94, 0.5);
-            border-radius: 8px;
-            padding: 2px 8px;
-            outline: none;
-            line-height: 1;
-            /* Chrome number spinner gizlət */
-            &::-webkit-inner-spin-button,
-            &::-webkit-outer-spin-button {
-              -webkit-appearance: none;
-              margin: 0;
-            }
-            -moz-appearance: textfield;
-            &:focus {
-              border-color: #c8a75e;
-            }
-          }
-          .worker-action {
-            width: 26px;
-            height: 26px;
-            border-radius: 7px;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-            flex-shrink: 0;
-            &--save {
-              background: rgba(39, 174, 96, 0.12);
-              color: #27ae60;
-              border: 1px solid rgba(39, 174, 96, 0.3);
-              &:hover {
-                background: #27ae60;
-                color: #fff;
-              }
-            }
-            &--cancel {
-              background: var(--bg-hover);
-              color: var(--text-muted);
-              border: 1px solid var(--border-subtle);
-              &:hover {
-                background: rgba(239, 68, 68, 0.1);
-                color: #ef4444;
-              }
-            }
-          }
-
-          /* Düzəliş düyməsi (qələm) */
-          .worker-edit-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
-            background: var(--bg-input);
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: 0.2s;
-            flex-shrink: 0;
-            &:hover {
-              background: rgba(200, 167, 94, 0.12);
-              color: #c8a75e;
-              border-color: rgba(200, 167, 94, 0.4);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /* ── DETALLI ANALİZ QRİDİ ───────────────────── */
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-
-    .dashboard-card {
-      background-color: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      border-radius: 25px;
-      padding: 25px;
-      display: flex;
-      flex-direction: column;
-
-      .card-header {
-        margin-bottom: 25px;
-        border-bottom: 1px dashed var(--border-strong);
-        padding-bottom: 15px;
-
-        h3 {
-          margin: 0;
-          font-size: 16px;
           font-weight: 700;
           color: var(--text-primary);
-          display: flex;
-          align-items: center;
-          gap: 10px;
-
-          .head-icon {
-            color: var(--text-link);
-            font-size: 18px;
-          }
+          line-height: 1.2;
+        }
+        .country {
+          font-size: 11px;
+          color: var(--text-secondary);
         }
       }
+    }
 
-      .card-body {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
+    .loc-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
 
-        .progress-row {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-
-          .row-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            .info-left {
-              display: flex;
-              align-items: center;
-              gap: 8px;
-
-              .item-icon {
-                font-size: 16px;
-                display: flex;
-              }
-              .item-name {
-                font-size: 14px;
-                font-weight: 600;
-                color: var(--text-primary);
-              }
-            }
-            .item-count {
-              font-size: 13px;
-              font-weight: 600;
-              color: var(--text-secondary);
-            }
-          }
-
-          .progress-bar-bg {
-            width: 100%;
-            height: 8px;
-            background-color: var(--bg-input);
-            border-radius: 10px;
-            overflow: hidden;
-
-            .progress-fill {
-              height: 100%;
-              border-radius: 10px;
-              transition: width 0.8s ease-in-out;
-            }
-          }
-        }
-
-        .location-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 12px 15px;
-          background-color: var(--bg-input);
-          border: 1px solid var(--border-input);
-          border-radius: 15px;
-          transition:
-            background 0.3s,
-            border-color 0.3s;
-
-          &:hover {
-            background-color: var(--bg-hover);
-            border-color: var(--border-input-hover);
-          }
-
-          .loc-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            .loc-icon {
-              width: 36px;
-              height: 36px;
-              border-radius: 10px;
-              background-color: var(--bg-panel);
-              border: 1px solid var(--border-subtle);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: var(--text-link);
-            }
-            .loc-texts {
-              display: flex;
-              flex-direction: column;
-              .city {
-                font-size: 14px;
-                font-weight: 700;
-                color: var(--text-primary);
-                line-height: 1.2;
-              }
-              .country {
-                font-size: 12px;
-                color: var(--text-secondary);
-              }
-            }
-          }
-
-          .loc-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            .loc-count {
-              font-size: 15px;
-              font-weight: 800;
-              color: var(--text-primary);
-            }
-            .loc-percent {
-              font-size: 12px;
-              font-weight: 600;
-              color: var(--badge-success-text);
-            }
-          }
-        }
+      .loc-count {
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--text-primary);
+      }
+      .loc-percent {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--badge-success-text);
       }
     }
   }
 
-  /* ── RESPONSİVLİK ───────────────────────────── */
+  // ── ANİMASİYA ──────────────────────────────────────
+  @keyframes skShimmer {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 0.85; }
+  }
+
+  // ── RESPONSİV ──────────────────────────────────────
   @media screen and (max-width: 1100px) {
-    .summary-cards-row {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .dashboard-grid {
-      grid-template-columns: repeat(2, 1fr);
-      .location-card {
-        grid-column: span 2;
-      }
-    }
+    .scan-type-row { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media screen and (max-width: 768px) {
@@ -408,45 +463,20 @@
         width: 100%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        button {
-          padding: 8px 5px;
-          font-size: 12px;
-        }
+
+        button { padding: 8px 5px; font-size: 12px; }
       }
     }
 
-    .summary-cards-row {
-      grid-template-columns: 1fr;
-      gap: 15px;
+    .scan-type-row     { grid-template-columns: repeat(2, 1fr); }
+    .summary-cards-row { grid-template-columns: 1fr; }
 
-      .stat-card {
-        padding: 20px;
-        .stat-icon {
-          width: 50px;
-          height: 50px;
-          min-width: 50px;
-          font-size: 22px;
-        }
-        .stat-info .stat-bottom .value {
-          font-size: 20px;
-        }
-      }
-    }
+    .dashboard-grid.two-col { grid-template-columns: 1fr; }
 
-    .dashboard-grid {
-      grid-template-columns: 1fr;
-      .location-card {
-        grid-column: span 1;
-      }
-      .dashboard-card {
-        padding: 20px 15px;
-      }
-    }
+    .dashboard-card { padding: 18px 14px; }
   }
 
-  @media screen and (max-width: 500px) {
-    .summary-cards-row {
-      grid-template-columns: 1fr;
-    }
+  @media screen and (max-width: 480px) {
+    .scan-type-row { grid-template-columns: 1fr; }
   }
 }

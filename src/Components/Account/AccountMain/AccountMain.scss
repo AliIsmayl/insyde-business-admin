@@ -278,8 +278,8 @@
           }
 
           &.active {
-            background-color: rgba(200, 167, 94, 0.12);
-            border-color: rgba(200, 167, 94, 0.35);
+            background-color: rgba(212, 175, 55, 0.12);
+            border-color: rgba(212, 175, 55, 0.35);
             color: var(--text-link);
           }
 
@@ -485,13 +485,13 @@
                     }
                   }
                   &.website {
-                    background: rgba(200, 167, 94, 0.08);
-                    border-color: rgba(200, 167, 94, 0.2);
+                    background: rgba(212, 175, 55, 0.08);
+                    border-color: rgba(212, 175, 55, 0.2);
                     svg {
                       color: var(--text-link);
                     }
                     &:hover {
-                      background: rgba(200, 167, 94, 0.16);
+                      background: rgba(212, 175, 55, 0.16);
                     }
                   }
                 }
@@ -505,8 +505,8 @@
                 font-weight: 600;
                 color: var(--text-link);
                 text-decoration: none;
-                background-color: rgba(200, 167, 94, 0.08);
-                border: 1px solid rgba(200, 167, 94, 0.2);
+                background-color: rgba(212, 175, 55, 0.08);
+                border: 1px solid rgba(212, 175, 55, 0.2);
                 padding: 7px 14px;
                 border-radius: 9px;
                 transition: all 0.2s;
@@ -524,8 +524,8 @@
                 }
 
                 &:hover {
-                  background-color: rgba(200, 167, 94, 0.16);
-                  border-color: rgba(200, 167, 94, 0.4);
+                  background-color: rgba(212, 175, 55, 0.16);
+                  border-color: rgba(212, 175, 55, 0.4);
                   transform: translateY(-1px);
                 }
                 &:active {
@@ -601,8 +601,8 @@
     font-size: 12px;
     font-weight: 700;
     color: var(--text-link);
-    background-color: rgba(200, 167, 94, 0.1);
-    border: 1px solid rgba(200, 167, 94, 0.2);
+    background-color: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     padding: 4px 10px;
     letter-spacing: 0.5px;
@@ -698,9 +698,9 @@
       border: 1px solid rgba(46, 204, 113, 0.25);
     }
     &.mid {
-      background-color: rgba(200, 167, 94, 0.1);
+      background-color: rgba(212, 175, 55, 0.1);
       color: var(--text-link);
-      border: 1px solid rgba(200, 167, 94, 0.2);
+      border: 1px solid rgba(212, 175, 55, 0.2);
     }
     &.low {
       background-color: var(--bg-input);
@@ -765,11 +765,11 @@
         }
       }
       &.website {
-        background: rgba(200, 167, 94, 0.08);
-        border-color: rgba(200, 167, 94, 0.18);
+        background: rgba(212, 175, 55, 0.08);
+        border-color: rgba(212, 175, 55, 0.18);
         color: var(--text-link);
         &:hover {
-          background: rgba(200, 167, 94, 0.18);
+          background: rgba(212, 175, 55, 0.18);
           transform: translateY(-2px);
         }
       }
@@ -813,8 +813,8 @@
     font-weight: 600;
     color: var(--text-link);
     text-decoration: none;
-    background-color: rgba(200, 167, 94, 0.08);
-    border: 1px solid rgba(200, 167, 94, 0.2);
+    background-color: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     padding: 6px 13px;
     border-radius: 9px;
     transition: all 0.2s;
@@ -825,8 +825,8 @@
     }
 
     &:hover {
-      background-color: rgba(200, 167, 94, 0.18);
-      border-color: rgba(200, 167, 94, 0.45);
+      background-color: rgba(212, 175, 55, 0.18);
+      border-color: rgba(212, 175, 55, 0.45);
       transform: translateY(-1px);
     }
     &:active {

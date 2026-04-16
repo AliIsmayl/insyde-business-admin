@@ -39,9 +39,9 @@
     border-radius: 12px;
     font-size: 13px;
     font-weight: 600;
-    background: rgba(200, 167, 94, 0.1);
-    color: #c8a75e;
-    border: 1px solid rgba(200, 167, 94, 0.25);
+    background: rgba(212, 175, 55, 0.1);
+    color: #d4af37;
+    border: 1px solid rgba(212, 175, 55, 0.25);
     white-space: nowrap;
   }
 
@@ -375,9 +375,9 @@
       text-overflow: ellipsis;
     }
     &:hover {
-      background: rgba(200, 167, 94, 0.1);
-      border-color: rgba(200, 167, 94, 0.35);
-      color: #c8a75e;
+      background: rgba(212, 175, 55, 0.1);
+      border-color: rgba(212, 175, 55, 0.35);
+      color: #d4af37;
     }
   }
   &__item-actions {
@@ -575,8 +575,8 @@
     background: var(--bg-input);
     &:hover,
     &--drag {
-      border-color: #c8a75e;
-      background: rgba(200, 167, 94, 0.06);
+      border-color: #d4af37;
+      background: rgba(212, 175, 55, 0.06);
     }
   }
   &__dropzone-icon {
@@ -654,10 +654,10 @@
     transition: 0.2s;
   }
   &__bg-replace {
-    background: rgba(200, 167, 94, 0.9);
+    background: rgba(212, 175, 55, 0.9);
     color: #fff;
     &:hover {
-      background: #c8a75e;
+      background: #d4af37;
     }
   }
   &__bg-remove {
@@ -763,7 +763,7 @@
     flex: 1;
     font-size: 12px;
     font-weight: 500;
-    color: #c8a75e;
+    color: #d4af37;
     text-decoration: none;
     white-space: nowrap;
     overflow: hidden;
@@ -811,9 +811,9 @@
       border-color: var(--border-strong);
     }
     &--active {
-      background: rgba(200, 167, 94, 0.12);
-      color: #c8a75e;
-      border-color: rgba(200, 167, 94, 0.5);
+      background: rgba(212, 175, 55, 0.12);
+      color: #d4af37;
+      border-color: rgba(212, 175, 55, 0.5);
     }
   }
 
@@ -859,16 +859,16 @@
     min-width: 0;
     &:hover {
       transform: scale(1.14);
-      border-color: rgba(200, 167, 94, 0.5);
+      border-color: rgba(212, 175, 55, 0.5);
     }
     &--active {
-      border-color: #c8a75e !important;
+      border-color: #d4af37 !important;
       transform: scale(1.1);
     }
     /* tətbiq edilmiş rəng — soluk halqa */
     &--applied {
-      border-color: rgba(200, 167, 94, 0.35) !important;
-      outline: 2px dashed rgba(200, 167, 94, 0.4);
+      border-color: rgba(212, 175, 55, 0.35) !important;
+      outline: 2px dashed rgba(212, 175, 55, 0.4);
       outline-offset: 2px;
     }
   }
@@ -921,7 +921,7 @@
     border: 2px solid var(--border-input);
     transition: border-color 0.2s;
     &:hover {
-      border-color: #c8a75e;
+      border-color: #d4af37;
     }
   }
   &__color-input {
@@ -1287,7 +1287,7 @@
       background: var(--bg-hover);
     }
     &--active {
-      background: rgba(200, 167, 94, 0.1);
+      background: rgba(212, 175, 55, 0.1);
       .psel__icon {
         background: var(--btn-primary-bg);
         color: var(--text-on-gold);
@@ -1299,7 +1299,7 @@
   }
   &__opt-check {
     font-size: 13px;
-    color: #c8a75e;
+    color: #d4af37;
     flex-shrink: 0;
   }
 }
