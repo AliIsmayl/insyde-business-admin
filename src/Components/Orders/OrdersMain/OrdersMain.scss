@@ -455,6 +455,12 @@
   strong { color: var(--text-primary); font-weight: 700; }
 }
 
+.order-confirmed-redirect {
+  font-size: 12px !important;
+  color: #d4af37 !important;
+  font-weight: 600;
+}
+
 // ══════════════════════════════════════════════════════════
 // PAST ORDERS MODE
 // ══════════════════════════════════════════════════════════
@@ -503,6 +509,60 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.pending-address-card {
+  width: 100%;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.14), rgba(212, 175, 55, 0.05));
+  border: 1.5px solid rgba(212, 175, 55, 0.24);
+  border-radius: 16px;
+  padding: 16px 17px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(212, 175, 55, 0.42);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.pending-address-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.pending-address-card__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #d4af37;
+  letter-spacing: 0.03em;
+}
+
+.pending-address-card__num {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pending-address-card__meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+
+  span + span::before {
+    content: "·";
+    margin-right: 8px;
+  }
 }
 
 .order-card {

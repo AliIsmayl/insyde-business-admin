@@ -15,7 +15,7 @@ const SAHIBKAR_PKG = {
 };
 
 const KORPORATIV_PKG = {
-  key: "korporativ", name: "Korporativ", color: "#8b5cf6",
+  key: "korporativ", name: "Korporativ", color: "#b8942a",
   features: ["Fərdi + Brend profili", "Sosial & əlaqə linkləri", "Analitika paneli", "QR / NFC dəstəyi", "Fiziki kart", "Xüsusi dizayn", "Hesablar idarəetməsi", "Linklər", "İşçi sayı analitikası"],
 };
 
@@ -352,6 +352,8 @@ export default function PackageMain() {
       return `rgba(${r},${g},${b},${a})`;
     };
     const c = pkgData.color;
+    const heroAccent = "#d4af37";
+    const heroAccentDeep = "#8f6b16";
     const baseCard2  = calcCorp(2);
     const baseCard5  = calcCorp(5);
     const baseCard10 = calcCorp(10);
@@ -362,12 +364,12 @@ export default function PackageMain() {
 
           {/* ── Hero ── */}
           <div className="pkg-info-hero" style={{
-            background: `linear-gradient(145deg, ${toRgba(c,0.24)} 0%, ${toRgba(c,0.08)} 55%, transparent 100%)`,
-            borderBottom: `1px solid ${toRgba(c,0.18)}`,
+            background: `linear-gradient(145deg, ${toRgba(heroAccent,0.22)} 0%, ${toRgba(heroAccentDeep,0.1)} 52%, transparent 100%)`,
+            borderBottom: `1px solid ${toRgba(heroAccent,0.24)}`,
           }}>
             <div className="pkg-info-hero-inner">
               <div className="pkg-info-hero-text">
-                <span className="pkg-info-badge" style={{ background: toRgba(c,0.16), color: c, border: `1px solid ${toRgba(c,0.35)}` }}>
+                <span className="pkg-info-badge" style={{ background: toRgba(heroAccent,0.14), color: heroAccent, border: `1px solid ${toRgba(heroAccent,0.3)}` }}>
                   {pkgData.name} paketi
                 </span>
                 <h2 className="pkg-info-title">
@@ -379,7 +381,7 @@ export default function PackageMain() {
                     : "Öz şəxsi brendinizi yaradın. Fiziki kart + analitika paneli ilə rəqəmsal varlığınızı gücləndirin."}
                 </p>
               </div>
-              <button className="pkg-start-btn" style={{ background: c }} onClick={() => setStarted(true)}>
+              <button className="pkg-start-btn" onClick={() => setStarted(true)}>
                 Sifarişə başla <FiArrowRight size={16} />
               </button>
             </div>
@@ -452,6 +454,37 @@ export default function PackageMain() {
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+              {!isKorporativ && (
+                <div className="pkg-price-card pkg-price-card--dr">
+                  <div className="ppc-head">
+                    <span className="ppc-label">Endirimlər</span>
+                    <span className="ppc-tag">müddətə görə</span>
+                  </div>
+                  <div className="pkg-dr-table">
+                    {BILLING_OPTIONS.map((opt) => {
+                      const raw = calcRaw(SAHIBKAR_PKG.monthlyRate, opt.months);
+                      const disc = calcTotal(SAHIBKAR_PKG.monthlyRate, opt.months, opt.discountRate);
+                      const saved = +(raw - disc).toFixed(2);
+                      return (
+                        <div key={opt.key} className="pkg-dr-row">
+                          <span className="pkg-dr-users">{opt.label}</span>
+                          <div className="pkg-dr-prices">
+                            <span className="pkg-dr-item">
+                              <em>Toplam</em>
+                              <strong style={{ color: c }}>{disc.toFixed(2)}₼</strong>
+                            </span>
+                            <span className="pkg-dr-sep">·</span>
+                            <span className="pkg-dr-item">
+                              <em>Qənaət</em>
+                              <strong style={{ color: c }}>{saved > 0 ? `-${saved.toFixed(2)}₼` : "0.00₼"}</strong>
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -757,13 +790,17 @@ export default function PackageMain() {
             <div className="corp-price-preview">
               <div className="corp-price-item">
                 <span>Kart qiyməti</span>
-                <strong>{corpCalc.cardTotal.toFixed(2)}₼</strong>
-                {corpCalc.cardDR > 0 && <span className="corp-discount-badge">-{corpCalc.cardDR}%</span>}
+                <div className="corp-price-value-row">
+                  <strong>{corpCalc.cardTotal.toFixed(2)}₼</strong>
+                  {corpCalc.cardDR > 0 && <span className="corp-discount-badge">-{corpCalc.cardDR}%</span>}
+                </div>
               </div>
               <div className="corp-price-item">
                 <span>Aylıq aktivlik</span>
-                <strong>{corpCalc.monthlyTotal.toFixed(2)}₼</strong>
-                {corpCalc.monthDR > 0 && <span className="corp-discount-badge">-{corpCalc.monthDR}%</span>}
+                <div className="corp-price-value-row">
+                  <strong>{corpCalc.monthlyTotal.toFixed(2)}₼</strong>
+                  {corpCalc.monthDR > 0 && <span className="corp-discount-badge">-{corpCalc.monthDR}%</span>}
+                </div>
               </div>
             </div>
           </div>

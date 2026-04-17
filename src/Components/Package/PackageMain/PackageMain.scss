@@ -208,7 +208,6 @@ $radius-card: 18px;
     &.selected {
       border-color: var(--border-focus);
       background: var(--bg-active);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
       transform: translateY(-2px);
     }
 
@@ -938,8 +937,9 @@ $radius-card: 18px;
     flex-shrink: 0;
     padding: 14px 28px;
     border-radius: 16px;
-    border: none;
-    color: #fff;
+    border: 1px solid rgba(212, 175, 55, 0.24);
+    background: linear-gradient(135deg, #d4af37, #8f6b16);
+    color: #1a1405;
     font-family: "Poppins", sans-serif;
     font-size: 15px;
     font-weight: 700;
@@ -952,21 +952,36 @@ $radius-card: 18px;
     &:active { transform: translateY(0); opacity: 1; }
   }
 
+  [data-theme="light"] & .pkg-start-btn,
+  :root[data-theme="light"] & .pkg-start-btn {
+    background: #ffffff;
+    color: var(--text-primary);
+    border-color: rgba(212, 175, 55, 0.2);
+  }
+
   .pkg-info-body {
     padding: 32px 36px 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 1fr;
+    gap: 24px;
+    align-items: start;
   }
 
   .pkg-pricing-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
+    grid-column: 2 / 4;
+    order: 2;
 
     &.korp {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+  }
+
+  .pkg-price-card--dr {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 
   .pkg-price-card {
@@ -1113,6 +1128,14 @@ $radius-card: 18px;
     display: flex;
     flex-direction: column;
     gap: 14px;
+    order: 1;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: stretch;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 20px 22px;
   }
 
   .pkg-features-title {
@@ -1126,8 +1149,8 @@ $radius-card: 18px;
 
   .pkg-features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px 20px;
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .pkg-feature-item {
@@ -1154,6 +1177,40 @@ $radius-card: 18px;
     transition: all 0.2s;
 
     &:hover { border-color: var(--border-focus); color: var(--text-primary); }
+  }
+
+  .pkg-info-body {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .pkg-pricing-grid {
+    grid-column: 2 / 4;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    &.korp {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .pkg-price-card--dr {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .pkg-info-features {
+    grid-column: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 20px 22px;
+  }
+
+  .pkg-features-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   // ── Corp 2-col layout ────────────────────────────────────
@@ -1361,31 +1418,50 @@ $radius-card: 18px;
 
   // ── Corp pricing preview ──────────────────────────────────
   .corp-price-preview {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+    width: 100%;
     flex-shrink: 0;
 
     .corp-price-item {
       display: flex;
-      align-items: center;
-      gap: 6px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: 11px;
-      padding: 7px 13px;
+      padding: 12px 14px;
       font-size: 12px;
       color: var(--text-secondary);
-      white-space: nowrap;
-      width: 220px;
-      flex-shrink: 0;
+      white-space: normal;
+      width: auto;
+      min-width: 0;
+      flex-shrink: 1;
       box-sizing: border-box;
+
+      span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+
+      .corp-price-value-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
 
       strong {
         color: var(--text-primary);
-        font-weight: 700;
+        font-size: 20px;
+        font-weight: 800;
         font-variant-numeric: tabular-nums;
-        width: 80px;
-        display: inline-block;
+        line-height: 1;
         flex-shrink: 0;
       }
 
@@ -1393,10 +1469,9 @@ $radius-card: 18px;
         background: rgba(16, 185, 129, 0.12);
         color: #10b981;
         border-radius: 6px;
-        padding: 1px 6px;
+        padding: 2px 8px;
         font-size: 10px;
         font-weight: 700;
-        width: 42px;
         text-align: center;
         flex-shrink: 0;
       }
@@ -2017,6 +2092,11 @@ $radius-card: 18px;
 
   // ── Responsive ───────────────────────────────────────────
   @media (max-width: 1024px) {
+    .pkg-info-body { grid-template-columns: 1fr; }
+    .pkg-pricing-grid,
+    .pkg-pricing-grid.korp { grid-column: auto; grid-template-columns: 1fr 1fr; }
+    .pkg-info-features,
+    .pkg-price-card--dr { grid-column: auto; grid-row: auto; }
     .card-design-workspace { grid-template-columns: 1fr; }
     .card-controls-panel { max-width: 100%; justify-self: stretch; }
     .checkout-layout { grid-template-columns: 1fr; }
@@ -2032,6 +2112,8 @@ $radius-card: 18px;
     }
 
     .billing-options { grid-template-columns: 1fr; }
+    .pkg-pricing-grid,
+    .pkg-pricing-grid.korp { grid-template-columns: 1fr; }
     .card-controls-grid { grid-template-columns: 1fr; }
     .profile-count-wrap { flex-direction: column; align-items: flex-start; gap: 12px; }
     .corp-confirm-layout { grid-template-columns: 1fr; }

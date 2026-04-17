@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./OrdersMain.scss";
 
 // ─── Helpers ─────────────────────────────────────────────
@@ -62,6 +62,22 @@ const PAST_ORDERS = [
   },
 ];
 
+const ADDRESS_PENDING_ORDER = {
+  id: "pending-address-1",
+  isNew: true,
+  order_number: "INS-2039841",
+  user_count: 1,
+  card_total: 27.9,
+  card_dr: 0,
+  monthly_total: 12,
+  monthly_per_user: 2,
+  month_dr: 0,
+  billing_label: "6 Aylıq",
+  billing_months: 6,
+  package_name: "Sahibkar",
+  package_color: "#d4af37",
+};
+
 // ─── Stage icons ──────────────────────────────────────────
 function StageIcon({ stageKey }) {
   const icons = {
@@ -112,7 +128,10 @@ function OrderTimeline({ timeline }) {
 // ─── Main ─────────────────────────────────────────────────
 export default function OrdersMain() {
   const location = useLocation();
-  const newOrder = location.state?.isNew ? location.state : null;
+  const navigate = useNavigate();
+  const routeOrder = location.state?.isNew ? location.state : null;
+  const [pendingOrder, setPendingOrder] = useState(null);
+  const newOrder = routeOrder || pendingOrder;
 
   // Delivery form state
   const [deliveryTab,       setDeliveryTab]       = useState("metro");
@@ -133,10 +152,32 @@ export default function OrdersMain() {
   const canConfirmMetro   = selectedStation && selectedSlot;
   const canConfirmAddress = address.trim() && selectedSlot;
 
+  const openPendingAddressOrder = () => {
+    setDeliveryTab("address");
+    setSelectedStation(null);
+    setSelectedSlot("");
+    setPhone("");
+    setAddress("");
+    setNote("");
+    setSubmitError("");
+    setSubmitLoading(false);
+    setConfirmed(false);
+    setPendingOrder(ADDRESS_PENDING_ORDER);
+  };
+
   const handleConfirm = () => {
     setSubmitLoading(true); setSubmitError("");
     setTimeout(() => { setSubmitLoading(false); setConfirmed(true); }, 1200);
   };
+
+  useEffect(() => {
+    if (!confirmed || !newOrder) return;
+    const timer = setTimeout(() => {
+      setPendingOrder(null);
+      navigate("/orders", { replace: true });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [confirmed, newOrder, navigate]);
 
   // ── NEW ORDER MODE ────────────────────────────────────────
   if (newOrder) {
@@ -148,6 +189,7 @@ export default function OrdersMain() {
             <h2>Sifariş qəbul edildi!</h2>
             <p className="order-confirmed-num">Sifariş nömrəsi: <strong>{newOrder.order_number}</strong></p>
             <p>Çatdırılma məlumatlarınız sisteme daxil edildi. Ən yaxın həftə sonu çatdırılma həyata keçiriləcək.</p>
+            <p className="order-confirmed-redirect">3 saniyə sonra sifarişlər siyahısına yönləndiriləcəksiniz.</p>
           </div>
         </div>
       );
@@ -331,10 +373,22 @@ export default function OrdersMain() {
         <div className="orders-left">
           <div className="orders-header">
             <h2 className="orders-title">Sifarişlərim</h2>
-            <p className="orders-subtitle">{PAST_ORDERS.length} sifariş</p>
+            <p className="orders-subtitle">{PAST_ORDERS.length + 1} sifariş</p>
           </div>
 
           <div className="orders-list">
+            <button className="pending-address-card" onClick={openPendingAddressOrder} type="button">
+              <div className="pending-address-card__top">
+                <span className="pending-address-card__label">Ünvan gözləyən sifariş</span>
+                <span className="order-badge status-accepted">Ünvan seç</span>
+              </div>
+              <div className="pending-address-card__num">№ {ADDRESS_PENDING_ORDER.order_number}</div>
+              <div className="pending-address-card__meta">
+                <span>{ADDRESS_PENDING_ORDER.user_count} kart</span>
+                <span>{ADDRESS_PENDING_ORDER.card_total.toFixed(2)}₼ kart + {ADDRESS_PENDING_ORDER.monthly_total.toFixed(2)}₼ abunə</span>
+              </div>
+            </button>
+
             {PAST_ORDERS.map((order) => (
               <div
                 key={order.id}
