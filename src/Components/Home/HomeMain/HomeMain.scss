@@ -1328,6 +1328,28 @@
     }
   }
 
+  .add-links-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-default);
+    background: transparent;
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+  }
+
   .add-new-btn {
     display: flex;
     align-items: center;

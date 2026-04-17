@@ -9,10 +9,9 @@ const PLANS = [
     label: "Sahibkar",
     icon: <FiBriefcase />,
     color: "#d4af37",
-    desc: "Fərdi sahibkarlar və kiçik müəssisələr üçün. 1-ci və 2-ci hissəni idarə edin, linklər əlavə edin, analitikanı izləyin.",
+    desc: "Fərdi sahibkarlar və kiçik müəssisələr üçün. 1-ci və 2-ci hissəni idarə edin və analitikanı izləyin.",
     features: [
       "Fərdi + Brend profili",
-      "Sosial & əlaqə linkləri",
       "Analitika paneli",
       "QR / NFC dəstəyi",
       "Paket seçimi",

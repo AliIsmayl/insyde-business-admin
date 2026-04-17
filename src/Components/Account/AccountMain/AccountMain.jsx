@@ -22,8 +22,13 @@ import {
   FiAlertTriangle,
   FiX,
   FiShield,
+  FiUserPlus,
+  FiSend,
+  FiClock,
 } from "react-icons/fi";
 import "./AccountMain.scss";
+
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
 const MOCK_USERS = [
   {
@@ -32,6 +37,8 @@ const MOCK_USERS = [
     name: "Elçin Məmmədov",
     email: "elcin@example.com",
     profession: "Frontend Developer",
+    inviteStatus: "active",
+    invitedAt: null,
     skills: ["React", "CSS", "UI/UX"],
     experience: "2 il 4 ay",
     views: 0,
@@ -58,13 +65,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/aynur",
     about: "İstifadəçi mərkəzli dizayn.",
     blocked: false,
-    socials: {
-      instagram: "aynur.design",
-      linkedin: "aynurhasanova",
-      github: "",
-      twitter: "aynurux",
-      website: "",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "aynur.design", linkedin: "aynurhasanova", github: "", twitter: "aynurux", website: "" },
   },
   {
     id: 3,
@@ -78,13 +81,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/tural",
     about: "Güclü API həlləri yaradıram.",
     blocked: true,
-    socials: {
-      instagram: "",
-      linkedin: "turalaliyev",
-      github: "turalaliyev",
-      twitter: "",
-      website: "https://tural.io",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "", linkedin: "turalaliyev", github: "turalaliyev", twitter: "", website: "https://tural.io" },
   },
   {
     id: 4,
@@ -98,13 +97,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/leyla",
     about: "Məhsulun hər mərhələsini sevərək idarə edirəm.",
     blocked: false,
-    socials: {
-      instagram: "leyla.pm",
-      linkedin: "leylaquliyeva",
-      github: "",
-      twitter: "leylapm",
-      website: "https://leyla.pm",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "leyla.pm", linkedin: "leylaquliyeva", github: "", twitter: "leylapm", website: "https://leyla.pm" },
   },
   {
     id: 5,
@@ -118,13 +113,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/rauf",
     about: "Cross-platform mobil tətbiqlər hazırlayıram.",
     blocked: false,
-    socials: {
-      instagram: "",
-      linkedin: "raufismayilov",
-      github: "raufdev",
-      twitter: "",
-      website: "",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "", linkedin: "raufismayilov", github: "raufdev", twitter: "", website: "" },
   },
   {
     id: 6,
@@ -138,13 +129,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/nigar",
     about: "Vizual hekayəçilik mənim ehtirasım.",
     blocked: false,
-    socials: {
-      instagram: "nigar.art",
-      linkedin: "nigarbabayeva",
-      github: "",
-      twitter: "nigarart",
-      website: "https://nigar.art",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "nigar.art", linkedin: "nigarbabayeva", github: "", twitter: "nigarart", website: "https://nigar.art" },
   },
   {
     id: 7,
@@ -158,13 +145,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/kamran",
     about: "İnfrastruktur avtomatlaşdırma üzrə ixtisaslaşmışam.",
     blocked: false,
-    socials: {
-      instagram: "",
-      linkedin: "kamrannecefov",
-      github: "kamranops",
-      twitter: "kamrandevops",
-      website: "",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "", linkedin: "kamrannecefov", github: "kamranops", twitter: "kamrandevops", website: "" },
   },
   {
     id: 8,
@@ -178,13 +161,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/sevinc",
     about: "Məlumatlardan dərin anlayışlar çıxarıram.",
     blocked: false,
-    socials: {
-      instagram: "sevinc.data",
-      linkedin: "sevincorucova",
-      github: "sevincdata",
-      twitter: "",
-      website: "",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "sevinc.data", linkedin: "sevincorucova", github: "sevincdata", twitter: "", website: "" },
   },
   {
     id: 9,
@@ -198,13 +177,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/ferid",
     about: "Tam yığın həllərlə işləyirəm.",
     blocked: false,
-    socials: {
-      instagram: "",
-      linkedin: "feridhüseynov",
-      github: "feriddev",
-      twitter: "feridstack",
-      website: "https://ferid.dev",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "", linkedin: "feridhüseynov", github: "feriddev", twitter: "feridstack", website: "https://ferid.dev" },
   },
   {
     id: 10,
@@ -218,13 +193,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/xedice",
     about: "Marka səsini formalaşdırıram.",
     blocked: false,
-    socials: {
-      instagram: "xedice.content",
-      linkedin: "xedicérahimova",
-      github: "",
-      twitter: "xedicecreates",
-      website: "https://xedice.co",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "xedice.content", linkedin: "xedicérahimova", github: "", twitter: "xedicecreates", website: "https://xedice.co" },
   },
   {
     id: 11,
@@ -238,13 +209,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/behruz",
     about: "Keyfiyyətsiz kod buraxmıram.",
     blocked: true,
-    socials: {
-      instagram: "",
-      linkedin: "behruzasgarov",
-      github: "behruzqa",
-      twitter: "",
-      website: "",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "", linkedin: "behruzasgarov", github: "behruzqa", twitter: "", website: "" },
   },
   {
     id: 12,
@@ -258,13 +225,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/meryem",
     about: "İstifadəçi davranışını dərindən öyrənirəm.",
     blocked: false,
-    socials: {
-      instagram: "meryem.ux",
-      linkedin: "meryemsultanova",
-      github: "",
-      twitter: "meryemresearch",
-      website: "https://meryem.design",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "meryem.ux", linkedin: "meryemsultanova", github: "", twitter: "meryemresearch", website: "https://meryem.design" },
   },
   {
     id: 13,
@@ -278,13 +241,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/elnur",
     about: "Rəqəmsal aktivləri qoruyuram.",
     blocked: false,
-    socials: {
-      instagram: "",
-      linkedin: "elnurqasimov",
-      github: "elnursec",
-      twitter: "elnurcyber",
-      website: "",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "", linkedin: "elnurqasimov", github: "elnursec", twitter: "elnurcyber", website: "" },
   },
   {
     id: 14,
@@ -298,13 +257,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/zehra",
     about: "Brendlər üçün böyümə strategiyaları hazırlayıram.",
     blocked: false,
-    socials: {
-      instagram: "zehra.marketing",
-      linkedin: "zehramuradova",
-      github: "",
-      twitter: "zehragrowth",
-      website: "https://zehra.marketing",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "zehra.marketing", linkedin: "zehramuradova", github: "", twitter: "zehragrowth", website: "https://zehra.marketing" },
   },
   {
     id: 15,
@@ -318,13 +273,9 @@ const MOCK_USERS = [
     profileUrl: "https://example.com/vusal",
     about: "Artırılmış reallıq təcrübələri yaradıram.",
     blocked: false,
-    socials: {
-      instagram: "vusal.xr",
-      linkedin: "vusalkarimov",
-      github: "vusalxr",
-      twitter: "",
-      website: "https://vusal.xr",
-    },
+    inviteStatus: "active",
+    invitedAt: null,
+    socials: { instagram: "vusal.xr", linkedin: "vusalkarimov", github: "vusalxr", twitter: "", website: "https://vusal.xr" },
   },
 ];
 
@@ -434,37 +385,83 @@ function AccountMain() {
   const [page, setPage] = useState(1);
   const [expandedRow, setExpandedRow] = useState(null);
   const [openMenu, setOpenMenu] = useState(null);
-  const [filterBlocked, setFilterBlocked] = useState("all"); // "all" | "active" | "blocked"
-  const [confirmModal, setConfirmModal] = useState(null); // { user, action: "block"|"unblock" }
-  const [deleteModal, setDeleteModal] = useState(null); // user
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [confirmModal, setConfirmModal] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(null);
+
+  // Invite form
+  const [inviteName, setInviteName] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteSuccess, setInviteSuccess] = useState("");
+
+  const canInvite = inviteName.trim().length > 1 && isValidEmail(inviteEmail);
+
+  const handleInvite = () => {
+    if (!canInvite) return;
+    const newUser = {
+      id: Date.now(),
+      code: "—",
+      name: inviteName.trim(),
+      email: inviteEmail.trim(),
+      profession: "—",
+      skills: [],
+      experience: "—",
+      views: 0,
+      profileUrl: "#",
+      about: "",
+      blocked: false,
+      inviteStatus: "pending",
+      invitedAt: new Date().toLocaleDateString("az-AZ"),
+      socials: { instagram: "", linkedin: "", github: "", twitter: "", website: "" },
+    };
+    setUsers((p) => [newUser, ...p]);
+    setInviteSuccess(inviteEmail.trim());
+    setInviteName("");
+    setInviteEmail("");
+    setTimeout(() => setInviteSuccess(""), 4000);
+    setPage(1);
+  };
+
+  const handleConfirmMember = (id) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === id
+          ? { ...u, inviteStatus: "active", code: `INV${Math.floor(1000 + Math.random() * 9000)}` }
+          : u
+      )
+    );
+    setOpenMenu(null);
+  };
+
+  const handleCancelInvite = (e, id) => {
+    e.stopPropagation();
+    setOpenMenu(null);
+    setUsers((prev) => prev.filter((u) => u.id !== id));
+  };
 
   const filtered = users.filter((u) => {
+    const q = search.toLowerCase();
     const matchSearch =
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase()) ||
-      u.code.toLowerCase().includes(search.toLowerCase()) ||
-      u.profession.toLowerCase().includes(search.toLowerCase());
+      u.name.toLowerCase().includes(q) ||
+      u.email.toLowerCase().includes(q) ||
+      u.code.toLowerCase().includes(q) ||
+      (u.profession && u.profession.toLowerCase().includes(q));
     const matchFilter =
-      filterBlocked === "all"
-        ? true
-        : filterBlocked === "blocked"
-          ? u.blocked
-          : !u.blocked;
+      filterStatus === "all"        ? true
+      : filterStatus === "pending"  ? u.inviteStatus === "pending"
+      : filterStatus === "active"   ? u.inviteStatus === "active" && !u.blocked
+      : filterStatus === "blocked"  ? u.blocked
+      : true;
     return matchSearch && matchFilter;
   });
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE,
-  );
+  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-    setPage(1);
-  };
+  const handleSearch = (e) => { setSearch(e.target.value); setPage(1); };
 
-  const toggleRow = (id) => {
+  const toggleRow = (id, isPending) => {
+    if (isPending) return;
     setExpandedRow(expandedRow === id ? null : id);
     setOpenMenu(null);
   };
@@ -482,9 +479,7 @@ function AccountMain() {
 
   const handleBlockConfirm = () => {
     setUsers((prev) =>
-      prev.map((u) =>
-        u.id === confirmModal.user.id ? { ...u, blocked: !u.blocked } : u,
-      ),
+      prev.map((u) => u.id === confirmModal.user.id ? { ...u, blocked: !u.blocked } : u)
     );
     setConfirmModal(null);
   };
@@ -501,8 +496,9 @@ function AccountMain() {
     setExpandedRow(null);
   };
 
+  const pendingCount = users.filter((u) => u.inviteStatus === "pending").length;
+  const activeCount  = users.filter((u) => u.inviteStatus === "active" && !u.blocked).length;
   const blockedCount = users.filter((u) => u.blocked).length;
-  const activeCount = users.length - blockedCount;
 
   return (
     <div className="account-main" onClick={() => setOpenMenu(null)}>
@@ -527,52 +523,100 @@ function AccountMain() {
       <div className="top-header">
         <div>
           <h2 className="page-title">İstifadəçilər</h2>
-          <p className="page-subtitle">
-            Bütün qeydiyyatlı istifadəçiləri idarə edin.
-          </p>
+          <p className="page-subtitle">Korporativ üzvləri idarə edin və yeni dəvətlər göndərin.</p>
         </div>
-        <div className="header-right">
-          <div className="search-box">
-            <FiSearch className="search-icon" />
+      </div>
+
+      {/* INVITE PANEL */}
+      <div className="invite-panel">
+        <div className="invite-panel-head">
+          <FiUserPlus className="invite-panel-icon" />
+          <div>
+            <h3 className="invite-panel-title">Yeni İstifadəçi Dəvət Et</h3>
+            <p className="invite-panel-sub">
+              Ad və e-poçt daxil edin — dəvət linki həmin e-poçta göndəriləcək.
+            </p>
+          </div>
+        </div>
+        {inviteSuccess && (
+          <div className="invite-success">
+            <FiCheckCircle />
+            <span>
+              <strong>{inviteSuccess}</strong> ünvanına dəvət e-poçtu göndərildi.
+            </span>
+          </div>
+        )}
+        <div className="invite-form">
+          <div className="invite-field">
+            <FiUser className="invite-field-icon" />
             <input
               type="text"
-              placeholder="Ad, email, kod və ya peşə..."
-              value={search}
-              onChange={handleSearch}
+              placeholder="Ad Soyad"
+              value={inviteName}
+              onChange={(e) => setInviteName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleInvite()}
             />
           </div>
-          <div className="stats-badges">
-            <button
-              className={`stat-badge ${filterBlocked === "all" ? "active" : ""}`}
-              onClick={() => {
-                setFilterBlocked("all");
-                setPage(1);
-              }}
-            >
-              <FiUser />
-              <span>{users.length} Hamısı</span>
-            </button>
-            <button
-              className={`stat-badge success ${filterBlocked === "active" ? "active" : ""}`}
-              onClick={() => {
-                setFilterBlocked("active");
-                setPage(1);
-              }}
-            >
-              <FiCheckCircle />
-              <span>{activeCount} Aktiv</span>
-            </button>
-            <button
-              className={`stat-badge danger ${filterBlocked === "blocked" ? "active" : ""}`}
-              onClick={() => {
-                setFilterBlocked("blocked");
-                setPage(1);
-              }}
-            >
-              <FiShield />
-              <span>{blockedCount} Blok</span>
-            </button>
+          <div className="invite-field">
+            <FiMail className="invite-field-icon" />
+            <input
+              type="email"
+              placeholder="E-poçt ünvanı"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleInvite()}
+            />
           </div>
+          <button
+            className="invite-send-btn"
+            onClick={handleInvite}
+            disabled={!canInvite}
+          >
+            <FiSend /> Dəvət Et
+          </button>
+        </div>
+      </div>
+
+      {/* FILTER ROW */}
+      <div className="filter-row">
+        <div className="search-box">
+          <FiSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Ad, email, kod..."
+            value={search}
+            onChange={handleSearch}
+          />
+        </div>
+        <div className="stats-badges">
+          <button
+            className={`stat-badge ${filterStatus === "all" ? "active" : ""}`}
+            onClick={() => { setFilterStatus("all"); setPage(1); }}
+          >
+            <FiUser />
+            <span>{users.length} Hamısı</span>
+          </button>
+          <button
+            className={`stat-badge success ${filterStatus === "active" ? "active" : ""}`}
+            onClick={() => { setFilterStatus("active"); setPage(1); }}
+          >
+            <FiCheckCircle />
+            <span>{activeCount} Üzv</span>
+          </button>
+          <button
+            className={`stat-badge pending ${filterStatus === "pending" ? "active" : ""}`}
+            onClick={() => { setFilterStatus("pending"); setPage(1); }}
+          >
+            <FiClock />
+            <span>{pendingCount} Gözləyir</span>
+          </button>
+          <button
+            className={`stat-badge danger ${filterStatus === "blocked" ? "active" : ""}`}
+            onClick={() => { setFilterStatus("blocked"); setPage(1); }}
+          >
+            <FiShield />
+            <span>{blockedCount} Blok</span>
+          </button>
         </div>
       </div>
 
@@ -582,27 +626,16 @@ function AccountMain() {
           <table className="accounts-table">
             <thead>
               <tr>
-                <th>
-                  <FiHash className="th-icon" /> Kod
-                </th>
-                <th>
-                  <FiUser className="th-icon" /> Ad Soyad
-                </th>
-                <th>
-                  <FiMail className="th-icon" /> Email
-                </th>
-                <th>
-                  <FiBriefcase className="th-icon" /> Peşə
-                </th>
+                <th><FiHash className="th-icon" /> Kod</th>
+                <th><FiUser className="th-icon" /> Ad Soyad</th>
+                <th><FiMail className="th-icon" /> Email</th>
+                <th><FiBriefcase className="th-icon" /> Peşə</th>
                 <th>Bacarıqlar</th>
-                <th>
-                  <FiEye className="th-icon" /> Baxışlar
-                </th>
+                <th><FiEye className="th-icon" /> Baxışlar</th>
                 <th>Sosial</th>
+                <th><FiClock className="th-icon" /> Dəvət</th>
                 <th>Status</th>
-                <th>
-                  <FiExternalLink className="th-icon" /> Link
-                </th>
+                <th><FiExternalLink className="th-icon" /> Link</th>
                 <th></th>
               </tr>
             </thead>
@@ -615,20 +648,21 @@ function AccountMain() {
                   </td>
                 </tr>
               ) : (
-                paginated.map((user) => (
+                paginated.map((user) => {
+                  const isPending = user.inviteStatus === "pending";
+                  return (
                   <React.Fragment key={user.id}>
                     <tr
-                      className={`data-row ${expandedRow === user.id ? "expanded" : ""} ${user.blocked ? "is-blocked" : ""}`}
-                      onClick={() => toggleRow(user.id)}
+                      className={`data-row ${expandedRow === user.id ? "expanded" : ""} ${user.blocked ? "is-blocked" : ""} ${isPending ? "is-pending" : ""}`}
+                      onClick={() => toggleRow(user.id, isPending)}
+                      style={{ cursor: isPending ? "default" : "pointer" }}
                     >
                       <td>
-                        <span className="user-code">{user.code}</span>
+                        <span className={`user-code ${isPending ? "user-code--pending" : ""}`}>{user.code}</span>
                       </td>
                       <td>
                         <div className="user-name-cell">
-                          <div
-                            className={`avatar ${user.blocked ? "blocked-avatar" : ""}`}
-                          >
+                          <div className={`avatar ${user.blocked ? "blocked-avatar" : ""} ${isPending ? "pending-avatar" : ""}`}>
                             {user.name.charAt(0)}
                           </div>
                           <span>{user.name}</span>
@@ -638,114 +672,118 @@ function AccountMain() {
                         <span className="email-text">{user.email}</span>
                       </td>
                       <td>
-                        <span className="profession-text">
-                          {user.profession}
-                        </span>
+                        <span className="profession-text">{isPending ? <span className="pending-dash">Dəvət gözlənilir</span> : user.profession}</span>
                       </td>
                       <td>
-                        <div className="skills-cell">
-                          {user.skills.slice(0, 2).map((s, i) => (
-                            <span key={i} className="skill-tag">
-                              {s}
-                            </span>
-                          ))}
-                          {user.skills.length > 2 && (
-                            <span className="skill-tag more">
-                              +{user.skills.length - 2}
-                            </span>
-                          )}
-                        </div>
+                        {isPending ? <span className="pending-dash">—</span> : (
+                          <div className="skills-cell">
+                            {user.skills.slice(0, 2).map((s, i) => (
+                              <span key={i} className="skill-tag">{s}</span>
+                            ))}
+                            {user.skills.length > 2 && (
+                              <span className="skill-tag more">+{user.skills.length - 2}</span>
+                            )}
+                          </div>
+                        )}
                       </td>
-                   
                       <td>
-                        <span
-                          className={`views-badge ${user.views > 200 ? "high" : user.views > 50 ? "mid" : "low"}`}
-                        >
-                          {user.views}
-                        </span>
+                        {isPending ? <span className="pending-dash">—</span> : (
+                          <span className={`views-badge ${user.views > 200 ? "high" : user.views > 50 ? "mid" : "low"}`}>
+                            {user.views}
+                          </span>
+                        )}
                       </td>
-                      {/* SOCIAL ICONS */}
                       <td onClick={(e) => e.stopPropagation()}>
-                        <div className="socials-cell">
-                          {Object.entries(user.socials).map(([type, val]) => {
-                            if (!val) return null;
-                            const url = getSocialUrl(type, val);
-                            return (
-                              <a
-                                key={type}
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`social-icon-btn ${type}`}
-                                title={`@${val}`}
-                              >
-                                <SocialIcon type={type} />
-                              </a>
-                            );
-                          })}
-                        </div>
+                        {isPending ? <span className="pending-dash">—</span> : (
+                          <div className="socials-cell">
+                            {Object.entries(user.socials).map(([type, val]) => {
+                              if (!val) return null;
+                              const url = getSocialUrl(type, val);
+                              return (
+                                <a key={type} href={url} target="_blank" rel="noopener noreferrer"
+                                  className={`social-icon-btn ${type}`} title={`@${val}`}>
+                                  <SocialIcon type={type} />
+                                </a>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        <span className={`invite-date ${isPending ? "invite-date--pending" : ""}`}>
+                          {user.invitedAt || "—"}
+                        </span>
                       </td>
                       {/* STATUS BADGE */}
                       <td>
-                        <span
-                          className={`status-badge ${user.blocked ? "blocked" : "active"}`}
-                        >
-                          {user.blocked ? (
-                            <>
-                              <FiSlash /> Blok
-                            </>
-                          ) : (
-                            <>
-                              <FiCheckCircle /> Aktiv
-                            </>
-                          )}
-                        </span>
+                        {isPending ? (
+                          <span className="status-badge pending">
+                            <FiClock /> Gözləyir
+                          </span>
+                        ) : user.blocked ? (
+                          <span className="status-badge blocked">
+                            <FiSlash /> Blok
+                          </span>
+                        ) : (
+                          <span className="status-badge active">
+                            <FiCheckCircle /> Üzv
+                          </span>
+                        )}
                       </td>
                       <td onClick={(e) => e.stopPropagation()}>
-                        <a
-                          href={user.profileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="profile-link-btn"
-                        >
-                          <FiExternalLink />
-                          <span>Profil</span>
-                        </a>
+                        {!isPending ? (
+                          <a href={user.profileUrl} target="_blank" rel="noopener noreferrer" className="profile-link-btn">
+                            <FiExternalLink /><span>Profil</span>
+                          </a>
+                        ) : <span className="pending-dash">—</span>}
                       </td>
                       <td onClick={(e) => e.stopPropagation()}>
                         <div className="action-menu-wrap">
-                          <button
-                            className="more-btn"
-                            onClick={(e) => toggleMenu(e, user.id)}
-                          >
+                          <button className="more-btn" onClick={(e) => toggleMenu(e, user.id)}>
                             <FiMoreVertical />
                           </button>
                           {openMenu === user.id && (
                             <div className="action-dropdown">
-                              <button className="dropdown-item edit">
-                                <FiEdit2 /> Düzəliş et
-                              </button>
-                              <button
-                                className={`dropdown-item ${user.blocked ? "unblock" : "block-item"}`}
-                                onClick={(e) => openBlockConfirm(e, user)}
-                              >
-                                {user.blocked ? (
-                                  <>
-                                    <FiCheckCircle /> Bloku aç
-                                  </>
-                                ) : (
-                                  <>
-                                    <FiSlash /> Blokla
-                                  </>
-                                )}
-                              </button>
-                              <div className="dropdown-divider" />
-                              <button
-                                className="dropdown-item delete"
-                                onClick={(e) => openDeleteConfirm(e, user)}
-                              >
-                                <FiTrash2 /> Sil
-                              </button>
+                              {isPending ? (
+                                <>
+                                  <button
+                                    className="dropdown-item edit"
+                                    onClick={() => { handleConfirmMember(user.id); }}
+                                  >
+                                    <FiCheckCircle /> Üzv kimi təsdiqlə
+                                  </button>
+                                  <div className="dropdown-divider" />
+                                  <button
+                                    className="dropdown-item delete"
+                                    onClick={(e) => handleCancelInvite(e, user.id)}
+                                  >
+                                    <FiTrash2 /> Dəvəti ləğv et
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button className="dropdown-item edit">
+                                    <FiEdit2 /> Düzəliş et
+                                  </button>
+                                  <button
+                                    className={`dropdown-item ${user.blocked ? "unblock" : "block-item"}`}
+                                    onClick={(e) => openBlockConfirm(e, user)}
+                                  >
+                                    {user.blocked ? (
+                                      <><FiCheckCircle /> Bloku aç</>
+                                    ) : (
+                                      <><FiSlash /> Blokla</>
+                                    )}
+                                  </button>
+                                  <div className="dropdown-divider" />
+                                  <button
+                                    className="dropdown-item delete"
+                                    onClick={(e) => openDeleteConfirm(e, user)}
+                                  >
+                                    <FiTrash2 /> Sil
+                                  </button>
+                                </>
+                              )}
                             </div>
                           )}
                         </div>
@@ -845,7 +883,8 @@ function AccountMain() {
                       </tr>
                     )}
                   </React.Fragment>
-                ))
+                );
+                })
               )}
             </tbody>
           </table>

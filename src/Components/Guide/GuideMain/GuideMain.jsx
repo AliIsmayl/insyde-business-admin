@@ -17,7 +17,7 @@ const STEPS = [
     num: 1,
     icon: <HiOutlineHome />,
     title: "Profil bölməsini doldurun",
-    desc: "1-ci hissədə fərdi və ya biznes məlumatlarınızı, 2-ci hissədə brend məlumatlarınızı daxil edin. Sosial şəbəkə və əlaqə linklərini əlavə edib yadda saxlayın — məlumatlar kartınızda dərhal görünəcək.",
+    desc: "1-ci hissədə fərdi məlumatlarınızı, 2-ci hissədə brend məlumatlarınızı daxil edin. Sosial şəbəkə və əlaqə linklərini əlavə edib yadda saxlayın — məlumatlar kartınızda dərhal görünəcək.",
     imageAlt: "Profil — 1-ci və 2-ci hissə",
   },
   {
@@ -51,14 +51,14 @@ const BASE_PAGES = [
     subs: [
       {
         id: "home-s1",
-        title: "1-ci Hissə — Fərdi / Biznes",
-        desc: "1-ci hissədə profil növünüzü seçin: Fərdi (ad, peşə, bacarıqlar) və ya Biznes (brend adı, üstünlüklər). Seçiminə uyğun sahələr avtomatik dəyişir. Dəyişiklikləri yadda saxlamağı unutmayın.",
-        imageAlt: "1-ci hissə — fərdi/biznes switch",
+        title: "1-ci Hissə — Fərdi",
+        desc: "1-ci hissədə fərdi məlumatlarınızı daxil edin: ad, peşə, bacarıqlar və istəyə bağlı iş yeri. Dəyişiklikləri yadda saxlamağı unutmayın.",
+        imageAlt: "1-ci hissə — fərdi məlumatlar",
       },
       {
         id: "home-s2",
         title: "2-ci Hissə — Brend",
-        desc: "2-ci hissədə müstəqil brend məlumatlarınızı daxil edin. Bu hissə həmişə biznes/brend formatındadır — şirkət adı, üstünlüklər və brend şəkli.",
+        desc: "2-ci hissədə müstəqil brend məlumatlarınızı daxil edin. Bu hissə həmişə brend formatındadır — şirkət adı, üstünlüklər və brend şəkli.",
         imageAlt: "2-ci hissə — brend məlumatları",
       },
       {
@@ -84,7 +84,7 @@ const BASE_PAGES = [
         id: "analys-source",
         title: "Hansı vasitələrlə baxılıb?",
         desc: "Fərdi və Brend hissəsini ayrıca seçib hər biri üçün mənbə statistikasını (Instagram, WhatsApp, Telegram...) müqayisə edin.",
-        imageAlt: "Mənbə analizi — Fərdi / Biznes switch",
+        imageAlt: "Mənbə analizi — Fərdi / Brend seçimi",
       },
       {
         id: "analys-devices",

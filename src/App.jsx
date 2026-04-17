@@ -18,6 +18,7 @@ import AccountPage from "./Pages/AccountPage";
 import CategoryPage from "./Pages/CategoryPage";
 import PlanSelectPage from "./Pages/PlanSelectPage";
 import GuidePage from "./Pages/GuidePage";
+import OrdersPage from "./Pages/OrdersPage";
 import ScrollToTop from "./Components/ScroolToTop";
 
 // --- YENİ ƏLAVƏ ---
@@ -59,6 +60,7 @@ function App() {
           <Route path="/applications" element={<ApplicationsPage />} />
           <Route path="/settings" element={<SettingPage />} />
           <Route path="/guide" element={<GuidePage />} />
+          <Route path="/orders" element={<OrdersPage />} />
         </Route>
 
         {/* Yanlış link */}

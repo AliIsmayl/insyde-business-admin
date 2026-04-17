@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { FiSettings, FiChevronDown, FiMenu } from "react-icons/fi";
+import { FiSettings, FiChevronDown, FiMenu, FiLogOut, FiShoppingBag } from "react-icons/fi";
 import { HiOutlineHome } from "react-icons/hi2";
-import { LuSquareArrowOutDownLeft } from "react-icons/lu";
 import { FaRegMessage } from "react-icons/fa6";
 import { PiPackage } from "react-icons/pi";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import "./Sidebar.scss";
 import { MdOutlineSwitchAccount } from "react-icons/md";
-import { TbCategory } from "react-icons/tb";
+import { FiLink } from "react-icons/fi";
 import { HiOutlineBookOpen } from "react-icons/hi";
 
 function Sidebar({ isOpen, setIsOpen }) {
@@ -74,14 +73,15 @@ function Sidebar({ isOpen, setIsOpen }) {
         icon: <MdOutlineSwitchAccount />,
       },
       {
-        name: "Categoriyalar",
+        name: "Linklər",
         path: "/categorys",
-        icon: <TbCategory />,
+        icon: <FiLink />,
       },
     ] : []),
 
     { name: "Analitika", path: "/analys", icon: <TbBrandGoogleAnalytics /> },
     { name: "Paketlər", path: "/packages", icon: <PiPackage /> },
+    { name: "Sifarişlərim", path: "/orders", icon: <FiShoppingBag /> },
     {
       name: "Bələdçi",
       path: "/guide",
@@ -197,7 +197,7 @@ function Sidebar({ isOpen, setIsOpen }) {
             onClick={() => isMobile && setIsOpen(false)}
           >
             <div className="icon-container">
-              <LuSquareArrowOutDownLeft />
+              <FiLogOut />
             </div>
             <span className="menu-text">Çıxış</span>
           </NavLink>

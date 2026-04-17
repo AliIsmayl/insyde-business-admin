@@ -86,7 +86,6 @@ function DashCard({ title, icon, children, headerExtra }) {
 // ─── Ana Komponent ────────────────────────────────────────
 function AnalysMain() {
   const [period, setPeriod] = useState("month");
-  const [sourceSection, setSourceSection] = useState("ferdi");
 
   const planType = (localStorage.getItem("planType") || "sahibkar").toLowerCase();
   const showWorkerCard =
@@ -149,21 +148,28 @@ function AnalysMain() {
     },
   ];
 
-  /* ── Mənbə məlumatları (Fərdi / Biznes) ── */
-  const sourceDataFerdi = [
+  /* ── Mənbə məlumatları ── */
+  const sourceData = [
     {
       name: "Instagram",
       icon: <FaInstagram />,
       count: Math.round(450 * m),
-      percent: 65,
+      percent: 55,
       color: "#E1306C",
     },
     {
       name: "WhatsApp",
       icon: <FaWhatsapp />,
       count: Math.round(150 * m),
-      percent: 25,
+      percent: 20,
       color: "#25D366",
+    },
+    {
+      name: "Facebook",
+      icon: <FaFacebook />,
+      count: Math.round(90 * m),
+      percent: 15,
+      color: "#1877F2",
     },
     {
       name: "Telegram",
@@ -174,25 +180,14 @@ function AnalysMain() {
     },
   ];
 
-  const sourceDataBiznes = [
-    {
-      name: "Instagram",
-      icon: <FaInstagram />,
-      count: Math.round(310 * m),
-      percent: 72,
-      color: "#E1306C",
-    },
-    {
-      name: "Facebook",
-      icon: <FaFacebook />,
-      count: Math.round(90 * m),
-      percent: 28,
-      color: "#1877F2",
-    },
+  /* ── İşçilərin baxış sayı ── */
+  const employeeViews = [
+    { name: "Ali", views: Math.round(1000 * m), percent: 100 },
+    { name: "Vali", views: Math.round(200 * m), percent: 20 },
+    { name: "Nigar", views: Math.round(560 * m), percent: 56 },
+    { name: "Kamran", views: Math.round(340 * m), percent: 34 },
+    { name: "Leyla", views: Math.round(780 * m), percent: 78 },
   ];
-
-  const sourceData =
-    sourceSection === "ferdi" ? sourceDataFerdi : sourceDataBiznes;
 
   /* ── Cihazlar ── */
   const deviceData = [
@@ -218,23 +213,6 @@ function AnalysMain() {
       color: "#3b82f6",
     },
   ];
-
-  const sourceSectionSwitch = (
-    <div className="source-section-switch">
-      <button
-        className={sourceSection === "ferdi" ? "active" : ""}
-        onClick={() => setSourceSection("ferdi")}
-      >
-        Fərdi
-      </button>
-      <button
-        className={sourceSection === "biznes" ? "active" : ""}
-        onClick={() => setSourceSection("biznes")}
-      >
-        Biznes
-      </button>
-    </div>
-  );
 
   return (
     <div className="analys-main-modern">
@@ -354,7 +332,6 @@ function AnalysMain() {
           <DashCard
             title="Hansı vasitələrlə baxılıb?"
             icon={<FaGlobe />}
-            headerExtra={sourceSectionSwitch}
           >
             {sourceData.map((item, i) => (
               <ProgressRow
@@ -381,6 +358,23 @@ function AnalysMain() {
             ))}
           </DashCard>
         </div>
+
+        {/* ── İŞÇİLƏRİN BAXIŞ SAYI ── */}
+        {showWorkerCard && (
+          <DashCard title="İşçilərin Baxış Sayı" icon={<FiUsers />}>
+            {employeeViews.map((emp, i) => (
+              <ProgressRow
+                key={i}
+                icon={<FiUsers />}
+                name={emp.name}
+                count={emp.views}
+                percent={emp.percent}
+                color="#d4af37"
+                label="baxış"
+              />
+            ))}
+          </DashCard>
+        )}
 
       </div>
     </div>

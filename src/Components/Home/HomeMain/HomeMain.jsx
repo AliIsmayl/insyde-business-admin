@@ -7,7 +7,6 @@ import {
   FaSave,
   FaChevronDown,
   FaChevronUp,
-  FaBriefcase,
   FaUser,
   FaShareAlt,
   FaExternalLinkAlt,
@@ -158,7 +157,7 @@ function WelcomeModal({ onClose }) {
               <div className="tm-step__num">1</div>
               <div className="tm-step__text">
                 <strong>Profilinizi tamamlayın</strong>
-                <span>Fərdi və ya biznes məlumatlarınızı daxil edin.</span>
+                <span>Fərdi və brend məlumatlarınızı daxil edin.</span>
               </div>
             </div>
             <div className="tm-step">
@@ -488,6 +487,10 @@ function LinksSection({ links, setLinks, onDirty, sectionId }) {
 
 // ─── Əsas komponent ──────────────────────────────────────────
 export default function HomeMain() {
+  const navigate = useNavigate();
+  const isKorporativ =
+    (localStorage.getItem("planType") || "sahibkar").toLowerCase() === "korporativ";
+
   const [popup, setPopup] = useState({ isOpen: false });
   const closePopup = () => setPopup((p) => ({ ...p, isOpen: false }));
 
@@ -523,20 +526,15 @@ export default function HomeMain() {
   const [isBlocked] = useState(false);
   const [hasUnsaved, setHasUnsaved] = useState(false);
 
-  // Hissə 1 — Fərdi/Biznes switch + fieldlər
+  // Hissə 1 — Yalnız fərdi fieldlər
   const [form1, setForm1] = useState(emptyForm());
   const [image1, setImage1] = useState(null);
-  const [section1Mode, setSection1Mode] = useState("ferdi");
   const [section1Open, setSection1Open] = useState(true);
 
   // Hissə 2 — Yalnız brend fieldləri
   const [form2, setForm2] = useState(emptyForm());
   const [image2, setImage2] = useState(null);
   const [section2Open, setSection2Open] = useState(false);
-
-  // Linklər
-  const [links1, setLinks1] = useState([]);
-  const [links2, setLinks2] = useState([]);
 
   // İzlənmə & profil linki
   const [totalViews] = useState(0);
@@ -585,8 +583,8 @@ export default function HomeMain() {
   // Önizləmə üçün məlumat (açıq olan hissədən götürülür)
   const activeForm = section1Open ? form1 : form2;
   const activeImage = section1Open ? image1 : image2;
-  const previewName = activeForm.name || (section1Open && section1Mode === "ferdi" ? "Ad Soyad" : "Brend Adı");
-  const previewProfession = section1Open && section1Mode === "ferdi" ? activeForm.profession || "Peşə" : "";
+  const previewName = activeForm.name || (section1Open ? "Ad Soyad" : "Brend Adı");
+  const previewProfession = section1Open ? activeForm.profession || "Peşə" : "";
 
   return (
     <div className="home-main-modern-split">
@@ -690,7 +688,9 @@ export default function HomeMain() {
         <div className="top-header">
           <div>
             <h2 className="page-title">Profil</h2>
-            <span className="badge premium">Sahibkar Paket</span>
+            <span className="badge premium">
+              {isKorporativ ? "Korporativ Paket" : "Sahibkar Paket"}
+            </span>
           </div>
           <div className="header-stats">
             <div className="stat-views">
@@ -700,82 +700,19 @@ export default function HomeMain() {
           </div>
         </div>
 
-        <div id="tour-profile" className="dual-accounts">
-          {/* ── Başlıq sıraları yan yana ── */}
-          <div className="dual-accounts-headers">
-            <button
-              className={`account-section-header${section1Open ? " active" : ""}`}
-              onClick={() => {
-                const next = !section1Open;
-                setSection1Open(next);
-                if (next) setSection2Open(false);
-              }}
-            >
-              <div className="account-section-title">
-                <span className="account-num">1</span>
-                <div className="account-title-text">
-                  <span className="account-title-main">
-                    {section1Mode === "ferdi" ? "Fərdi Hissə" : "Biznes Hissə"}
-                  </span>
-                  <span className="account-title-sub">İstənilən 1 hissəni seçin</span>
-                </div>
-                {form1.name && (
-                  <span className="account-name-preview">{form1.name}</span>
-                )}
-              </div>
-              {section1Open ? <FaChevronUp /> : <FaChevronDown />}
-            </button>
-
-            <button
-              className={`account-section-header${section2Open ? " active" : ""}`}
-              onClick={() => {
-                const next = !section2Open;
-                setSection2Open(next);
-                if (next) setSection1Open(false);
-              }}
-            >
-              <div className="account-section-title">
-                <span className="account-num">2</span>
-                <div className="account-title-text">
-                  <span className="account-title-main">Brend Hissə</span>
-                  <span className="account-title-sub">Brendinizi daxil edin</span>
-                </div>
-                {form2.name && (
-                  <span className="account-name-preview">{form2.name}</span>
-                )}
-              </div>
-              {section2Open ? <FaChevronUp /> : <FaChevronDown />}
-            </button>
-          </div>
-
-          {/* ── Açılan bölmə — tam en ── */}
-          {section1Open && (
+        {isKorporativ ? (
+          /* ── Korporativ: tək biznes hissəsi ── */
+          <div id="tour-profile" className="dual-accounts">
             <div className="account-section-body modern-card">
               <div className="section-info-box">
                 <FaInfoCircle />
                 <p>
-                  Aşağıdan <strong>Fərdi</strong> və ya <strong>Biznes</strong> seçib
-                  profilinizi doldurun. Seçiminə uyğun sahələr avtomatik dəyişir.
+                  Korporativ profil üçün <strong>biznes məlumatlarınızı</strong> daxil edin.
                 </p>
               </div>
 
-              <div className="profile-mode-switch">
-                <button
-                  className={`mode-switch-btn ${section1Mode === "ferdi" ? "active" : ""}`}
-                  onClick={() => setSection1Mode("ferdi")}
-                >
-                  <FaUser /> Fərdi
-                </button>
-                <button
-                  className={`mode-switch-btn ${section1Mode === "biznes" ? "active" : ""}`}
-                  onClick={() => setSection1Mode("biznes")}
-                >
-                  <FaBriefcase /> Biznes
-                </button>
-              </div>
-
               <ProfileFields
-                mode={section1Mode}
+                mode="biznes"
                 data={form1}
                 onChange={handleChange1}
                 imgSrc={image1}
@@ -783,42 +720,90 @@ export default function HomeMain() {
                 formId="s1"
               />
 
-              <LinksSection
-                links={links1}
-                setLinks={setLinks1}
-                onDirty={() => setHasUnsaved(true)}
-                sectionId="s1"
-              />
+              <button
+                className="add-links-nav-btn"
+                onClick={() => navigate("/categorys")}
+              >
+                <FaPlus /> Linklər Əlavə Et
+              </button>
             </div>
-          )}
+          </div>
+        ) : (
+          /* ── Sahibkar: ikili hissə ── */
+          <div id="tour-profile" className="dual-accounts">
+            {/* ── Başlıq sıraları yan yana ── */}
+            <div className="dual-accounts-headers">
+              <button
+                className={`account-section-header${section1Open ? " active" : ""}`}
+                onClick={() => {
+                  const next = !section1Open;
+                  setSection1Open(next);
+                  if (next) setSection2Open(false);
+                }}
+              >
+                <div className="account-section-title">
+                    <span className="account-num">1</span>
+                  <div className="account-title-text">
+                    <span className="account-title-main">Fərdi Hissə</span>
+                    <span className="account-title-sub">Fərdi məlumatlarınızı daxil edin</span>
+                  </div>
+                  {form1.name && (
+                    <span className="account-name-preview">{form1.name}</span>
+                  )}
+                </div>
+                {section1Open ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
 
-          {section2Open && (
-            <div className="account-section-body modern-card">
-              <div className="section-info-box">
-                <FaInfoCircle />
-                <p>
-                  Bu hissədə <strong>brend</strong> məlumatlarınızı daxil edin.
-                </p>
+              <button
+                className={`account-section-header${section2Open ? " active" : ""}`}
+                onClick={() => {
+                  const next = !section2Open;
+                  setSection2Open(next);
+                  if (next) setSection1Open(false);
+                }}
+              >
+                <div className="account-section-title">
+                  <span className="account-num">2</span>
+                  <div className="account-title-text">
+                    <span className="account-title-main">Brend Hissə</span>
+                    <span className="account-title-sub">Brendinizi daxil edin</span>
+                  </div>
+                  {form2.name && (
+                    <span className="account-name-preview">{form2.name}</span>
+                  )}
+                </div>
+                {section2Open ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+            </div>
+
+            {/* ── Açılan bölmə — tam en ── */}
+            {section1Open && (
+              <div className="account-section-body modern-card">
+                <ProfileFields
+                  mode="ferdi"
+                  data={form1}
+                  onChange={handleChange1}
+                  imgSrc={image1}
+                  onImgUpload={handleImageUpload1}
+                  formId="s1"
+                />
               </div>
+            )}
 
-              <ProfileFields
-                mode="biznes"
-                data={form2}
-                onChange={handleChange2}
-                imgSrc={image2}
-                onImgUpload={handleImageUpload2}
-                formId="s2"
-              />
-
-              <LinksSection
-                links={links2}
-                setLinks={setLinks2}
-                onDirty={() => setHasUnsaved(true)}
-                sectionId="s2"
-              />
-            </div>
-          )}
-        </div>
+            {section2Open && (
+              <div className="account-section-body modern-card">
+                <ProfileFields
+                  mode="biznes"
+                  data={form2}
+                  onChange={handleChange2}
+                  imgSrc={image2}
+                  onImgUpload={handleImageUpload2}
+                  formId="s2"
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ── Alt düymələr ── */}
         <div className="bottom-actions">
@@ -904,6 +889,7 @@ export default function HomeMain() {
           SAĞ — TELEFON PREVİEW
       ══════════════════════════════ */}
       <div className="preview-section">
+        {!isKorporativ && (
         <button className="phone-theme-toggle" onClick={togglePhoneTheme}>
           <div className="toggle-track">
             <span className={`toggle-label left ${phoneTheme === "light" ? "active" : ""}`}>
@@ -915,6 +901,7 @@ export default function HomeMain() {
             <div className={`toggle-thumb ${phoneTheme === "dark" ? "thumb-right" : "thumb-left"}`} />
           </div>
         </button>
+        )}
 
         <div className={`phone-mockup phone-${phoneTheme}`}>
           <div className="phone-notch" />
@@ -991,8 +978,8 @@ export default function HomeMain() {
               </div>
 
               <div className="ph-tabs">
-                <button className="ph-tab active">Şəxsi</button>
-                <button className="ph-tab">Biznes</button>
+                <button className="ph-tab active">Fərdi</button>
+                <button className="ph-tab">Brend</button>
               </div>
             </div>
 
@@ -1003,7 +990,8 @@ export default function HomeMain() {
           </div>
         </div>
 
-        {/* Rəng palitri */}
+        {/* Rəng palitri — yalnız sahibkar üçün */}
+        {!isKorporativ && (
         <div className="theme-color-section">
           <label>Profil Rəngi / Tema Rəngi</label>
           <div className="color-palette">
@@ -1017,6 +1005,7 @@ export default function HomeMain() {
             ))}
           </div>
         </div>
+        )}
       </div>
     </div>
   );
