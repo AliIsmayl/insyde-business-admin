@@ -189,7 +189,6 @@ export default function OrdersMain() {
             <h2>Sifariş qəbul edildi!</h2>
             <p className="order-confirmed-num">Sifariş nömrəsi: <strong>{newOrder.order_number}</strong></p>
             <p>Çatdırılma məlumatlarınız sisteme daxil edildi. Ən yaxın həftə sonu çatdırılma həyata keçiriləcək.</p>
-            <p className="order-confirmed-redirect">3 saniyə sonra sifarişlər siyahısına yönləndiriləcəksiniz.</p>
           </div>
         </div>
       );

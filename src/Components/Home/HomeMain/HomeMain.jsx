@@ -529,11 +529,13 @@ export default function HomeMain() {
   // Hissə 1 — Yalnız fərdi fieldlər
   const [form1, setForm1] = useState(emptyForm());
   const [image1, setImage1] = useState(null);
+  const [links1, setLinks1] = useState([]);
   const [section1Open, setSection1Open] = useState(true);
 
   // Hissə 2 — Yalnız brend fieldləri
   const [form2, setForm2] = useState(emptyForm());
   const [image2, setImage2] = useState(null);
+  const [links2, setLinks2] = useState([]);
   const [section2Open, setSection2Open] = useState(false);
 
   // İzlənmə & profil linki
@@ -787,6 +789,12 @@ export default function HomeMain() {
                   onImgUpload={handleImageUpload1}
                   formId="s1"
                 />
+                <LinksSection
+                  links={links1}
+                  setLinks={setLinks1}
+                  onDirty={() => setHasUnsaved(true)}
+                  sectionId="s1"
+                />
               </div>
             )}
 
@@ -799,6 +807,12 @@ export default function HomeMain() {
                   imgSrc={image2}
                   onImgUpload={handleImageUpload2}
                   formId="s2"
+                />
+                <LinksSection
+                  links={links2}
+                  setLinks={setLinks2}
+                  onDirty={() => setHasUnsaved(true)}
+                  sectionId="s2"
                 />
               </div>
             )}

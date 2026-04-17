@@ -64,6 +64,14 @@ function calcRaw(monthlyRate, months) {
   return +(monthlyRate * months).toFixed(2);
 }
 
+function formatWholePrice(price) {
+  const numeric = typeof price === "number"
+    ? price
+    : Number.parseFloat(String(price).replace(",", ".").replace(/[^\d.]/g, ""));
+  if (!Number.isFinite(numeric)) return price;
+  return `${Math.floor(numeric)}₼`;
+}
+
 // Code generator
 function genCode() {
   const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -262,6 +270,7 @@ export default function PackageMain() {
   const rawPrice   = calcRaw(SAHIBKAR_PKG.monthlyRate, billData?.months ?? 1);
   const totalPrice = calcTotal(SAHIBKAR_PKG.monthlyRate, billData?.months ?? 1, billData?.discountRate ?? 0);
   const savedAmount = +(rawPrice - totalPrice).toFixed(2);
+  const sahibkarCardPrice = formatWholePrice(SAHIBKAR_PKG.cardPrice);
 
   const handleLogoUpload = (e) => {
     const file = e.target.files[0]; if (!file) return;
@@ -708,6 +717,8 @@ export default function PackageMain() {
                 slogan={corpSlogan} brandMode={corpBrandMode} brandName={corpBrandName}
                 flipped={corpFlipped} onFlip={() => setCorpFlipped((f) => !f)}
               />
+              <p className="card-preview-hint">Kartın üzərinə klik edib çevirin</p>
+
             </div>
 
             <div className="card-controls-panel">
@@ -760,7 +771,6 @@ export default function PackageMain() {
                   <button type="button" className="card-flip-btn" onClick={() => setCorpFlipped((f) => !f)}>
                     {corpFlipped ? "Ön üzü göstər" : "Arxa üzü göstər"}
                   </button>
-                  <p className="corp-tone-hint">Kartın rəng tonu digər hissədən seçilir</p>
                 </div>
               </div>
             </div>
@@ -972,9 +982,7 @@ export default function PackageMain() {
                 brandMode={cardBrandMode} brandName={cardBrandName}
                 flipped={flipped} onFlip={() => setFlipped((f) => !f)}
               />
-              <button type="button" className="card-flip-btn" onClick={() => setFlipped((f) => !f)}>
-                {flipped ? "Ön üzü göstər" : "Arxa üzü göstər"}
-              </button>
+              <p className="card-preview-hint">Kartın üzərinə klik edib çevirin</p>
             </div>
 
             <div className="card-controls-panel">
@@ -1031,6 +1039,9 @@ export default function PackageMain() {
                   </div>
                   <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleLogoUpload} />
                   {cardLogo && <button type="button" className="card-remove-btn" onClick={() => { setCardLogo(null); setCardLogoFile(null); }}>Sil</button>}
+                  <button type="button" className="card-flip-btn" onClick={() => setFlipped((f) => !f)}>
+                    {flipped ? "Ön üzü göstər" : "Arxa üzü göstər"}
+                  </button>
                 </div>
                 {cardStyle === "detayli" && (
                   <>
@@ -1067,7 +1078,7 @@ export default function PackageMain() {
               <div className="checkout-card">
                 <p className="checkout-section-label">Paket məlumatları</p>
                 <div className="checkout-row"><span>Paket</span><strong style={{ color: SAHIBKAR_PKG.color }}>{SAHIBKAR_PKG.name}</strong></div>
-                <div className="checkout-row"><span>Kartın 1 dəfəlik ödənişi</span><strong>{SAHIBKAR_PKG.cardPrice}</strong></div>
+                <div className="checkout-row"><span>Kartın 1 dəfəlik ödənişi</span><strong>{sahibkarCardPrice}</strong></div>
                 <div className="checkout-row"><span>Aylıq qiymət</span><strong>{SAHIBKAR_PKG.monthlyRate.toFixed(2)}₼</strong></div>
                 <div className="checkout-row"><span>Ödəniş müddəti</span><strong>{billData?.label}</strong></div>
                 {savedAmount > 0 && (
