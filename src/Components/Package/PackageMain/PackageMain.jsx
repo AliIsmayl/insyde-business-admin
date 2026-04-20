@@ -246,8 +246,10 @@ export default function PackageMain() {
   const [corpBillingKey, setCorpBillingKey] = useState("monthly");
 
   // ── Payment ──
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError]           = useState("");
+  const [submitting, setSubmitting]       = useState(false);
+  const [error, setError]                 = useState("");
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const [pendingNav, setPendingNav]        = useState(null);
 
   // Derived
   const billData         = BILLING_OPTIONS.find((b) => b.key === selectedBilling);
@@ -307,37 +309,38 @@ export default function PackageMain() {
     setTimeout(() => {
       setSubmitting(false);
       const orderNum = `INS-${String(Date.now()).slice(-7)}`;
-      if (isKorporativ) {
-        navigate("/orders", { state: {
-          isNew: true,
-          order_number: orderNum,
-          user_count: orderedUsers.length,
-          card_total: corpCalc.cardTotal,
-          card_dr: corpCalc.cardDR,
-          monthly_total: corpMonthlyTotal,
-          monthly_per_user: corpCalc.monthlyTotal,
-          month_dr: corpCalc.monthDR,
-          billing_label: corpBill?.label,
-          billing_months: corpBill?.months,
-          package_name: "Korporativ",
-          package_color: KORPORATIV_PKG.color,
-        }});
-      } else {
-        navigate("/orders", { state: {
-          isNew: true,
-          order_number: orderNum,
-          user_count: 1,
-          card_total: 27.90,
-          card_dr: 0,
-          monthly_total: totalPrice,
-          monthly_per_user: SAHIBKAR_PKG.monthlyRate,
-          month_dr: 0,
-          billing_label: billData?.label,
-          billing_months: billData?.months,
-          package_name: "Sahibkar",
-          package_color: SAHIBKAR_PKG.color,
-        }});
-      }
+      const navState = isKorporativ
+        ? {
+            isNew: true,
+            order_number: orderNum,
+            user_count: orderedUsers.length,
+            card_total: corpCalc.cardTotal,
+            card_dr: corpCalc.cardDR,
+            monthly_total: corpMonthlyTotal,
+            monthly_per_user: corpCalc.monthlyTotal,
+            month_dr: corpCalc.monthDR,
+            billing_label: corpBill?.label,
+            billing_months: corpBill?.months,
+            package_name: "Korporativ",
+            package_color: KORPORATIV_PKG.color,
+          }
+        : {
+            isNew: true,
+            order_number: orderNum,
+            user_count: 1,
+            card_total: 27.90,
+            card_dr: 0,
+            monthly_total: totalPrice,
+            monthly_per_user: SAHIBKAR_PKG.monthlyRate,
+            month_dr: 0,
+            billing_label: billData?.label,
+            billing_months: billData?.months,
+            package_name: "Sahibkar",
+            package_color: SAHIBKAR_PKG.color,
+          };
+      setPendingNav(navState);
+      setOrderConfirmed(true);
+      setTimeout(() => navigate("/orders", { state: navState }), 3000);
     }, 1500);
   };
 
@@ -512,6 +515,28 @@ export default function PackageMain() {
               </div>
             </div>
 
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (orderConfirmed) {
+    return (
+      <div className="package-main-modern">
+        <div className="order-confirmed-screen">
+          <div className="order-confirmed-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="9 12 11.5 14.5 15.5 10" />
+            </svg>
+          </div>
+          <h2 className="order-confirmed-title">Sifariş Təsdiqləndi!</h2>
+          <p className="order-confirmed-sub">
+            Sifarişiniz uğurla qəbul edildi. Sifarişlər səhifəsinə yönləndirilirsiniz...
+          </p>
+          <div className="order-confirmed-dots">
+            <span /><span /><span />
           </div>
         </div>
       </div>

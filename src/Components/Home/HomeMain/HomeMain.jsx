@@ -722,12 +722,12 @@ export default function HomeMain() {
                 formId="s1"
               />
 
-              <button
-                className="add-links-nav-btn"
-                onClick={() => navigate("/categorys")}
-              >
-                <FaPlus /> Linklər Əlavə Et
-              </button>
+              <LinksSection
+                links={links1}
+                setLinks={setLinks1}
+                onDirty={() => setHasUnsaved(true)}
+                sectionId="s1"
+              />
             </div>
           </div>
         ) : (
@@ -903,7 +903,6 @@ export default function HomeMain() {
           SAĞ — TELEFON PREVİEW
       ══════════════════════════════ */}
       <div className="preview-section">
-        {!isKorporativ && (
         <button className="phone-theme-toggle" onClick={togglePhoneTheme}>
           <div className="toggle-track">
             <span className={`toggle-label left ${phoneTheme === "light" ? "active" : ""}`}>
@@ -915,7 +914,6 @@ export default function HomeMain() {
             <div className={`toggle-thumb ${phoneTheme === "dark" ? "thumb-right" : "thumb-left"}`} />
           </div>
         </button>
-        )}
 
         <div className={`phone-mockup phone-${phoneTheme}`}>
           <div className="phone-notch" />
@@ -923,9 +921,7 @@ export default function HomeMain() {
             <div
               className="ph-header-gradient"
               style={{
-                background: phoneTheme === "light"
-                  ? `linear-gradient(160deg, #fef9e7 0%, #fff8dc 40%, #fffaf0 100%)`
-                  : `linear-gradient(160deg, #2a1f00 0%, #3d2c00 40%, #1a1400 100%)`,
+                background: `linear-gradient(160deg, ${themeColor}cc 0%, ${themeColor}99 50%, ${themeColor}44 100%)`,
               }}
             >
               <div className="ph-top-bar">
@@ -979,12 +975,6 @@ export default function HomeMain() {
               </div>
 
               <div className="ph-action-row">
-                <button
-                  className="ph-act-btn ph-act-gold"
-                  style={{ borderColor: themeColor, color: themeColor }}
-                >
-                  INSYDE
-                </button>
                 <button className="ph-act-btn ph-act-outline">Daha çox</button>
                 <button className="ph-act-btn ph-act-share">
                   <FaShareAlt /> Paylaş
@@ -1004,8 +994,6 @@ export default function HomeMain() {
           </div>
         </div>
 
-        {/* Rəng palitri — yalnız sahibkar üçün */}
-        {!isKorporativ && (
         <div className="theme-color-section">
           <label>Profil Rəngi / Tema Rəngi</label>
           <div className="color-palette">
@@ -1019,7 +1007,6 @@ export default function HomeMain() {
             ))}
           </div>
         </div>
-        )}
       </div>
     </div>
   );

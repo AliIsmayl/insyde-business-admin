@@ -7,7 +7,6 @@ import { PiPackage } from "react-icons/pi";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import "./Sidebar.scss";
 import { MdOutlineSwitchAccount } from "react-icons/md";
-import { FiLink } from "react-icons/fi";
 import { HiOutlineBookOpen } from "react-icons/hi";
 
 function Sidebar({ isOpen, setIsOpen }) {
@@ -71,11 +70,6 @@ function Sidebar({ isOpen, setIsOpen }) {
         name: "Hesablar",
         path: "/accounts",
         icon: <MdOutlineSwitchAccount />,
-      },
-      {
-        name: "Linklər",
-        path: "/categorys",
-        icon: <FiLink />,
       },
     ] : []),
 

@@ -88,8 +88,11 @@ function AnalysMain() {
   const [period, setPeriod] = useState("month");
 
   const planType = (localStorage.getItem("planType") || "sahibkar").toLowerCase();
+  const isSahibkar = planType === "sahibkar";
   const showWorkerCard =
     planType === "biznes" || planType === "korporativ";
+
+  const [sourceTab, setSourceTab] = useState("ferdi");
 
   /* ── İşçi sayı state ── */
   const [workerCount, setWorkerCount] = useState(12);
@@ -149,36 +152,21 @@ function AnalysMain() {
   ];
 
   /* ── Mənbə məlumatları ── */
-  const sourceData = [
-    {
-      name: "Instagram",
-      icon: <FaInstagram />,
-      count: Math.round(450 * m),
-      percent: 55,
-      color: "#E1306C",
-    },
-    {
-      name: "WhatsApp",
-      icon: <FaWhatsapp />,
-      count: Math.round(150 * m),
-      percent: 20,
-      color: "#25D366",
-    },
-    {
-      name: "Facebook",
-      icon: <FaFacebook />,
-      count: Math.round(90 * m),
-      percent: 15,
-      color: "#1877F2",
-    },
-    {
-      name: "Telegram",
-      icon: <FaTelegram />,
-      count: Math.round(50 * m),
-      percent: 10,
-      color: "#2CA5E0",
-    },
+  const sourceDataFerdi = [
+    { name: "Instagram",    icon: <FaInstagram />, count: Math.round(450 * m), percent: 55, color: "#E1306C" },
+    { name: "WhatsApp",     icon: <FaWhatsapp />,  count: Math.round(150 * m), percent: 20, color: "#25D366" },
+    { name: "Facebook",     icon: <FaFacebook />,  count: Math.round(90  * m), percent: 15, color: "#1877F2" },
+    { name: "Telegram",     icon: <FaTelegram />,  count: Math.round(50  * m), percent: 10, color: "#2CA5E0" },
   ];
+  const sourceDataBiznes = [
+    { name: "Instagram",    icon: <FaInstagram />, count: Math.round(310 * m), percent: 48, color: "#E1306C" },
+    { name: "Birbaşa Link", icon: <FiLink />,      count: Math.round(200 * m), percent: 30, color: "#3b82f6" },
+    { name: "WhatsApp",     icon: <FaWhatsapp />,  count: Math.round(80  * m), percent: 12, color: "#25D366" },
+    { name: "Telegram",     icon: <FaTelegram />,  count: Math.round(60  * m), percent: 10, color: "#2CA5E0" },
+  ];
+  const sourceData = isSahibkar
+    ? (sourceTab === "ferdi" ? sourceDataFerdi : sourceDataBiznes)
+    : sourceDataFerdi;
 
   /* ── İşçilərin baxış sayı ── */
   const employeeViews = [
@@ -332,6 +320,24 @@ function AnalysMain() {
           <DashCard
             title="Hansı vasitələrlə baxılıb?"
             icon={<FaGlobe />}
+            headerExtra={
+              isSahibkar ? (
+                <div className="source-section-switch">
+                  <button
+                    className={sourceTab === "ferdi" ? "active" : ""}
+                    onClick={() => setSourceTab("ferdi")}
+                  >
+                    Fərdi
+                  </button>
+                  <button
+                    className={sourceTab === "biznes" ? "active" : ""}
+                    onClick={() => setSourceTab("biznes")}
+                  >
+                    Biznes
+                  </button>
+                </div>
+              ) : null
+            }
           >
             {sourceData.map((item, i) => (
               <ProgressRow
