@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  FiLock,
-  FiEye,
-  FiEyeOff,
+  FiMail,
   FiCheckCircle,
   FiSun,
   FiMoon,
-  FiGlobe,
+  FiSend,
+  FiArrowLeft,
 } from "react-icons/fi";
 import "./SettingsMain.scss";
 import Popup from "../../Popup/Popup";
@@ -53,36 +52,83 @@ function SettingsMain() {
     });
   };
 
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [showPassword, setShowPassword] = useState({
-    current: false,
-    new: false,
-    confirm: false,
-  });
-  const [isSuccess, setIsSuccess] = useState(false);
+  // ── E-poçt dəyişmə ──
+  const [emailStep, setEmailStep]     = useState(1); // 1=email, 2=kod
+  const [newEmail, setNewEmail]       = useState("");
+  const [code, setCode]               = useState(["", "", "", "", "", ""]);
+  const [codeSending, setCodeSending] = useState(false);
+  const [codeVerifying, setCodeVerifying] = useState(false);
+  const [countdown, setCountdown]     = useState(0);
+  const timerRef = useRef(null);
+  const codeRefs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
 
-  const handleChange = (e) =>
-    setPasswords({ ...passwords, [e.target.name]: e.target.value });
-  const toggleVisibility = (field) =>
-    setShowPassword({ ...showPassword, [field]: !showPassword[field] });
+  const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (passwords.newPassword === passwords.confirmPassword) {
-      setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 3000);
-      setPasswords({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    } else {
-      alert("Yeni şifrələr uyğun gəlmir!");
+  const startCountdown = () => {
+    setCountdown(60);
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCountdown((c) => { if (c <= 1) { clearInterval(timerRef.current); return 0; } return c - 1; });
+    }, 1000);
+  };
+
+  const handleSendCode = () => {
+    if (!isValidEmail(newEmail) || codeSending) return;
+    setCodeSending(true);
+    setTimeout(() => {
+      setCodeSending(false);
+      setEmailStep(2);
+      startCountdown();
+    }, 1200);
+  };
+
+  const handleCodeInput = (i, val) => {
+    if (!/^\d?$/.test(val)) return;
+    const next = [...code];
+    next[i] = val;
+    setCode(next);
+    if (val && i < 5) codeRefs[i + 1].current?.focus();
+  };
+
+  const handleCodeKeyDown = (i, e) => {
+    if (e.key === "Backspace" && !code[i] && i > 0) codeRefs[i - 1].current?.focus();
+  };
+
+  const handleCodePaste = (e) => {
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      setCode(pasted.split(""));
+      codeRefs[5].current?.focus();
     }
+  };
+
+  const fullCode = code.join("");
+
+  const handleVerify = () => {
+    if (fullCode.length < 6 || codeVerifying) return;
+    setCodeVerifying(true);
+    setTimeout(() => {
+      setCodeVerifying(false);
+      setPopup({
+        isOpen: true,
+        type: "success",
+        title: "E-poçt dəyişdirildi!",
+        message: `Yeni e-poçt ünvanınız: ${newEmail}`,
+        confirmText: "Əla",
+        onConfirm: null,
+      });
+      setEmailStep(1);
+      setNewEmail("");
+      setCode(["", "", "", "", "", ""]);
+      setCountdown(0);
+      clearInterval(timerRef.current);
+    }, 1200);
+  };
+
+  const handleResend = () => {
+    if (countdown > 0) return;
+    setCode(["", "", "", "", "", ""]);
+    startCountdown();
   };
 
   return (
@@ -202,117 +248,103 @@ function SettingsMain() {
           </div> */}
         </div>
 
-        {/* SAĞ SÜTUN — PAROL */}
+        {/* SAĞ SÜTUN — MAİL DƏYİŞ */}
         <div className="settings-col right-col">
           <div className="modern-card password-card">
             <div className="card-header">
               <div className="header-icon">
-                <FiLock />
+                <FiMail />
               </div>
               <div>
-                <h3>Şifrəni Yenilə</h3>
-                <p>
-                  Hesabınızın təhlükəsizliyini qorumaq üçün güclü şifrə istifadə
-                  edin.
-                </p>
+                <h3>Maili Dəyiş</h3>
+                <p>Yeni e-poçt ünvanınızı daxil edin, doğrulama kodu göndəriləcək.</p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="password-form">
-              <div className="input-group">
-                <label>Mövcud Şifrə</label>
-                <div className="input-wrapper">
-                  <input
-                    type={showPassword.current ? "text" : "password"}
-                    name="currentPassword"
-                    placeholder="Hazırkı şifrənizi daxil edin"
-                    value={passwords.currentPassword}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="eye-btn"
-                    onClick={() => toggleVisibility("current")}
-                  >
-                    {showPassword.current ? <FiEyeOff /> : <FiEye />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="divider" />
-
-              <div className="input-group">
-                <label>Yeni Şifrə</label>
-                <div className="input-wrapper">
-                  <input
-                    type={showPassword.new ? "text" : "password"}
-                    name="newPassword"
-                    placeholder="Yeni şifrə yaradın"
-                    value={passwords.newPassword}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="eye-btn"
-                    onClick={() => toggleVisibility("new")}
-                  >
-                    {showPassword.new ? <FiEyeOff /> : <FiEye />}
-                  </button>
-                </div>
-                <ul className="password-rules">
-                  <li>Ən azı 8 simvol</li>
-                  <li>Böyük və kiçik hərflər</li>
-                  <li>Rəqəm və ya xüsusi simvol</li>
-                </ul>
-              </div>
-
-              <div className="input-group">
-                <label>Yeni Şifrə (Təkrar)</label>
-                <div className="input-wrapper">
-                  <input
-                    type={showPassword.confirm ? "text" : "password"}
-                    name="confirmPassword"
-                    placeholder="Yeni şifrəni təsdiqləyin"
-                    value={passwords.confirmPassword}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="eye-btn"
-                    onClick={() => toggleVisibility("confirm")}
-                  >
-                    {showPassword.confirm ? <FiEyeOff /> : <FiEye />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-actions">
-                {isSuccess && (
-                  <div className="success-msg">
-                    <FiCheckCircle /> Şifrəniz uğurla yeniləndi!
+            {emailStep === 1 ? (
+              <div className="email-change-form">
+                <div className="input-group">
+                  <label>Yeni E-poçt</label>
+                  <div className="input-wrapper">
+                    <FiMail className="input-prefix-icon" />
+                    <input
+                      type="email"
+                      placeholder="yeni@email.com"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSendCode()}
+                    />
                   </div>
-                )}
-                <button
-                  type="submit"
-                  className="save-btn"
-                  onClick={() =>
-                    setPopup({
-                      isOpen: true,
-                      type: "success",
-                      title: "Uğurlu!",
-                      message: "Məlumatlarınız yeniləndi.",
-                      confirmText: "Əla",
-                      onConfirm: null,
-                    })
-                  }
-                >
-                  Yadda Saxla
-                </button>
+                </div>
+                <div className="form-actions">
+                  <button
+                    className="save-btn"
+                    onClick={handleSendCode}
+                    disabled={!isValidEmail(newEmail) || codeSending}
+                  >
+                    {codeSending ? (
+                      <span className="btn-spinner" />
+                    ) : (
+                      <FiSend />
+                    )}
+                    {codeSending ? "Göndərilir..." : "Kod Göndər"}
+                  </button>
+                </div>
               </div>
-            </form>
+            ) : (
+              <div className="email-change-form">
+                <div className="email-code-target">
+                  <FiMail />
+                  <span><strong>{newEmail}</strong> ünvanına 6 rəqəmli kod göndərildi.</span>
+                </div>
+
+                <div className="input-group">
+                  <label>Doğrulama Kodu</label>
+                  <div className="otp-row" onPaste={handleCodePaste}>
+                    {code.map((d, i) => (
+                      <input
+                        key={i}
+                        ref={codeRefs[i]}
+                        className="otp-cell"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        value={d}
+                        onChange={(e) => handleCodeInput(i, e.target.value)}
+                        onKeyDown={(e) => handleCodeKeyDown(i, e)}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="otp-resend">
+                  {countdown > 0 ? (
+                    <span className="otp-countdown">Yenidən göndər — {countdown}s</span>
+                  ) : (
+                    <button className="otp-resend-btn" onClick={handleResend}>
+                      Kodu yenidən göndər
+                    </button>
+                  )}
+                </div>
+
+                <div className="form-actions">
+                  <button
+                    className="save-btn ghost-btn"
+                    onClick={() => { setEmailStep(1); setCode(["","","","","",""]); }}
+                  >
+                    <FiArrowLeft /> Geri
+                  </button>
+                  <button
+                    className="save-btn"
+                    onClick={handleVerify}
+                    disabled={fullCode.length < 6 || codeVerifying}
+                  >
+                    {codeVerifying ? <span className="btn-spinner" /> : <FiCheckCircle />}
+                    {codeVerifying ? "Yoxlanılır..." : "Təsdiqlə"}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
