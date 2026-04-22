@@ -62,6 +62,25 @@ const PAST_ORDERS = [
   },
 ];
 
+// ─── Subscriptions data ──────────────────────────────────
+const SUBSCRIPTIONS = [
+  {
+    id: 1,
+    package_name: "Korporativ",
+    package_color: "#b8942a",
+    status: "active",
+    status_display: "Aktiv",
+    card_total: 415.8,
+    monthly_total: 72.6,
+    billing_label: "6 Aylıq",
+    billing_months: 6,
+    user_count: 12,
+    start_date: new Date(2024, 2, 10),
+    next_renewal: new Date(2024, 8, 10),
+    paid_at: new Date(2024, 2, 10, 14, 45),
+  },
+];
+
 const ADDRESS_PENDING_ORDER = {
   id: "pending-address-1",
   isNew: true,
@@ -144,9 +163,16 @@ export default function OrdersMain() {
   const [submitError,       setSubmitError]       = useState("");
   const [confirmed,         setConfirmed]         = useState(false);
 
+  // Section switch
+  const [activeSection, setActiveSection] = useState("orders");
+
   // Past orders list state
   const [selectedId, setSelectedId] = useState(PAST_ORDERS[0]?.id ?? null);
   const selectedPast = PAST_ORDERS.find((o) => o.id === selectedId);
+
+  // Subscriptions state
+  const [selectedSubId, setSelectedSubId] = useState(SUBSCRIPTIONS[0]?.id ?? null);
+  const selectedSub = SUBSCRIPTIONS.find((s) => s.id === selectedSubId);
 
   const { sat, sun } = getNextWeekend();
   const canConfirmMetro   = selectedStation && selectedSlot;
@@ -369,56 +395,118 @@ export default function OrdersMain() {
   return (
     <div className="orders-wrap">
       <div className="orders-page">
+        {/* ── Sol panel ── */}
         <div className="orders-left">
-          <div className="orders-header">
-            <h2 className="orders-title">Sifarişlərim</h2>
-            <p className="orders-subtitle">{PAST_ORDERS.length + 1} sifariş</p>
-          </div>
-
-          <div className="orders-list">
-            <button className="pending-address-card" onClick={openPendingAddressOrder} type="button">
-              <div className="pending-address-card__top">
-                <span className="pending-address-card__label">Ünvan gözləyən sifariş</span>
-                <span className="order-badge status-accepted">Ünvan seç</span>
-              </div>
-              <div className="pending-address-card__num">№ {ADDRESS_PENDING_ORDER.order_number}</div>
-              <div className="pending-address-card__meta">
-                <span>{ADDRESS_PENDING_ORDER.user_count} kart</span>
-                <span>{ADDRESS_PENDING_ORDER.card_total.toFixed(2)}₼ kart + {ADDRESS_PENDING_ORDER.monthly_total.toFixed(2)}₼ abunə</span>
-              </div>
+          {/* Section switch */}
+          <div className="orders-section-switch">
+            <button
+              className={`orders-section-btn ${activeSection === "orders" ? "active" : ""}`}
+              onClick={() => setActiveSection("orders")}
+            >
+              Sifarişlərim
             </button>
-
-            {PAST_ORDERS.map((order) => (
-              <div
-                key={order.id}
-                className={`order-card ${selectedId === order.id ? "active" : ""}`}
-                onClick={() => setSelectedId(order.id)}
-              >
-                <div className="order-card-top">
-                  <span className="order-card-num">№ {order.order_number}</span>
-                  <span className={`order-badge status-${order.current_status}`}>{order.current_status_display}</span>
-                </div>
-                <div className="order-card-pkg" style={{ color: order.package_color }}>{order.package_name} paketi</div>
-                <div className="order-card-meta">
-                  <span>{order.user_count} kart</span>
-                  <span>{order.card_total.toFixed(2)}₼ kart + {order.monthly_total.toFixed(2)}₼ abunə</span>
-                  <span>{fmtDate(order.created_at)}</span>
-                </div>
-              </div>
-            ))}
-            {PAST_ORDERS.length === 0 && (
-              <div className="orders-empty">
-                <div className="orders-empty-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="36" height="36"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                </div>
-                <p>Hələ sifariş yoxdur</p>
-              </div>
-            )}
+            <button
+              className={`orders-section-btn ${activeSection === "subscriptions" ? "active" : ""}`}
+              onClick={() => setActiveSection("subscriptions")}
+            >
+              Abunəliklərim
+            </button>
           </div>
+
+          <div className="orders-header">
+            <h2 className="orders-title">
+              {activeSection === "orders" ? "Sifarişlərim" : "Abunəliklərim"}
+            </h2>
+            <p className="orders-subtitle">
+              {activeSection === "orders"
+                ? `${PAST_ORDERS.length + 1} sifariş`
+                : `${SUBSCRIPTIONS.length} abunəlik`}
+            </p>
+          </div>
+
+          {/* ── Sifarişlər siyahısı ── */}
+          {activeSection === "orders" && (
+            <div className="orders-list">
+              <button className="pending-address-card" onClick={openPendingAddressOrder} type="button">
+                <div className="pending-address-card__top">
+                  <span className="pending-address-card__label">Ünvan gözləyən sifariş</span>
+                  <span className="order-badge status-accepted">Ünvan seç</span>
+                </div>
+                <div className="pending-address-card__num">№ {ADDRESS_PENDING_ORDER.order_number}</div>
+                <div className="pending-address-card__meta">
+                  <span>{ADDRESS_PENDING_ORDER.user_count} kart</span>
+                  <span>{ADDRESS_PENDING_ORDER.card_total.toFixed(2)}₼ kart + {ADDRESS_PENDING_ORDER.monthly_total.toFixed(2)}₼ abunə</span>
+                </div>
+              </button>
+
+              {PAST_ORDERS.map((order) => (
+                <div
+                  key={order.id}
+                  className={`order-card ${selectedId === order.id ? "active" : ""}`}
+                  onClick={() => setSelectedId(order.id)}
+                >
+                  <div className="order-card-top">
+                    <span className="order-card-num">№ {order.order_number}</span>
+                    <span className={`order-badge status-${order.current_status}`}>{order.current_status_display}</span>
+                  </div>
+                  <div className="order-card-pkg" style={{ color: order.package_color }}>{order.package_name} paketi</div>
+                  <div className="order-card-meta">
+                    <span>{order.user_count} kart</span>
+                    <span>{order.card_total.toFixed(2)}₼ kart + {order.monthly_total.toFixed(2)}₼ abunə</span>
+                    <span>{fmtDate(order.created_at)}</span>
+                  </div>
+                </div>
+              ))}
+
+              {PAST_ORDERS.length === 0 && (
+                <div className="orders-empty">
+                  <div className="orders-empty-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="36" height="36"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  </div>
+                  <p>Hələ sifariş yoxdur</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Abunəliklər siyahısı ── */}
+          {activeSection === "subscriptions" && (
+            <div className="orders-list">
+              {SUBSCRIPTIONS.map((sub) => (
+                <div
+                  key={sub.id}
+                  className={`order-card ${selectedSubId === sub.id ? "active" : ""}`}
+                  onClick={() => setSelectedSubId(sub.id)}
+                >
+                  <div className="order-card-top">
+                    <span className="order-card-num">Abunəlik</span>
+                    <span className={`order-badge sub-status-${sub.status}`}>{sub.status_display}</span>
+                  </div>
+                  <div className="order-card-pkg" style={{ color: sub.package_color }}>{sub.package_name} paketi</div>
+                  <div className="order-card-meta">
+                    <span>{sub.user_count} istifadəçi</span>
+                    <span>{sub.monthly_total.toFixed(2)}₼ / {sub.billing_label}</span>
+                    <span>{fmtDate(sub.start_date)}</span>
+                  </div>
+                </div>
+              ))}
+
+              {SUBSCRIPTIONS.length === 0 && (
+                <div className="orders-empty">
+                  <div className="orders-empty-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="36" height="36"><path d="M3 7h18M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M16 14h.01"/></svg>
+                  </div>
+                  <p>Abunəlik yoxdur</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
+        {/* ── Sağ panel ── */}
         <div className="orders-right">
-          {selectedPast ? (
+          {/* Sifariş detalı */}
+          {activeSection === "orders" && selectedPast && (
             <>
               <div className="order-detail-header">
                 <div>
@@ -460,10 +548,106 @@ export default function OrdersMain() {
                 </div>
               </div>
             </>
-          ) : (
+          )}
+
+          {/* Abunəlik detalı */}
+          {activeSection === "subscriptions" && selectedSub && (
+            <>
+              <div className="order-detail-header">
+                <div>
+                  <h3 className="order-detail-title">Abunəlik detalları</h3>
+                  <p className="order-detail-sub">
+                    Başlanğıc: <strong>{fmtDate(selectedSub.start_date)}</strong>
+                    {" · "}Yenilənmə: <strong>{fmtDate(selectedSub.next_renewal)}</strong>
+                  </p>
+                </div>
+                <span className={`order-badge sub-status-${selectedSub.status}`}>{selectedSub.status_display}</span>
+              </div>
+
+              <div className="order-detail-body single-col">
+                <div className="order-info-card">
+                  <p className="detail-section-label">Abunəlik məlumatları</p>
+                  <div className="detail-row">
+                    <span>Paket</span>
+                    <strong style={{ color: selectedSub.package_color }}>{selectedSub.package_name}</strong>
+                  </div>
+                  <div className="detail-row">
+                    <span>İstifadəçi sayı</span>
+                    <strong>{selectedSub.user_count} nəfər</strong>
+                  </div>
+                  <div className="detail-row">
+                    <span>Ödəniş müddəti</span>
+                    <strong>{selectedSub.billing_label}</strong>
+                  </div>
+                  <div className="detail-row">
+                    <span>Başlanğıc tarixi</span>
+                    <strong>{fmtDate(selectedSub.start_date)}</strong>
+                  </div>
+                  <div className="detail-row">
+                    <span>Növbəti yenilənmə</span>
+                    <strong>{fmtDate(selectedSub.next_renewal)}</strong>
+                  </div>
+                  <div className="detail-divider" />
+                  <div className="detail-row">
+                    <span>Kart ödənişi</span>
+                    <strong>{selectedSub.card_total.toFixed(2)}₼</strong>
+                  </div>
+                  <div className="detail-row">
+                    <span>Abunəlik ödənişi</span>
+                    <strong>{selectedSub.monthly_total.toFixed(2)}₼ / {selectedSub.billing_label}</strong>
+                  </div>
+                  <div className="detail-divider" />
+                  <div className="detail-row total">
+                    <span>Ümumi</span>
+                    <strong>{(selectedSub.card_total + selectedSub.monthly_total).toFixed(2)}₼</strong>
+                  </div>
+                </div>
+
+                {/* Abunəlik status kartı */}
+                <div className={`sub-status-card sub-status-card--${selectedSub.status}`}>
+                  <div className="sub-status-card-icon">
+                    {selectedSub.status === "active" ? (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                        <path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                    )}
+                  </div>
+                  <div>
+                    <p className="sub-status-card-title">
+                      {selectedSub.status === "active"
+                        ? "Abunəlik aktivdir"
+                        : selectedSub.status === "pending"
+                          ? "Ödəniş gözləmədədir"
+                          : "Abunəlik bitib"}
+                    </p>
+                    <p className="sub-status-card-desc">
+                      {selectedSub.status === "active"
+                        ? `Növbəti ödəniş: ${fmtDate(selectedSub.next_renewal)}`
+                        : selectedSub.status === "pending"
+                          ? "Ödənişinizi tamamlayın"
+                          : "Abunəliyi yeniləmək üçün Paketlər bölməsinə keçin"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Boş hallar */}
+          {activeSection === "orders" && !selectedPast && (
             <div className="orders-no-select">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="40" height="40"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
               <p>Sifariş seçin</p>
+            </div>
+          )}
+          {activeSection === "subscriptions" && !selectedSub && (
+            <div className="orders-no-select">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="40" height="40"><path d="M3 7h18M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M16 14h.01"/></svg>
+              <p>Abunəlik seçin</p>
             </div>
           )}
         </div>
