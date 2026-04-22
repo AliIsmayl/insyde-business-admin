@@ -19,6 +19,7 @@ import CategoryPage from "./Pages/CategoryPage";
 import PlanSelectPage from "./Pages/PlanSelectPage";
 import GuidePage from "./Pages/GuidePage";
 import OrdersPage from "./Pages/OrdersPage";
+import PromoPage from "./Pages/PromoPage";
 import ScrollToTop from "./Components/ScroolToTop";
 
 // --- YENİ ƏLAVƏ ---
@@ -61,6 +62,7 @@ function App() {
           <Route path="/settings" element={<SettingPage />} />
           <Route path="/guide" element={<GuidePage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/promo" element={<PromoPage />} />
         </Route>
 
         {/* Yanlış link */}

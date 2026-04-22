@@ -251,6 +251,14 @@ export default function PackageMain() {
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [pendingNav, setPendingNav]        = useState(null);
 
+  // ── Promo kod ──
+  const [promoInput, setPromoInput]     = useState("");
+  const [promoApplied, setPromoApplied] = useState(null);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError]     = useState("");
+
+  const PROMO_DISCOUNT = 10;
+
   // Derived
   const billData         = BILLING_OPTIONS.find((b) => b.key === selectedBilling);
   const orderedUsers     = corpUsers.filter((u) => u.ordered);
@@ -270,9 +278,27 @@ export default function PackageMain() {
 
   // Sahibkar pricing
   const rawPrice   = calcRaw(SAHIBKAR_PKG.monthlyRate, billData?.months ?? 1);
-  const totalPrice = calcTotal(SAHIBKAR_PKG.monthlyRate, billData?.months ?? 1, billData?.discountRate ?? 0);
-  const savedAmount = +(rawPrice - totalPrice).toFixed(2);
+  const baseTotal  = calcTotal(SAHIBKAR_PKG.monthlyRate, billData?.months ?? 1, billData?.discountRate ?? 0);
+  const savedAmount = +(rawPrice - baseTotal).toFixed(2);
   const sahibkarCardPrice = formatWholePrice(SAHIBKAR_PKG.cardPrice);
+
+  // Promo discount
+  const promoDiscount  = promoApplied ? +(baseTotal * (PROMO_DISCOUNT / 100)).toFixed(2) : 0;
+  const totalPrice     = +(baseTotal - promoDiscount).toFixed(2);
+  const corpPromoDisc  = promoApplied ? +(corpGrandTotal * (PROMO_DISCOUNT / 100)).toFixed(2) : 0;
+  const corpFinalTotal = +(corpGrandTotal - corpPromoDisc).toFixed(2);
+
+  const handlePromoApply = () => {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    setPromoLoading(true);
+    setPromoError("");
+    setPromoApplied(null);
+    setTimeout(() => {
+      setPromoApplied({ code, discount: PROMO_DISCOUNT });
+      setPromoLoading(false);
+    }, 600);
+  };
 
   const handleLogoUpload = (e) => {
     const file = e.target.files[0]; if (!file) return;
@@ -353,6 +379,7 @@ export default function PackageMain() {
     setCorpLogo(null); setCorpLogoFile(null); setCorpFlipped(false);
     setCorpUsers(INIT_CORP_USERS); setCorpGlobalTone("ferdi"); setCorpSearch("");
     setCorpBillingKey("monthly");
+    setPromoInput(""); setPromoApplied(null); setPromoLoading(false); setPromoError("");
   };
 
   const previewTone = corpGlobalTone === "ferdi" ? "dark" : corpGlobalTone;
@@ -724,6 +751,7 @@ export default function PackageMain() {
       )}
 
       {/* ══════════════════════════════════════════
+      
           KORPORATIV STEP 3 — KART DİZAYNI
       ══════════════════════════════════════════ */}
       {isKorporativ && step === 3 && (
@@ -929,10 +957,43 @@ export default function PackageMain() {
                 </div>
               </div>
 
+              {promoApplied && (
+                <div className="checkout-row checkout-promo-applied-row">
+                  <span>Promo endirim ({promoApplied.discount}%)</span>
+                  <strong className="checkout-save">-{corpPromoDisc.toFixed(2)}₼</strong>
+                </div>
+              )}
+
+              <div className="checkout-promo-wrap">
+                <div className="checkout-promo-row">
+                  <input
+                    className="checkout-promo-input"
+                    placeholder="Promo kodu daxil edin"
+                    value={promoInput}
+                    onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(""); setPromoApplied(null); }}
+                    disabled={promoLoading}
+                  />
+                  <button
+                    className="checkout-promo-btn"
+                    onClick={handlePromoApply}
+                    disabled={promoLoading || !promoInput.trim()}
+                  >
+                    {promoLoading ? <span className="pkg-spinner-sm" /> : "Tətbiq et"}
+                  </button>
+                </div>
+                {promoError && <p className="checkout-promo-error">{promoError}</p>}
+                {promoApplied && (
+                  <p className="checkout-promo-success">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    "{promoApplied.code}" kodu tətbiq edildi — {promoApplied.discount}% endirim
+                  </p>
+                )}
+              </div>
+
               {error && <div className="checkout-error">{error}</div>}
               <button className="pkg-nav-btn primary full-width" onClick={handleSubmit} disabled={submitting || orderedUsers.length === 0}>
                 {submitting ? <span className="pkg-spinner-sm" /> : null}
-                {submitting ? "Emal olunur..." : `${corpGrandTotal.toFixed(2)}₼ Ödənişə keç`}
+                {submitting ? "Emal olunur..." : `${corpFinalTotal.toFixed(2)}₼ Ödənişə keç`}
               </button>
             </div>
           </div>
@@ -1130,6 +1191,39 @@ export default function PackageMain() {
                   <span>Logo</span>
                   {cardLogo ? <div className="checkout-logo-wrap"><img src={cardLogo} alt="logo" className="checkout-logo-thumb" /><strong>Yüklənib</strong></div> : <strong>Yoxdur</strong>}
                 </div>
+              </div>
+
+              {promoApplied && (
+                <div className="checkout-row checkout-promo-applied-row">
+                  <span>Promo endirim ({promoApplied.discount}%)</span>
+                  <strong className="checkout-save">-{promoDiscount.toFixed(2)}₼</strong>
+                </div>
+              )}
+
+              <div className="checkout-promo-wrap">
+                <div className="checkout-promo-row">
+                  <input
+                    className="checkout-promo-input"
+                    placeholder="Promo kodu daxil edin"
+                    value={promoInput}
+                    onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(""); setPromoApplied(null); }}
+                    disabled={promoLoading}
+                  />
+                  <button
+                    className="checkout-promo-btn"
+                    onClick={handlePromoApply}
+                    disabled={promoLoading || !promoInput.trim()}
+                  >
+                    {promoLoading ? <span className="pkg-spinner-sm" /> : "Tətbiq et"}
+                  </button>
+                </div>
+                {promoError && <p className="checkout-promo-error">{promoError}</p>}
+                {promoApplied && (
+                  <p className="checkout-promo-success">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="13" height="13"><polyline points="20 6 9 17 4 12" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    "{promoApplied.code}" kodu tətbiq edildi — {promoApplied.discount}% endirim
+                  </p>
+                )}
               </div>
 
               {error && <div className="checkout-error">{error}</div>}

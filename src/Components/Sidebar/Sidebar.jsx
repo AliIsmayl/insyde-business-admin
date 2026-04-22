@@ -8,6 +8,7 @@ import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import "./Sidebar.scss";
 import { MdOutlineSwitchAccount } from "react-icons/md";
 import { HiOutlineBookOpen } from "react-icons/hi";
+import { TbTag } from "react-icons/tb";
 
 function Sidebar({ isOpen, setIsOpen }) {
   const [openMenus, setOpenMenus] = useState({});
@@ -76,6 +77,7 @@ function Sidebar({ isOpen, setIsOpen }) {
     { name: "Analitika", path: "/analys", icon: <TbBrandGoogleAnalytics /> },
     { name: "Paketlər", path: "/packages", icon: <PiPackage /> },
     { name: "Sifarişlərim", path: "/orders", icon: <FiShoppingBag /> },
+    { name: "Promokod",    path: "/promo",  icon: <TbTag /> },
     {
       name: "Bələdçi",
       path: "/guide",
